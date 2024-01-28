@@ -29,18 +29,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    implementation(project(':core'))
-    implementation(project(':api'))
 }
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-tasks.named('bootJar'){ // bootJar 세팅을 켜기
-    enabled = true
-}
-
-tasks.named('jar'){ // jar 설정은 끄기
-    enabled = false
 }
