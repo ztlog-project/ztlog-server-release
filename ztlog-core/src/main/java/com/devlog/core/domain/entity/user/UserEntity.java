@@ -20,8 +20,8 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "USERNAME")
     private String username;
 
-    @Column(name = "EMAIL")
-    private String email;
+//    @Column(name = "EMAIL")
+//    private String email;
 
     @Column(name = "PASSWORD")
     private String password;
