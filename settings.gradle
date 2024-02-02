@@ -1,4 +1,3 @@
-rootProject.name = 'devlog-api'
-include 'api'
-include 'core'
+rootProject.name = 'ztlog-server-release'
+include 'ztlog-core'
 
