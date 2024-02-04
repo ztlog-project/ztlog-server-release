@@ -33,8 +33,10 @@ public class ContentService {
     private final ContentTagRepository contentTagRepository;
 
     /**
-     * @param page
-     * @return
+     * 컨텐츠 목록 조회하기
+     *
+     * @param page 페이지 번호 (기본값 = 1)
+     * @return 컨텐츠 리스트 반환
      */
     public ContentListResDto getContentsListInfo(int page) {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);
@@ -46,9 +48,11 @@ public class ContentService {
     }
 
     /**
-     * @param ctntNo
-     * @return
-     * @throws DataNotFoundException
+     * 컨텐츠 상세 조회하기
+     *
+     * @param ctntNo 컨텐츠 번호
+     * @return 컨텐츠 반환
+     * @throws DataNotFoundException 조회 오류 예외처리
      */
     public ContentInfoResDto getContentInfo(Integer ctntNo) throws DataNotFoundException {
         ContentDtlEntity entity = this.contentDtlRepository.findById(Long.valueOf(ctntNo))
@@ -62,10 +66,11 @@ public class ContentService {
     }
 
     /**
+     * 컨텐츠 검색하기
      *
-     * @param param
-     * @param page
-     * @return
+     * @param param 검색 키워드
+     * @param page 페이지 번호 (기본값 = 1)
+     * @return 검색한 키워드 관련 리스트 반환
      */
     public ContentListResDto searchContentsInfo(String param, int page) {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);
@@ -77,10 +82,11 @@ public class ContentService {
     }
 
     /**
+     * 컨텐츠 리스트 반환
      *
-     * @param list
-     * @param contentEntityPage
-     * @return
+     * @param list DTO 리스트
+     * @param contentEntityPage Page 타입 리스트
+     * @return ContentListResDto 객체 반환
      */
     @NotNull
     private ContentListResDto getContentMainList(List<ContentListResDto.ContentMainDto> list, Page<ContentEntity> contentEntityPage) {

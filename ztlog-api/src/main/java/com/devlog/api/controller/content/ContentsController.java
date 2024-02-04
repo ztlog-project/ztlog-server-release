@@ -17,9 +17,10 @@ public class ContentsController {
     private final ContentService contentService;
 
     /**
+     * 컨텐츠 목록 조회하기
      *
-     * @param page
-     * @return
+     * @param page 페이지 번호 (기본값 = 1)
+     * @return 컨텐츠 리스트 반환
      */
     @Operation(summary = "컨텐츠 목록 조회", description = "컨텐츠 목록 조회")
     @GetMapping(value = "/contents")
@@ -28,10 +29,11 @@ public class ContentsController {
     }
 
     /**
+     * 컨텐츠 상세 조회하기
      *
-     * @param ctntNo
-     * @return
-     * @throws DataNotFoundException
+     * @param ctntNo 컨텐츠 번호
+     * @return 컨텐츠 반환
+     * @throws DataNotFoundException 조회 오류 예외처리
      */
     @Operation(summary = "컨텐츠 상세 조회", description = "컨텐츠 상세 조회")
     @GetMapping(value = "/content/{ctntNo}")
@@ -40,10 +42,11 @@ public class ContentsController {
     }
 
     /**
+     * 컨텐츠 검색하기
      *
-     * @param param
-     * @param page
-     * @return
+     * @param param 검색 키워드
+     * @param page 페이지 번호 (기본값 = 1)
+     * @return 검색한 키워드 관련 리스트 반환
      */
     @Operation(summary = "컨텐츠 검색", description = "컨텐츠 검색")
     @GetMapping(value = "/search")

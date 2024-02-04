@@ -26,13 +26,14 @@ public class TagsService {
     private final ContentTagRepository contentTagRepository;
 
     /**
+     * 태그 목록 조회하기
      *
-     * @return
+     * @return 태그 리스트
      */
     public List<TagListResDto> getTagsListInfo() {
         List<TagListResDto> list = new ArrayList<>();
 
-        while (this.tagsRepository.findAll().iterator().hasNext() ) {
+        while (this.tagsRepository.findAll().iterator().hasNext()) {
             final var dto = TagListResDto.builder().build();
             BeanUtils.copyProperties(this.tagsRepository.findAll().iterator().next(), dto);
             list.add(dto);
@@ -41,10 +42,11 @@ public class TagsService {
     }
 
     /**
+     * 태그 게시물 목록 모회하기
      *
-     * @param tagNo
-     * @param page
-     * @return
+     * @param tagNo 태그 번호
+     * @param page  페이지 번호 (기본값 = 1)
+     * @return 태그 게시물 리스트
      */
     public ContentListResDto getTagsContentsListInfo(Integer tagNo, Integer page) {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);

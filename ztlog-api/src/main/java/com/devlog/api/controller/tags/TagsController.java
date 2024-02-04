@@ -16,8 +16,9 @@ public class TagsController {
     private final TagsService tagsService;
 
     /**
+     * 태그 목록 조회하기
      *
-     * @return
+     * @return 태그 리스트
      */
     @Operation(summary = "태그 목록 조회", description = "태그 목록 조회")
     @GetMapping(value = "/tags")
@@ -26,9 +27,11 @@ public class TagsController {
     }
 
     /**
+     * 태그 게시물 목록 모회하기
      *
-     * @param tagNo
-     * @return
+     * @param tagNo 태그 번호
+     * @param page 페이지 번호 (기본값 = 1)
+     * @return 태그 게시물 리스트
      */
     @Operation(summary = "태그 게시물 목록 조회", description = "태그로 게시물 목록 조회")
     @GetMapping(value = "/tags/{tagNo}")
