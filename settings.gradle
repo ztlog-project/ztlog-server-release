@@ -1,4 +1,5 @@
 rootProject.name = 'ztlog-server-release'
 include 'ztlog-core'
 include 'ztlog-api'
+include 'ztlog-admin'
 

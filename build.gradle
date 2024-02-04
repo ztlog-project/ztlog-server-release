@@ -58,6 +58,12 @@ project(':ztlog-api') {
     }
 }
 
+project(':ztlog-admin') {
+    dependencies {
+        implementation(project(':ztlog-core'))
+    }
+}
+
 project(':ztlog-core') {
     bootJar { enabled = false }
     jar { enabled = true }

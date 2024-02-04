@@ -1,0 +1,19 @@
+
+dependencies {
+    api(project(":ztlog-core"))
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+//    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.session:spring-session-data-redis"
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.1'
+    runtimeOnly "com.mysql:mysql-connector-j"
+    compileOnly "org.jetbrains:annotations:16.0.2"
+    implementation "org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE"
+    implementation "org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE"
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+//	implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+//    testImplementation "org.springframework.security:spring-security-test"
+
+}
