@@ -13,7 +13,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserEntity getUserInfo(Long userNo) {
-        return userRepository.findByUserNo(userNo);
+    public UserEntity getUserInfo(String userName) {
+        return userRepository.findByUsername(userName);
     }
 }
