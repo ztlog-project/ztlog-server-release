@@ -27,8 +27,8 @@ public class ContentController {
      */
     @Operation(summary = "컨텐츠 목록 조회", description = "컨텐츠 목록 조회")
     @GetMapping(value = "/contents")
-    public @ResponseBody Response getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
-        return new Response(contentService.getContentsList(page));
+    public @ResponseBody Response getContentList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
+        return new Response(contentService.getContentList(page));
     }
 
     /**

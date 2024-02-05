@@ -36,6 +36,14 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
 
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+  mapper-locations: classpath:mybatis/mapper/**/**.xml
+  type-aliases-package: com.devlog.admin.vo
+
 
 ---
 

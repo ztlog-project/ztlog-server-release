@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devlog.admin.mapper.ContentMapper">
 
+    <select id="selectContentList" parameterType="content.ContentSearchVo" resultType="content.ContentVo">
+
+    </select>
+
+    <select id="selectContentByCtntNo" parameterType="Integer" resultType="content.ContentVo">
+
+    </select>
+
     <insert id="insertContentMaster">
 
     </insert>
