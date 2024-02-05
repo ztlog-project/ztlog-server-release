@@ -6,4 +6,5 @@
         DELETE FROM contents_tags
         WHERE CTNT_NO = #{ctntNo}
     </delete>
+
 </mapper>
