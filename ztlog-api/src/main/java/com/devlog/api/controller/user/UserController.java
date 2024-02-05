@@ -11,7 +11,7 @@ import com.devlog.core.common.vo.Response;
 @Tag(name = "유저 컨트롤러", description = "유저 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/api/v1/user")
 public class UserController {
 
     private final UserService userService;

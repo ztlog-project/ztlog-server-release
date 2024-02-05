@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "태그 컨트롤러", description = "태그 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/v1")
 public class TagsController {
 
     private final TagsService tagsService;
