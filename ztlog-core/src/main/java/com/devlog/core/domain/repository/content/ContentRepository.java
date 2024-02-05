@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContentRepository extends JpaRepository<ContentEntity, Long> {
+public interface ContentRepository extends CrudRepository<ContentEntity, Long> {
     Page<ContentEntity> findAll(Pageable pageable);
 
     Page<ContentEntity> findAllByCtntTitleContaining(String ctntTitle, Pageable pageable);

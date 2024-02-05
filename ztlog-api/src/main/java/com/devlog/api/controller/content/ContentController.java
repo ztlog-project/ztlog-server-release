@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api")
-public class ContentsController {
+public class ContentController {
 
     private final ContentService contentService;
 
@@ -24,8 +24,8 @@ public class ContentsController {
      */
     @Operation(summary = "컨텐츠 목록 조회", description = "컨텐츠 목록 조회")
     @GetMapping(value = "/contents")
-    public @ResponseBody Response getContentsListInfo(@RequestParam(value = "no", defaultValue = "1") Integer page) {
-        return new Response(contentService.getContentsListInfo(page));
+    public @ResponseBody Response getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
+        return new Response(contentService.getContentsList(page));
     }
 
     /**

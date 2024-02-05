@@ -30,7 +30,7 @@ public class TagsService {
      *
      * @return 태그 리스트
      */
-    public List<TagListResDto> getTagsListInfo() {
+    public List<TagListResDto> getTagsList() {
         List<TagListResDto> list = new ArrayList<>();
 
         while (this.tagsRepository.findAll().iterator().hasNext()) {
@@ -48,7 +48,7 @@ public class TagsService {
      * @param page  페이지 번호 (기본값 = 1)
      * @return 태그 게시물 리스트
      */
-    public ContentListResDto getTagsContentsListInfo(Integer tagNo, Integer page) {
+    public ContentListResDto getTagsContentsList(Integer tagNo, Integer page) {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 

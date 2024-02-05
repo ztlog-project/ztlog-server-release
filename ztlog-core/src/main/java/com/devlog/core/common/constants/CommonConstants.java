@@ -3,6 +3,8 @@ package com.devlog.core.common.constants;
 public class CommonConstants {
     public static final String TITLE = "ztlog";
 
+    public static final String ADMIN = "yjchoi";
+
     public static final Integer PAGE_SIZE = 5;
 
     public static final String USER_NOT_FOUND = "사용자 정보가 없습니다.";

@@ -38,7 +38,7 @@ public class ContentService {
      * @param page 페이지 번호 (기본값 = 1)
      * @return 컨텐츠 리스트 반환
      */
-    public ContentListResDto getContentsListInfo(int page) {
+    public ContentListResDto getContentsList(int page) {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 

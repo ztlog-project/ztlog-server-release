@@ -22,8 +22,8 @@ public class TagsController {
      */
     @Operation(summary = "태그 목록 조회", description = "태그 목록 조회")
     @GetMapping(value = "/tags")
-    public @ResponseBody Response getTagsListInfo() {
-        return new Response(tagsService.getTagsListInfo());
+    public @ResponseBody Response getTagsList() {
+        return new Response(tagsService.getTagsList());
     }
 
     /**
@@ -35,11 +35,11 @@ public class TagsController {
      */
     @Operation(summary = "태그 게시물 목록 조회", description = "태그로 게시물 목록 조회")
     @GetMapping(value = "/tags/{tagNo}")
-    public @ResponseBody Response getTagsContentsListInfo(
+    public @ResponseBody Response getTagsContentsList(
             @PathVariable Integer tagNo,
             @RequestParam(value = "no", defaultValue = "1") Integer page
     ) {
-        return new Response(tagsService.getTagsContentsListInfo(tagNo, page));
+        return new Response(tagsService.getTagsContentsList(tagNo, page));
     }
 
 
