@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +61,8 @@ public class ContentService {
      * @return 컨텐츠 객체
      * @throws DataNotFoundException 조회 오류 예외처리
      */
-    public ContentListResDto getContentInfo(Integer ctntNo) throws DataNotFoundException {
+    public ContentListResDto getContentInfo(Long ctntNo) throws DataNotFoundException {
         ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
-
-        // check
         if (ObjectUtils.isEmpty(vo)) {
             throw  new DataNotFoundException(CommonConstants.BAD_REQUEST);
         }
@@ -73,17 +73,60 @@ public class ContentService {
         return resDto;
     }
 
-
+    /**
+     * 컨텐츠 등록하기
+     * 
+     * @param reqVo 컨텐츠 요청 객체
+     */
     public void createContentInfo(ContentInfoReqDto reqVo) {
+        ContentVo vo = new ContentVo();
+        BeanUtils.copyProperties(reqVo, vo);
+
+        // vo setting
+        vo.setInpUser(CommonConstants.ADMIN);
+        vo.setInpDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
+        vo.setUpdDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
+
+        // insert
+        this.contentMapper.insertContentMaster(vo);
+        this.contentMapper.insertContentDetail(vo);
 
     }
 
+    /**
+     * 컨텐츠 수정하기
+     *
+     * @param reqVo 컨텐츠 요청 객체
+     * @throws DataNotFoundException 조회 오류 예외처리
+     */
     public void updateContentInfo(ContentInfoReqDto reqVo) throws DataNotFoundException {
+        ContentVo vo = this.contentMapper.selectContentByCtntNo(reqVo.getCtntNo());
+        if (ObjectUtils.isEmpty(vo)) {
+            throw  new DataNotFoundException(CommonConstants.BAD_REQUEST);
+        }
 
+        vo.setCtntTitle(reqVo.getCtntTitle());
+        vo.setCtntSubTitle(reqVo.getCtntBody().substring(0, 300));
+        vo.setCtntBody(reqVo.getCtntBody());
+        vo.setUpdDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
+
+        this.contentMapper.updateContentMaster(vo);
+        this.contentMapper.updateContentDetail(vo);
     }
+
+    /**
+     * 컨텐츠 삭제하기
+     *
+     * @param ctntNo 컨텐츠 번호
+     * @throws DataNotFoundException 조회 오류 예외처리
+     */
 
     public void deleteContentInfo(Long ctntNo) throws DataNotFoundException {
         // check content exist
+        ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
+        if (ObjectUtils.isEmpty(vo)) {
+            throw  new DataNotFoundException(CommonConstants.BAD_REQUEST);
+        }
 
         // contents delete
         this.contentMapper.deleteContentMaster(ctntNo);

@@ -39,7 +39,7 @@ public class ContentController {
      * @throws DataNotFoundException 조회 오류 예외처리
      */
     @GetMapping(value = "/content/{ctntNo}")
-    public @ResponseBody Response getContentInfo(@PathVariable Integer ctntNo) throws DataNotFoundException {
+    public @ResponseBody Response getContentInfo(@PathVariable Long ctntNo) throws DataNotFoundException {
         return new Response(contentService.getContentInfo(ctntNo));
     }
 

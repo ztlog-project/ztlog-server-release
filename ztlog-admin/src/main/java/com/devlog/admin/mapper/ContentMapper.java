@@ -11,7 +11,7 @@ public interface ContentMapper {
 
     List<ContentVo> selectContentList(ContentSearchVo searchVo);
 
-    ContentVo selectContentByCtntNo(Integer ctntNo);
+    ContentVo selectContentByCtntNo(Long ctntNo);
 
     void insertContentMaster(ContentVo contentVo);
 
