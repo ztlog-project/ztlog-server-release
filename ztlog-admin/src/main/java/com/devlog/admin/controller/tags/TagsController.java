@@ -33,6 +33,7 @@ public class TagsController {
      * @param reqDto 태그 정보 객체
      * @return 성공 응답
      */
+    @Operation(summary = "태그 등록", description = "태그 등록")
     @PostMapping(value = "/tag")
     public @ResponseBody Response createTagsInfo(@RequestBody TagsInfoReqDto reqDto) {
         this.tagsService.createTagsInfo(reqDto);
@@ -45,6 +46,7 @@ public class TagsController {
      * @param reqDto 태그 정보 객체
      * @return 성공 응답
      */
+    @Operation(summary = "태그 수정", description = "태그 수정")
     @PutMapping(value = "/tag")
     public @ResponseBody Response updateTagsInfo(@RequestBody TagsInfoReqDto reqDto) {
         this.tagsService.updateTagsInfo(reqDto);
@@ -57,6 +59,7 @@ public class TagsController {
      * @param tagsNo 태그 번호
      * @return 성공 응답
      */
+    @Operation(summary = "태그 삭제", description = "태그 삭제")
     @DeleteMapping(value = "/tags/{tagsNo}")
     public @ResponseBody Response deleteTagsInfo(@PathVariable Long tagsNo) {
         this.tagsService.deleteTagsInfo(tagsNo);

@@ -38,6 +38,7 @@ public class ContentController {
      * @return 컨텐츠 반환
      * @throws DataNotFoundException 조회 오류 예외처리
      */
+    @Operation(summary = "컨텐츠 상세 조회", description = "컨텐츠 상세 조회")
     @GetMapping(value = "/content/{ctntNo}")
     public @ResponseBody Response getContentInfo(@PathVariable Long ctntNo) throws DataNotFoundException {
         return new Response(contentService.getContentInfo(ctntNo));
@@ -50,6 +51,7 @@ public class ContentController {
      * @param reqVo 컨텐츠 객체
      * @return 성공 응답
      */
+    @Operation(summary = "컨텐츠 등록", description = "컨텐츠 등록")
     @PostMapping(value = "/content")
     public @ResponseBody Response createContentInfo(@RequestBody ContentInfoReqDto reqVo) {
         this.contentService.createContentInfo(reqVo);
@@ -63,6 +65,7 @@ public class ContentController {
      * @return 성공 응답
      * @throws DataNotFoundException 조회 오류 예외처리
      */
+    @Operation(summary = "컨텐츠 수정", description = "컨텐츠 수정")
     @PutMapping(value = "/content")
     public @ResponseBody Response updateContentInfo(@RequestBody ContentInfoReqDto reqVo) throws DataNotFoundException {
         this.contentService.updateContentInfo(reqVo);
@@ -76,6 +79,7 @@ public class ContentController {
      * @return 성공 응답
      * @throws DataNotFoundException 조회 오류 예외처리
      */
+    @Operation(summary = "컨텐츠 삭제", description = "컨텐츠 삭제")
     @DeleteMapping(value = "/content/{ctntNo}")
     public @ResponseBody Response deleteContentInfo(@PathVariable Long ctntNo) throws DataNotFoundException {
         this.contentService.deleteContentInfo(ctntNo);
