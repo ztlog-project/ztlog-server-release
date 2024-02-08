@@ -1,6 +1,7 @@
 package com.devlog.admin.service.user;
 
 import com.devlog.admin.dto.user.request.LoginReqDto;
+import com.devlog.admin.dto.user.request.SignupReqDto;
 import com.devlog.admin.dto.user.response.UserInfoResDto;
 import com.devlog.admin.mapper.UserMapper;
 import com.devlog.admin.vo.user.UserVo;
@@ -30,10 +31,14 @@ public class UserService {
         return resDto;
     }
 
+    public void signupUser(SignupReqDto reqDto) {
+    }
+
     public void loginUser(LoginReqDto reqDto) {
     }
 
     public void logoutUser() {
 
     }
+
 }
