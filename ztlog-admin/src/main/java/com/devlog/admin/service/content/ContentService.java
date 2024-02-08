@@ -29,8 +29,6 @@ public class ContentService {
 
     private final TagsMapper tagMapper;
 
-    // TODO :
-
     /**
      * 컨텐츠 리스트 조회하기
      *
@@ -38,13 +36,11 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-        ContentSearchVo searchVo = ContentSearchVo.builder()
-                .page(page)
-                .size(CommonConstants.PAGE_SIZE)
-                .build();
+        ContentSearchVo searchVo = new ContentSearchVo();
+        searchVo.setPage(page);
+        searchVo.setSize(CommonConstants.PAGE_SIZE);
 
         List<ContentInfoResDto> list = new ArrayList<>();
-
         this.contentMapper.selectContentList(searchVo).forEach(vo -> {
             ContentInfoResDto dto = ContentInfoResDto.builder().build();
             BeanUtils.copyProperties(vo, dto);

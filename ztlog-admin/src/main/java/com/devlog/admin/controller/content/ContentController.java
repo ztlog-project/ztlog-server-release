@@ -17,8 +17,6 @@ public class ContentController {
 
     private final ContentService contentService;
 
-    // TODO : Contents CRUD API
-
     /**
      * 컨텐츠 목록 조회하기
      *

@@ -19,6 +19,11 @@ public class TagsService {
 
     private final TagsMapper tagsMapper;
 
+    /**
+     * 태그 목록 조회
+     *
+     * @return 태그 리스트
+     */
     public List<TagsInfoResDto> getTagsList() {
         List<TagsInfoResDto> list = new ArrayList<>();
 
