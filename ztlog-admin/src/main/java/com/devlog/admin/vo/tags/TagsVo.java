@@ -23,5 +23,7 @@ public class TagsVo implements Serializable {
 
     private Long ctntNo;
 
+    private Integer tagCnt;
+
 
 }
