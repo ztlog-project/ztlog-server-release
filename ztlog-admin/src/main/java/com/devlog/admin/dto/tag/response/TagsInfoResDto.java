@@ -1,4 +1,4 @@
-package com.devlog.admin.vo.tags;
+package com.devlog.admin.dto.tag.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,10 +10,10 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class TagsVo implements Serializable {
+public class TagsInfoResDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 6566928760535799829L;
+    private static final long serialVersionUID = 8631335185381607696L;
 
     private Long tag_no;
 
@@ -22,6 +22,5 @@ public class TagsVo implements Serializable {
     private Integer sort;
 
     private Long ctntNo;
-
 
 }

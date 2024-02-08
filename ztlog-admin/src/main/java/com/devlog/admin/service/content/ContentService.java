@@ -120,7 +120,6 @@ public class ContentService {
      * @param ctntNo 컨텐츠 번호
      * @throws DataNotFoundException 조회 오류 예외처리
      */
-
     public void deleteContentInfo(Long ctntNo) throws DataNotFoundException {
         // check content exist
         ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);

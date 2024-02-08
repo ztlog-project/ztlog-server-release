@@ -15,5 +15,6 @@ public class TagsInfoReqDto implements Serializable {
     @Serial
     private static final long serialVersionUID = -4642091134040102457L;
 
+    private String tagName;
 
 }

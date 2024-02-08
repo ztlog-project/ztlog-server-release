@@ -8,4 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class MainService {
+
+    public Object getMainStatusInfo() {
+        return null;
+    }
 }
