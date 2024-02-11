@@ -36,6 +36,7 @@ public class ContentEntity extends BaseTimeEntity {
     private ContentDtlEntity contentDetail;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL)
+    @OrderBy("sort asc")
     List<ContentTagsEntity> contentTags = new ArrayList<>();
 
 }

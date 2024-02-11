@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 @Builder
-public class TagInfoResDto implements Serializable {
+public class TagResDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1686790962136143267L;

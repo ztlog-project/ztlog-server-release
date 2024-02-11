@@ -2,19 +2,18 @@ package com.devlog.api.service.content;
 
 import com.devlog.api.service.content.dto.ContentResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
-import com.devlog.api.service.tag.dto.TagInfoResDto;
-import com.devlog.core.common.constants.CommonConstants;
+import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.domain.entity.content.ContentEntity;
+import com.devlog.core.domain.entity.content.ContentTagsEntity;
 import com.devlog.core.domain.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,22 +39,10 @@ public class ContentService {
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 
         // select content list
-        Page<ContentEntity> contentEntities = contentRepository.findAll(PageUtils.getPageable(page));
+        Page<ContentEntity> contentEntityPage = contentRepository.findAll(PageUtils.getPageable(page));
 
         // setting content entity -> dto list
-        contentEntities.getContent().forEach(content -> {
-            final var dto = ContentListResDto.ContentMainDto.builder().build();
-            BeanUtils.copyProperties(content, dto);
-
-            List<TagInfoResDto> tags = content.getContentTags().stream().map(contentTags -> TagInfoResDto.builder()
-                    .tagNo(contentTags.getTags().getTagNo())
-                    .tagName(contentTags.getTags().getTagName())
-                    .build()).collect(Collectors.toList());
-            dto.setTags(tags);
-            list.add(dto);
-        });
-
-        return new ContentListResDto(list, Long.valueOf(contentEntities.getTotalElements()).intValue());
+        return getContentListResDto(list, contentEntityPage);
     }
 
     /**
@@ -72,10 +59,12 @@ public class ContentService {
         BeanUtils.copyProperties(content, dto);
 
         // setting content tags
-        List<TagInfoResDto> tags = content.getContentTags().stream().map(contentTags -> TagInfoResDto.builder()
-                .tagNo(contentTags.getTags().getTagNo())
-                .tagName(contentTags.getTags().getTagName())
-                .build()).collect(Collectors.toList());
+        List<TagResDto> tags = content.getContentTags()
+                .stream().map(contentTags -> TagResDto.builder()
+                        .tagNo(contentTags.getTags().getTagNo())
+                        .tagName(contentTags.getTags().getTagName())
+                        .build()
+                ).collect(Collectors.toList());
         dto.setTags(tags);
 
         return dto;
@@ -92,22 +81,31 @@ public class ContentService {
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 
         // select content list
-        Page<ContentEntity> contentEntities = contentRepository.findAllByCtntTitleContaining(param, PageUtils.getPageable(page));
+        Page<ContentEntity> contentEntityPage = contentRepository.findAllByCtntTitleContaining(param, PageUtils.getPageable(page));
 
         // setting content entity -> dto list
-        contentEntities.getContent().forEach(content -> {
+        return getContentListResDto(list, contentEntityPage);
+    }
+
+    @NotNull
+    private ContentListResDto getContentListResDto(List<ContentListResDto.ContentMainDto> list, Page<ContentEntity> contentEntityPage) {
+        for (ContentEntity content : contentEntityPage.getContent()) {
             final var dto = ContentListResDto.ContentMainDto.builder().build();
             BeanUtils.copyProperties(content, dto);
 
-            List<TagInfoResDto> tags = content.getContentTags().stream().map(contentTags -> TagInfoResDto.builder()
-                    .tagNo(contentTags.getTags().getTagNo())
-                    .tagName(contentTags.getTags().getTagName())
-                    .build()).collect(Collectors.toList());
+            List<TagResDto> tags = new ArrayList<>();
+            for (ContentTagsEntity contentTags : content.getContentTags()) {
+                TagResDto build = TagResDto.builder()
+                        .tagNo(contentTags.getTags().getTagNo())
+                        .tagName(contentTags.getTags().getTagName())
+                        .build();
+                tags.add(build);
+            }
             dto.setTags(tags);
             list.add(dto);
-        });
+        }
 
-        return new ContentListResDto(list, Long.valueOf(contentEntities.getTotalElements()).intValue());
+        return new ContentListResDto(list, Long.valueOf(contentEntityPage.getTotalElements()).intValue());
     }
 
 }

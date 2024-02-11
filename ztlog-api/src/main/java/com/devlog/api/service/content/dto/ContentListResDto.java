@@ -1,6 +1,6 @@
 package com.devlog.api.service.content.dto;
 
-import com.devlog.api.service.tag.dto.TagInfoResDto;
+import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
@@ -25,8 +25,8 @@ public class ContentListResDto implements Serializable {
     private List<ContentMainDto> list;
 
     public ContentListResDto(List<ContentMainDto> list, Integer count) {
-        this.count = count;
         this.list = list;
+        this.count = count;
     }
 
     @Getter
@@ -49,7 +49,7 @@ public class ContentListResDto implements Serializable {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
         private LocalDateTime updDttm;
 
-        private List<TagInfoResDto> tags;
+        private List<TagResDto> tags;
 
     }
 
