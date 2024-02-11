@@ -1,8 +1,5 @@
 package com.devlog.core.domain.entity.content;
 
-import com.devlog.core.domain.entity.BaseTimeEntity;
-import com.devlog.core.domain.entity.tag.TagEntity;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serial;

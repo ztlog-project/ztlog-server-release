@@ -10,7 +10,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tags_mst")
@@ -26,4 +25,5 @@ public class TagEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "tags", cascade = CascadeType.ALL)
     List<ContentTagsEntity> contentTags = new ArrayList<>();
+
 }
