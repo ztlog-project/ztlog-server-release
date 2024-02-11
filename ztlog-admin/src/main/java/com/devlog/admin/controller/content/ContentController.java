@@ -4,7 +4,7 @@ import com.devlog.admin.dto.content.request.ContentInfoReqDto;
 import com.devlog.admin.dto.content.response.ContentInfoResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.admin.service.content.ContentService;
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.vo.Response;
 import com.devlog.core.config.exception.CoreException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +34,12 @@ public class ContentController {
     @Operation(summary = "컨텐츠 목록 조회", description = "컨텐츠 목록 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping(value = "/contents")
     public ResponseEntity<Response<ContentListResDto>> getContentList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
-        return Response.success(ResponseStatusCode.OK_SUCCESS, contentService.getContentList(page));
+        return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentList(page));
     }
 
     /**
@@ -53,12 +52,12 @@ public class ContentController {
     @Operation(summary = "컨텐츠 상세 조회", description = "컨텐츠 상세 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentInfoResDto.class))),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping(value = "/content/{ctntNo}")
     public ResponseEntity<Response<ContentInfoResDto>> getContentInfo(@PathVariable Long ctntNo) throws CoreException {
-        return Response.success(ResponseStatusCode.OK_SUCCESS, contentService.getContentInfo(ctntNo));
+        return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentInfo(ctntNo));
     }
 
 
@@ -70,13 +69,13 @@ public class ContentController {
      */
     @Operation(summary = "컨텐츠 등록", description = "컨텐츠 등록")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping(value = "/content")
     public ResponseEntity<Response<String>> createContentInfo(@RequestBody ContentInfoReqDto reqVo) {
         contentService.createContentInfo(reqVo);
-        return Response.success(ResponseStatusCode.CREATED_SUCCESS);
+        return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 
     /**
@@ -88,14 +87,14 @@ public class ContentController {
      */
     @Operation(summary = "컨텐츠 수정", description = "컨텐츠 수정")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping(value = "/content")
     public ResponseEntity<Response<String>> updateContentInfo(@RequestBody ContentInfoReqDto reqVo) throws CoreException {
         contentService.updateContentInfo(reqVo);
-        return Response.success(ResponseStatusCode.OK_SUCCESS);
+        return Response.success(ResponseCode.OK_SUCCESS);
     }
 
     /**
@@ -107,14 +106,14 @@ public class ContentController {
      */
     @Operation(summary = "컨텐츠 삭제", description = "컨텐츠 삭제")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @DeleteMapping(value = "/content/{ctntNo}")
     public ResponseEntity<Response<String>> deleteContentInfo(@PathVariable Long ctntNo) throws CoreException {
         contentService.deleteContentInfo(ctntNo);
-        return Response.success(ResponseStatusCode.OK_SUCCESS);
+        return Response.success(ResponseCode.OK_SUCCESS);
     }
 
 }

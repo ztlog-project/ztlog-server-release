@@ -3,7 +3,7 @@ package com.devlog.admin.controller.user;
 import com.devlog.admin.dto.user.request.SignupReqDto;
 import com.devlog.admin.dto.user.response.UserInfoResDto;
 import com.devlog.admin.service.user.UserService;
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.vo.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping(value = "/info")
     public ResponseEntity<Response<UserInfoResDto>> getUserInfo() {
         // TODO : 테스트용 api -> 추후 삭제 or 수정 요망
-        return Response.success(ResponseStatusCode.OK_SUCCESS, userService.getUserInfo(1L));
+        return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(1L));
     }
 
     /**
@@ -45,7 +45,7 @@ public class UserController {
     @PostMapping(value = "/signup")
     public ResponseEntity<Response<String>> signupUser(@RequestBody @Valid SignupReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
         userService.signupUser(reqDto);
-        return Response.success(ResponseStatusCode.CREATED_SUCCESS);
+        return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 
     /**
@@ -58,7 +58,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public ResponseEntity<Response<String>> loginUser(@RequestBody @Valid LoginReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
         userService.loginUser(reqDto);
-        return Response.success(ResponseStatusCode.OK_SUCCESS);
+        return Response.success(ResponseCode.OK_SUCCESS);
     }
 
     /**
@@ -70,7 +70,7 @@ public class UserController {
     @PostMapping(value = "/logout")
     public ResponseEntity<Response<String>> logoutUser(HttpServletRequest request, HttpServletResponse response) {
         userService.logoutUser();
-        return Response.success(ResponseStatusCode.OK_SUCCESS);
+        return Response.success(ResponseCode.OK_SUCCESS);
     }
 
 }

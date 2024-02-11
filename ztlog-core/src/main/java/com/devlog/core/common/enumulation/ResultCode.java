@@ -1,5 +1,5 @@
 package com.devlog.core.common.enumulation;
 
-public enum ResponseResultCode {
+public enum ResultCode {
     SUCCESS, FAIL
 }

@@ -1,7 +1,7 @@
 package com.devlog.admin.controller.main;
 
 import com.devlog.admin.service.main.MainService;
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.vo.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class MainController {
     @Operation(summary = "메인화면(대쉬보드) 조회", description = "메인화면(대쉬보드) 조회")
     @GetMapping(value = "/main")
     public ResponseEntity<Response<Object>> getMainStatusInfo() {
-        return Response.success(ResponseStatusCode.OK_SUCCESS, mainService.getMainStatusInfo());
+        return Response.success(ResponseCode.OK_SUCCESS, mainService.getMainStatusInfo());
     }
 
 }

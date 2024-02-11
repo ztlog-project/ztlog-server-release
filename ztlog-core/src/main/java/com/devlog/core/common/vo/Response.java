@@ -1,7 +1,7 @@
 package com.devlog.core.common.vo;
 
-import com.devlog.core.common.enumulation.ResponseStatusCode;
-import com.devlog.core.common.enumulation.ResponseResultCode;
+import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.enumulation.ResultCode;
 import lombok.*;
 import org.springframework.http.ResponseEntity;
 
@@ -12,38 +12,38 @@ import org.springframework.http.ResponseEntity;
 public class Response<T> {
 
     private int status;
-    private ResponseResultCode code;
+    private ResultCode code;
     private String message;
     private T data;
 
-    public Response(int status, ResponseResultCode code, String message) {
+    public Response(int status, ResultCode code, String message) {
         this.status = status;
         this.code = code;
         this.message = message;
     }
 
-    public static <T> ResponseEntity<Response<T>> success(ResponseStatusCode code) {
+    public static <T> ResponseEntity<Response<T>> success(ResponseCode code) {
         return ResponseEntity
                 .status(code.getStatus())
-                .body(new Response<>(code.getStatus(), ResponseResultCode.SUCCESS, code.getMessage()));
+                .body(new Response<>(code.getStatus(), ResultCode.SUCCESS, code.getMessage()));
     }
 
-    public static <T> ResponseEntity<Response<T>> success(ResponseStatusCode code, T data) {
+    public static <T> ResponseEntity<Response<T>> success(ResponseCode code, T data) {
         return ResponseEntity
                 .status(code.getStatus())
-                .body(new Response<>(code.getStatus(), ResponseResultCode.SUCCESS, code.getMessage(), data));
+                .body(new Response<>(code.getStatus(), ResultCode.SUCCESS, code.getMessage(), data));
     }
 
-    public static <T> ResponseEntity<Response<T>> error(ResponseStatusCode code) {
+    public static <T> ResponseEntity<Response<T>> error(ResponseCode code) {
         return ResponseEntity
                 .status(code.getStatus())
-                .body(new Response<>(code.getStatus(), ResponseResultCode.FAIL, code.getMessage()));
+                .body(new Response<>(code.getStatus(), ResultCode.FAIL, code.getMessage()));
     }
 
-    public static <T> ResponseEntity<Response<T>> error(ResponseStatusCode code, String message) {
+    public static <T> ResponseEntity<Response<T>> error(ResponseCode code, String message) {
         return ResponseEntity
                 .status(code.getStatus())
-                .body(new Response<>(code.getStatus(), ResponseResultCode.FAIL, message));
+                .body(new Response<>(code.getStatus(), ResultCode.FAIL, message));
     }
 }
 

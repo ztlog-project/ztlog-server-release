@@ -1,15 +1,15 @@
 package com.devlog.core.config.exception;
 
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 
 public class DataConflictException extends CoreException{
 
-    public DataConflictException(String message, ResponseStatusCode code) {
+    public DataConflictException(String message, ResponseCode code) {
         super(message, code);
     }
 
     public DataConflictException(String message) {
-        super(message, ResponseStatusCode.RESOURCE_DATA_CONFLICT);
+        super(message, ResponseCode.CONFLICT_DATA_ERROR);
     }
 
 }

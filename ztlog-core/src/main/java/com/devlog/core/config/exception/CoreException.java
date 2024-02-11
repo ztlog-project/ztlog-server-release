@@ -1,24 +1,24 @@
 package com.devlog.core.config.exception;
 
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 import lombok.Getter;
 
 @Getter
 public abstract class CoreException extends RuntimeException {
 
-    private final ResponseStatusCode responseStatusCode;
+    private final ResponseCode responseCode;
 
-    public CoreException(String message, ResponseStatusCode responseStatusCode) {
+    public CoreException(String message, ResponseCode responseCode) {
         super(message);
-        this.responseStatusCode = responseStatusCode;
+        this.responseCode = responseCode;
     }
 
     public int getStatus() {
-        return this.responseStatusCode.getStatus();
+        return this.responseCode.getStatus();
     }
 
     public String getMessage() {
-        return this.responseStatusCode.getMessage();
+        return this.responseCode.getMessage();
     }
 
 }

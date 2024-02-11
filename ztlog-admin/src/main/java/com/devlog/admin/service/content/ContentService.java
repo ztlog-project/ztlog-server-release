@@ -8,7 +8,7 @@ import com.devlog.admin.mapper.TagsMapper;
 import com.devlog.admin.vo.content.ContentSearchVo;
 import com.devlog.admin.vo.content.ContentVo;
 import com.devlog.core.common.constants.CommonConstants;
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.CoreException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -57,12 +57,11 @@ public class ContentService {
      *
      * @param ctntNo 컨텐츠 번호
      * @return 컨텐츠 객체
-     * @throws CoreException 조회 오류 예외처리
      */
     public ContentInfoResDto getContentInfo(Long ctntNo){
         ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
         if (ObjectUtils.isEmpty(vo)) {
-            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
         ContentInfoResDto resDto = ContentInfoResDto.builder().build();
@@ -95,12 +94,11 @@ public class ContentService {
      * 컨텐츠 수정하기
      *
      * @param reqVo 컨텐츠 요청 객체
-     * @throws CoreException 조회 오류 예외처리
      */
     public void updateContentInfo(ContentInfoReqDto reqVo) {
         ContentVo vo = this.contentMapper.selectContentByCtntNo(reqVo.getCtntNo());
         if (ObjectUtils.isEmpty(vo)) {
-            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
         vo.setCtntTitle(reqVo.getCtntTitle());
@@ -122,7 +120,7 @@ public class ContentService {
         // check content exist
         ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
         if (ObjectUtils.isEmpty(vo)) {
-            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage());
         }
 
         // contents delete

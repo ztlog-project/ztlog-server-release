@@ -1,7 +1,7 @@
 package com.devlog.api.service.user;
 
 import com.devlog.api.service.user.dto.UserInfoResDto;
-import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.domain.entity.user.UserEntity;
 import com.devlog.core.domain.repository.user.UserRepository;
@@ -20,7 +20,7 @@ public class UserService {
     public UserInfoResDto getUserInfo(String userName) {
         UserEntity user = userRepository.findByUsername(userName);
         if (ObjectUtils.isEmpty(user)) {
-            throw new DataNotFoundException(ResponseStatusCode.USER_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
         return UserInfoResDto.builder()

@@ -3,6 +3,7 @@ package com.devlog.api.service.content;
 import com.devlog.api.service.content.dto.ContentInfoResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.core.common.constants.CommonConstants;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.domain.entity.content.ContentDtlEntity;
 import com.devlog.core.domain.entity.content.ContentEntity;
@@ -52,11 +53,10 @@ public class ContentService {
      *
      * @param ctntNo 컨텐츠 번호
      * @return 컨텐츠 반환
-     * @throws DataNotFoundException 조회 오류 예외처리
      */
-    public ContentInfoResDto getContentInfo(Integer ctntNo) throws DataNotFoundException {
+    public ContentInfoResDto getContentInfo(Integer ctntNo) {
         ContentDtlEntity entity = this.contentDtlRepository.findById(Long.valueOf(ctntNo))
-                .orElseThrow(() -> new DataNotFoundException(CommonConstants.BAD_REQUEST));
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
         final var dto = ContentInfoResDto.builder().build();
         BeanUtils.copyProperties(entity, dto);

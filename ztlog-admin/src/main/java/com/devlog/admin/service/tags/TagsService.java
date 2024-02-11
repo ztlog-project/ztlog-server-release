@@ -4,8 +4,7 @@ import com.devlog.admin.dto.tag.request.TagsInfoReqDto;
 import com.devlog.admin.dto.tag.response.TagsInfoResDto;
 import com.devlog.admin.mapper.TagsMapper;
 import com.devlog.admin.vo.tags.TagsVo;
-import com.devlog.core.common.enumulation.ResponseStatusCode;
-import com.devlog.core.config.exception.CoreException;
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -50,7 +49,7 @@ public class TagsService {
         tagsVo.setTagName(reqDto.getTagsName());
         // check tag name
         if (!ObjectUtils.isEmpty(this.tagsMapper.selectTagsByName(tagsVo.getTagName()))) {
-            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
         // insert vo
@@ -66,7 +65,7 @@ public class TagsService {
         TagsVo tagsVo = this.tagsMapper.selectTagsByNo(reqDto.getTagsNo());
         // check tag exist
         if (ObjectUtils.isEmpty(tagsVo)) {
-            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
         // update vo
@@ -83,7 +82,7 @@ public class TagsService {
         TagsVo tagsVo = this.tagsMapper.selectTagsByNo(tagNo);
         // check tag exist
         if (ObjectUtils.isEmpty(tagsVo)) {
-            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage());
         }
 
 //        this.tagsMapper.deleteContentTags(tagsVo.getTagNo());
