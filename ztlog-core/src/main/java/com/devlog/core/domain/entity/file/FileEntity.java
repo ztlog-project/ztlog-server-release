@@ -13,7 +13,7 @@ import lombok.*;
 public class FileEntity extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "FILE_NO", nullable = false)
     private Long fileNo;
 

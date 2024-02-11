@@ -1,26 +1,28 @@
 package com.devlog.core.domain.entity.content;
 
-import com.devlog.core.domain.entity.BaseTimeEntity;
+import com.devlog.core.domain.entity.tag.TagEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "content_tags")
-public class ContentTagsEntity extends BaseTimeEntity {
+@IdClass(ContentTagsPKEntity.class)
+@Table(name = "contents_tags")
+public class ContentTagsEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TAG_NO", nullable = false)
-    private Long tagNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TAG_NO")
+    private TagEntity tags;
 
     @Column(name = "SORT", nullable = false)
     private Integer sort;
 
-    @Column(name = "ctnt_no", nullable = false)
-    private Long ctntNo;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CTNT_NO", nullable = false)
+    private ContentEntity contents;
 
 }

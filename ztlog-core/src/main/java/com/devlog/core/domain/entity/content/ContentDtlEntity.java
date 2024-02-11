@@ -1,6 +1,5 @@
 package com.devlog.core.domain.entity.content;
 
-import com.devlog.core.domain.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,11 +8,11 @@ import lombok.*;
 @ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "content_dtl")
-public class ContentDtlEntity extends BaseTimeEntity {
+@Table(name = "contents_dtl")
+public class ContentDtlEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CTNT_NO", nullable = false)
     private Long ctntNo;
 
@@ -34,5 +33,11 @@ public class ContentDtlEntity extends BaseTimeEntity {
 
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "CTNT_NO")
+    ContentEntity content;
+
 
 }

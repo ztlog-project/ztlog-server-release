@@ -1,11 +1,10 @@
 package com.devlog.api.controller.content;
 
 import com.devlog.api.service.content.ContentService;
-import com.devlog.api.service.content.dto.ContentInfoResDto;
+import com.devlog.api.service.content.dto.ContentResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.vo.Response;
-import com.devlog.core.config.exception.DataNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +52,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping(value = "/{ctntNo}")
-    public ResponseEntity<Response<ContentInfoResDto>> getContentInfo(@PathVariable Integer ctntNo) {
+    public ResponseEntity<Response<ContentResDto>> getContentInfo(@PathVariable Integer ctntNo) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentInfo(ctntNo));
     }
 

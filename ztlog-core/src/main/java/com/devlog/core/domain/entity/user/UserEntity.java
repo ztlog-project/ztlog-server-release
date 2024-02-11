@@ -13,7 +13,7 @@ import lombok.*;
 public class UserEntity extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_NO", nullable = false)
     private Long userNo;
 

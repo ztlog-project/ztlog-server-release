@@ -4,7 +4,7 @@ spring:
     group:
       "local": "local, common"
       "dev": "dev, common"
-      "prod": "prd, common"
+      "prd": "prd, common"
 
 ---
 
@@ -19,13 +19,10 @@ spring:
     open-in-view: false
     properties:
       hibernate.default_batch_fetch_size: 1000
-
-# local, dev, prod 공통 설정
 server:
   port: 8086
   servlet:
     context-path: '/front'
-
 springdoc:
   packages-to-scan: com.devlog.api.controller
   default-consumes-media-type: application/json;charset=UTF-8
@@ -82,6 +79,7 @@ spring:
 
 
 ---
+
 spring:
   config:
     activate:
