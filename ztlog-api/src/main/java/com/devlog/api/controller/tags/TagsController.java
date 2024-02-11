@@ -1,11 +1,21 @@
 package com.devlog.api.controller.tags;
 
+import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.api.service.tags.TagsService;
+import com.devlog.api.service.tags.dto.TagListResDto;
+import com.devlog.core.common.enumulation.ResponseStatusCode;
 import com.devlog.core.common.vo.Response;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "태그 컨트롤러", description = "태그 컨트롤러")
 @RestController
@@ -21,9 +31,13 @@ public class TagsController {
      * @return 태그 리스트
      */
     @Operation(summary = "태그 목록 조회", description = "태그 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagListResDto.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+    })
     @GetMapping(value = "/tags")
-    public @ResponseBody Response getTagsList() {
-        return new Response(tagsService.getTagsList());
+    public ResponseEntity<Response<List<TagListResDto>>> getTagsList() {
+        return Response.success(ResponseStatusCode.OK_SUCCESS, tagsService.getTagsList());
     }
 
     /**
@@ -34,12 +48,17 @@ public class TagsController {
      * @return 태그 게시물 리스트
      */
     @Operation(summary = "태그 게시물 목록 조회", description = "태그로 게시물 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+    })
     @GetMapping(value = "/tags/{tagNo}")
-    public @ResponseBody Response getTagsContentsList(
+    public ResponseEntity<Response<ContentListResDto>> getTagsContentsList(
             @PathVariable Integer tagNo,
             @RequestParam(value = "no", defaultValue = "1") Integer page
     ) {
-        return new Response(tagsService.getTagsContentsList(tagNo, page));
+        return Response.success(ResponseStatusCode.OK_SUCCESS, tagsService.getTagsContentsList(tagNo, page));
     }
 
 

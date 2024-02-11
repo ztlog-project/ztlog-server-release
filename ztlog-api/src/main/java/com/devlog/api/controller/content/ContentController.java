@@ -1,11 +1,19 @@
 package com.devlog.api.controller.content;
 
 import com.devlog.api.service.content.ContentService;
+import com.devlog.api.service.content.dto.ContentInfoResDto;
+import com.devlog.api.service.content.dto.ContentListResDto;
+import com.devlog.core.common.enumulation.ResponseStatusCode;
 import com.devlog.core.common.vo.Response;
 import com.devlog.core.config.exception.DataNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "컨텐츠 컨트롤러", description = "컨텐츠 컨트롤러")
@@ -23,9 +31,13 @@ public class ContentController {
      * @return 컨텐츠 리스트 반환
      */
     @Operation(summary = "컨텐츠 목록 조회", description = "컨텐츠 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+    })
     @GetMapping(value = "/contents")
-    public @ResponseBody Response getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
-        return new Response(contentService.getContentsList(page));
+    public ResponseEntity<Response<ContentListResDto>> getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
+        return Response.success(ResponseStatusCode.OK_SUCCESS, contentService.getContentsList(page));
     }
 
     /**
@@ -36,24 +48,34 @@ public class ContentController {
      * @throws DataNotFoundException 조회 오류 예외처리
      */
     @Operation(summary = "컨텐츠 상세 조회", description = "컨텐츠 상세 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+    })
     @GetMapping(value = "/content/{ctntNo}")
-    public @ResponseBody Response getContentInfo(@PathVariable Integer ctntNo) throws DataNotFoundException {
-        return new Response(contentService.getContentInfo(ctntNo));
+    public ResponseEntity<Response<ContentInfoResDto>> getContentInfo(@PathVariable Integer ctntNo) throws DataNotFoundException {
+        return Response.success(ResponseStatusCode.OK_SUCCESS, contentService.getContentInfo(ctntNo));
     }
 
     /**
      * 컨텐츠 검색하기
      *
      * @param param 검색 키워드
-     * @param page 페이지 번호 (기본값 = 1)
+     * @param page  페이지 번호 (기본값 = 1)
      * @return 검색한 키워드 관련 리스트 반환
      */
     @Operation(summary = "컨텐츠 검색", description = "컨텐츠 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseStatusCode.class)))
+    })
     @GetMapping(value = "/search")
-    public @ResponseBody Response searchContentsInfo(
+    public ResponseEntity<Response<ContentListResDto>> searchContentsInfo(
             @RequestParam(value = "param") String param,
             @RequestParam(value = "no", defaultValue = "1") Integer page
     ) {
-        return new Response(contentService.searchContentsInfo(param, page));
+        return Response.success(ResponseStatusCode.OK_SUCCESS, contentService.searchContentsInfo(param, page));
     }
 }

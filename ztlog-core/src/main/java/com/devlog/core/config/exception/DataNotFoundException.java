@@ -1,26 +1,15 @@
 package com.devlog.core.config.exception;
 
-import java.io.Serial;
+import com.devlog.core.common.enumulation.ResponseStatusCode;
 
-public class DataNotFoundException extends Exception {
+public class DataNotFoundException extends CoreException {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    public DataNotFoundException(int key) {
-        super(String.valueOf(key));
+    public DataNotFoundException(String message, ResponseStatusCode code) {
+        super(message, code);
     }
 
-    public DataNotFoundException(String id) {
-        super(id);
-    }
-
-    public DataNotFoundException(Throwable cause) {
-        super(cause);
-    }
-
-    public DataNotFoundException(String id, Throwable cause) {
-        super(id, cause);
+    public DataNotFoundException(String message) {
+        super(message, ResponseStatusCode.RESOURCE_NOT_FOUND);
     }
 
 }

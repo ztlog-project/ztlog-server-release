@@ -15,7 +15,7 @@ public class TagsVo implements Serializable {
     @Serial
     private static final long serialVersionUID = 6566928760535799829L;
 
-    private Long tag_no;
+    private Long tagNo;
 
     private String tagName;
 

@@ -8,8 +8,18 @@ import java.util.List;
 @Mapper
 public interface TagsMapper {
 
+    TagsVo selectTagsByNo(Long tagsNo);
+
+    TagsVo selectTagsByName(String tagName);
+
     List<TagsVo> selectTagsList();
 
+    void insertTagsMaster(TagsVo tagsVo);
+
+    void updateTagsMaster(TagsVo tagsVo);
+
     void deleteContentTags(Long ctntNo);
+
+    void deleteTagsMaster(Long tagNo);
 
 }

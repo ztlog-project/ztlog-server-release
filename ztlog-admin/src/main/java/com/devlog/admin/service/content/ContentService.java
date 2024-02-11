@@ -8,6 +8,8 @@ import com.devlog.admin.mapper.TagsMapper;
 import com.devlog.admin.vo.content.ContentSearchVo;
 import com.devlog.admin.vo.content.ContentVo;
 import com.devlog.core.common.constants.CommonConstants;
+import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.config.exception.CoreException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -55,15 +57,15 @@ public class ContentService {
      *
      * @param ctntNo 컨텐츠 번호
      * @return 컨텐츠 객체
-     * @throws DataNotFoundException 조회 오류 예외처리
+     * @throws CoreException 조회 오류 예외처리
      */
-    public ContentListResDto getContentInfo(Long ctntNo) throws DataNotFoundException {
+    public ContentInfoResDto getContentInfo(Long ctntNo){
         ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
         if (ObjectUtils.isEmpty(vo)) {
-            throw  new DataNotFoundException(CommonConstants.BAD_REQUEST);
+            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
         }
 
-        ContentListResDto resDto = ContentListResDto.builder().build();
+        ContentInfoResDto resDto = ContentInfoResDto.builder().build();
         BeanUtils.copyProperties(vo, resDto);
 
         return resDto;
@@ -71,7 +73,7 @@ public class ContentService {
 
     /**
      * 컨텐츠 등록하기
-     * 
+     *
      * @param reqVo 컨텐츠 요청 객체
      */
     public void createContentInfo(ContentInfoReqDto reqVo) {
@@ -93,12 +95,12 @@ public class ContentService {
      * 컨텐츠 수정하기
      *
      * @param reqVo 컨텐츠 요청 객체
-     * @throws DataNotFoundException 조회 오류 예외처리
+     * @throws CoreException 조회 오류 예외처리
      */
-    public void updateContentInfo(ContentInfoReqDto reqVo) throws DataNotFoundException {
+    public void updateContentInfo(ContentInfoReqDto reqVo) {
         ContentVo vo = this.contentMapper.selectContentByCtntNo(reqVo.getCtntNo());
         if (ObjectUtils.isEmpty(vo)) {
-            throw  new DataNotFoundException(CommonConstants.BAD_REQUEST);
+            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
         }
 
         vo.setCtntTitle(reqVo.getCtntTitle());
@@ -114,13 +116,13 @@ public class ContentService {
      * 컨텐츠 삭제하기
      *
      * @param ctntNo 컨텐츠 번호
-     * @throws DataNotFoundException 조회 오류 예외처리
+     * @throws CoreException 조회 오류 예외처리
      */
-    public void deleteContentInfo(Long ctntNo) throws DataNotFoundException {
+    public void deleteContentInfo(Long ctntNo)  {
         // check content exist
         ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
         if (ObjectUtils.isEmpty(vo)) {
-            throw  new DataNotFoundException(CommonConstants.BAD_REQUEST);
+            throw new DataNotFoundException(ResponseStatusCode.RESOURCE_NOT_FOUND.getMessage());
         }
 
         // contents delete
@@ -128,6 +130,6 @@ public class ContentService {
         this.contentMapper.deleteContentDetail(ctntNo);
 
         // tag delete
-        this.tagMapper.deleteContentTags(ctntNo);
+//        this.tagMapper.deleteContentTags(ctntNo);
     }
 }

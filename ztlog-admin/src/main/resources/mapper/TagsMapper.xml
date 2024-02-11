@@ -2,16 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devlog.admin.mapper.TagsMapper">
 
-    <select id="selectTagsList" resultType="tags.TagsVo">
-        SELECT tm.TAG_NO , tm.TAG_NAME, COUNT(ct.CTNT_NO) AS TAG_CNT
+    <select id="selectTagsByNo" parameterType="tags.TagsVo" resultType="tags.TagsVo">
+        SELECT tm.TAG_NO, tm.TAG_NAME
         FROM tags_mst tm
-        INNER JOIN contents_tags ct ON tm.TAG_NO = ct.TAG_NO
+        WHERE tm.TAG_NAME = #{tagNo}
+    </select>
+
+    <select id="selectTagsByName" parameterType="String" resultType="tags.TagsVo">
+        SELECT tm.TAG_NO, tm.TAG_NAME
+        FROM tags_mst tm
+        WHERE tm.TAG_NAME = #{tagName}
+    </select>
+
+    <select id="selectTagsList" resultType="tags.TagsVo">
+        SELECT tm.TAG_NO, tm.TAG_NAME, COUNT(ct.CTNT_NO) AS TAG_CNT
+        FROM tags_mst tm
+                 INNER JOIN contents_tags ct ON tm.TAG_NO = ct.TAG_NO
         GROUP BY tm.TAG_NO
     </select>
 
+    <insert id="insertTagsMaster" parameterType="tags.TagsVo">
+        INSERT INTO tags_mst
+            (TAG_NO, TAG_NAME)
+        VALUES (#{tagNo}, #{tagName})
+    </insert>
+
+    <update id="updateTagsMaster" parameterType="tags.TagsVo">
+        UPDATE tags_mst
+        SET TAG_NAME = #{tagName}
+        WHERE TAG_NO = #{tagNo}
+    </update>
+
     <delete id="deleteContentTags" parameterType="Long">
-        DELETE FROM contents_tags
+        DELETE
+        FROM contents_tags
         WHERE CTNT_NO = #{ctntNo}
+    </delete>
+
+    <delete id="deleteTagsMaster" parameterType="Long">
+        DELETE
+        FROM contents_tags
+        WHERE TAG_NO = #{tagNo}
     </delete>
 
 </mapper>

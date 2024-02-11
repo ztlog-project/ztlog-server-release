@@ -1,12 +1,17 @@
 package com.devlog.admin.controller.user;
 
 import com.devlog.admin.dto.user.request.SignupReqDto;
+import com.devlog.admin.dto.user.response.UserInfoResDto;
 import com.devlog.admin.service.user.UserService;
+import com.devlog.core.common.enumulation.ResponseStatusCode;
 import com.devlog.core.common.vo.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.devlog.admin.dto.user.request.LoginReqDto;
 
@@ -25,9 +30,9 @@ public class UserController {
      */
     @Operation(summary = "유저 정보 조회", description = "유저 정보 조회")
     @GetMapping(value = "/info")
-    public @ResponseBody Response getUserInfo() {
+    public ResponseEntity<Response<UserInfoResDto>> getUserInfo() {
         // TODO : 테스트용 api -> 추후 삭제 or 수정 요망
-        return new Response(userService.getUserInfo(1L));
+        return Response.success(ResponseStatusCode.OK_SUCCESS, userService.getUserInfo(1L));
     }
 
     /**
@@ -38,9 +43,9 @@ public class UserController {
      */
     @Operation(summary = "회원가입하기", description = "회원가입하기")
     @PostMapping(value = "/signup")
-    public @ResponseBody Response signupUser(@RequestBody @Valid SignupReqDto reqDto) {
-        this.userService.signupUser(reqDto);
-        return new Response();
+    public ResponseEntity<Response<String>> signupUser(@RequestBody @Valid SignupReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+        userService.signupUser(reqDto);
+        return Response.success(ResponseStatusCode.CREATED_SUCCESS);
     }
 
     /**
@@ -51,9 +56,9 @@ public class UserController {
      */
     @Operation(summary = "로그인하기", description = "로그인하기")
     @PostMapping(value = "/login")
-    public @ResponseBody Response loginUser(@RequestBody @Valid LoginReqDto reqDto) {
-        this.userService.loginUser(reqDto);
-        return new Response();
+    public ResponseEntity<Response<String>> loginUser(@RequestBody @Valid LoginReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+        userService.loginUser(reqDto);
+        return Response.success(ResponseStatusCode.OK_SUCCESS);
     }
 
     /**
@@ -63,9 +68,9 @@ public class UserController {
      */
     @Operation(summary = "로그아웃하기", description = "로그아웃하기")
     @PostMapping(value = "/logout")
-    public @ResponseBody Response logoutUser() {
-        this.userService.logoutUser();
-        return new Response();
+    public ResponseEntity<Response<String>> logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        userService.logoutUser();
+        return Response.success(ResponseStatusCode.OK_SUCCESS);
     }
 
 }

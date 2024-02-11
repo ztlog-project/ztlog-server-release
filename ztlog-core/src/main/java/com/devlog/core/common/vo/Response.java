@@ -1,37 +1,49 @@
 package com.devlog.core.common.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import com.devlog.core.common.enumulation.ResponseStatusCode;
+import com.devlog.core.common.enumulation.ResponseResultCode;
+import lombok.*;
+import org.springframework.http.ResponseEntity;
 
 @Getter
-@Setter
-@Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Response {
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class Response<T> {
 
-    private int code = 200;
-    private Object message = "Success";
-    private Object result;
+    private int status;
+    private ResponseResultCode code;
+    private String message;
+    private T data;
 
-    public Response() {}
-
-    public Response(Object result) {
-        this.result = result;
-    }
-
-    public Response(int code, Object message) {
+    public Response(int status, ResponseResultCode code, String message) {
+        this.status = status;
         this.code = code;
         this.message = message;
     }
 
-    public Response(int code, Object message, Object result) {
-        this.code = code;
-        this.message = message;
-        this.result = result;
+    public static <T> ResponseEntity<Response<T>> success(ResponseStatusCode code) {
+        return ResponseEntity
+                .status(code.getStatus())
+                .body(new Response<>(code.getStatus(), ResponseResultCode.SUCCESS, code.getMessage()));
+    }
+
+    public static <T> ResponseEntity<Response<T>> success(ResponseStatusCode code, T data) {
+        return ResponseEntity
+                .status(code.getStatus())
+                .body(new Response<>(code.getStatus(), ResponseResultCode.SUCCESS, code.getMessage(), data));
+    }
+
+    public static <T> ResponseEntity<Response<T>> error(ResponseStatusCode code) {
+        return ResponseEntity
+                .status(code.getStatus())
+                .body(new Response<>(code.getStatus(), ResponseResultCode.FAIL, code.getMessage()));
+    }
+
+    public static <T> ResponseEntity<Response<T>> error(ResponseStatusCode code, String message) {
+        return ResponseEntity
+                .status(code.getStatus())
+                .body(new Response<>(code.getStatus(), ResponseResultCode.FAIL, message));
     }
 }
 

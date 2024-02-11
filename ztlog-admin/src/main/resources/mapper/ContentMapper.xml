@@ -30,12 +30,14 @@
     </update>
 
     <delete id="deleteContentMaster" parameterType="Long">
-        DELETE FROM content_mst
+        DELETE
+        FROM content_mst
         WHERE CTNT_NO = #{ctntNp}
     </delete>
 
     <delete id="deleteContentDetail" parameterType="Long">
-        DELETE FROM content_dtl
+        DELETE
+        FROM content_dtl
         WHERE CTNT_NO = #{ctntNp}
     </delete>
 
