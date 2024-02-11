@@ -17,10 +17,10 @@ public class ContentDtlEntity extends BaseTimeEntity {
     @Column(name = "CTNT_NO", nullable = false)
     private Long ctntNo;
 
-    @Column(name = "CTNT_TITLE")
+    @Column(name = "CTNT_TITLE", nullable = false)
     private String ctntTitle;
 
-    @Column(name = "CTNT_BODY")
+    @Column(name = "CTNT_BODY", nullable = false)
     private String ctntBody;
 
     @Column(name = "CTNT_PATH")
@@ -32,7 +32,7 @@ public class ContentDtlEntity extends BaseTimeEntity {
     @Column(name = "CTNT_EXT")
     private String ctntExt;
 
-    @Column(name = "INP_USER")
+    @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
 

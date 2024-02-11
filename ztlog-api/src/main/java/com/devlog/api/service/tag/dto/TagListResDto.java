@@ -1,4 +1,4 @@
-package com.devlog.api.service.tags.dto;
+package com.devlog.api.service.tag.dto;
 
 import lombok.Builder;
 import lombok.Getter;

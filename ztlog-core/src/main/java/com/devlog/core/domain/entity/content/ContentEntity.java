@@ -17,13 +17,13 @@ public class ContentEntity extends BaseTimeEntity {
     @Column(name = "CTNT_NO", nullable = false)
     private Long ctntNo;
 
-    @Column(name = "CTNT_TITLE")
+    @Column(name = "CTNT_TITLE", nullable = false)
     private String ctntTitle;
 
-    @Column(name = "CTNT_SUBTITLE")
+    @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
 
-    @Column(name = "INP_USER")
+    @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
 

@@ -1,5 +1,7 @@
 package com.devlog.core.domain.entity;
 
+import com.devlog.core.common.constants.CommonConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,11 +19,13 @@ import java.time.LocalDateTime;
 public class BaseTimeEntity {
 
     @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
     @Column(name = "INP_DTTM", nullable = false, updatable = false)
     private LocalDateTime inpDttm;
 
     @LastModifiedDate
-    @Column(name = "UPD_DTTM")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
+    @Column(name = "UPD_DTTM", nullable = false)
     private LocalDateTime updDttm;
 
 }

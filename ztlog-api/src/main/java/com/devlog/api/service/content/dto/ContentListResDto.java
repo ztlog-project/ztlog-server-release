@@ -34,6 +34,7 @@ public class ContentListResDto implements Serializable {
         private Long ctntNo;
         private String ctntTitle;
         private String ctntSubTitle;
+        private String thumbnails;
         private String inpUser;
         private String inpDttm;
         private String updDttm;

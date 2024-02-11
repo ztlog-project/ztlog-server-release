@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "컨텐츠 컨트롤러", description = "컨텐츠 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "/api/v1/contents")
 public class ContentController {
 
     private final ContentService contentService;
@@ -33,9 +33,9 @@ public class ContentController {
     @Operation(summary = "컨텐츠 목록 조회", description = "컨텐츠 목록 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),
-            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+            @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/contents")
+    @GetMapping
     public ResponseEntity<Response<ContentListResDto>> getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentsList(page));
     }
@@ -45,7 +45,6 @@ public class ContentController {
      *
      * @param ctntNo 컨텐츠 번호
      * @return 컨텐츠 반환
-     * @throws DataNotFoundException 조회 오류 예외처리
      */
     @Operation(summary = "컨텐츠 상세 조회", description = "컨텐츠 상세 조회")
     @ApiResponses(value = {
@@ -53,8 +52,8 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/content/{ctntNo}")
-    public ResponseEntity<Response<ContentInfoResDto>> getContentInfo(@PathVariable Integer ctntNo) throws DataNotFoundException {
+    @GetMapping(value = "/{ctntNo}")
+    public ResponseEntity<Response<ContentInfoResDto>> getContentInfo(@PathVariable Integer ctntNo) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentInfo(ctntNo));
     }
 

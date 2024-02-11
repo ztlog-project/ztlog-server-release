@@ -15,7 +15,7 @@ public class FileEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "FILE_NO", nullable = false)
-    private Long file_no;
+    private Long fileNo;
 
     @Column(name = "FILE_PATH")
     private String filePath;

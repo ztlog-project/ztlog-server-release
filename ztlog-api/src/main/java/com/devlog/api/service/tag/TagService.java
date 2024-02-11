@@ -1,11 +1,11 @@
-package com.devlog.api.service.tags;
+package com.devlog.api.service.tag;
 
 import com.devlog.api.service.content.dto.ContentListResDto;
-import com.devlog.api.service.tags.dto.TagListResDto;
+import com.devlog.api.service.tag.dto.TagListResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.domain.entity.content.ContentEntity;
 import com.devlog.core.domain.repository.content.ContentTagRepository;
-import com.devlog.core.domain.repository.tags.TagsRepository;
+import com.devlog.core.domain.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -19,9 +19,9 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TagsService {
+public class TagService {
 
-    private final TagsRepository tagsRepository;
+    private final TagRepository tagRepository;
 
     private final ContentTagRepository contentTagRepository;
 
@@ -33,9 +33,9 @@ public class TagsService {
     public List<TagListResDto> getTagsList() {
         List<TagListResDto> list = new ArrayList<>();
 
-        while (this.tagsRepository.findAll().iterator().hasNext()) {
+        while (this.tagRepository.findAll().iterator().hasNext()) {
             final var dto = TagListResDto.builder().build();
-            BeanUtils.copyProperties(this.tagsRepository.findAll().iterator().next(), dto);
+            BeanUtils.copyProperties(this.tagRepository.findAll().iterator().next(), dto);
             list.add(dto);
         }
         return list;
@@ -48,7 +48,7 @@ public class TagsService {
      * @param page  페이지 번호 (기본값 = 1)
      * @return 태그 게시물 리스트
      */
-    public ContentListResDto getTagsContentsList(Integer tagNo, Integer page) {
+    public ContentListResDto getTagsSearchList(Integer tagNo, Integer page) {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 

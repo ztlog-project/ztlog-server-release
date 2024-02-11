@@ -43,9 +43,18 @@ public class ContentService {
         Pageable pageable = PageRequest.of(page, CommonConstants.PAGE_SIZE);
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 
+        //
         Page<ContentEntity> contentEntityPage = this.contentRepository.findAll(pageable);
 
-        return getContentMainList(list, contentEntityPage);
+        for (ContentEntity entity : contentEntityPage.stream().toList()) {
+            final var dto = ContentListResDto.ContentMainDto.builder().build();
+            BeanUtils.copyProperties(entity, dto);
+            dto.setTags(this.contentTagRepository.findTagNameListByCtntNo(entity.getCtntNo()));
+
+            list.add(dto);
+        }
+
+        return new ContentListResDto(list, contentEntityPage.getTotalElements());
     }
 
     /**
@@ -78,7 +87,15 @@ public class ContentService {
 
         Page<ContentEntity> contentEntityPage = this.contentRepository.findAllByCtntTitleContaining(param, pageable);
 
-        return getContentMainList(list, contentEntityPage);
+        for (ContentEntity entity : contentEntityPage.stream().toList()) {
+            final var dto = ContentListResDto.ContentMainDto.builder().build();
+            BeanUtils.copyProperties(entity, dto);
+            dto.setTags(this.contentTagRepository.findTagNameListByCtntNo(entity.getCtntNo()));
+
+            list.add(dto);
+        }
+
+        return new ContentListResDto(list, contentEntityPage.getTotalElements());
     }
 
     /**

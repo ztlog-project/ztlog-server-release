@@ -15,12 +15,12 @@ public class ContentTagsEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "TAG_NO", nullable = false)
-    private Long tag_no;
+    private Long tagNo;
 
-    @Column(name = "SORT")
+    @Column(name = "SORT", nullable = false)
     private Integer sort;
 
-    @Column(name = "ctnt_no")
+    @Column(name = "ctnt_no", nullable = false)
     private Long ctntNo;
 
 }
