@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "content")
+@Table(name = "content_mst")
 public class ContentEntity extends BaseTimeEntity {
 
     @Id

@@ -35,5 +35,4 @@ public class ContentDtlEntity extends BaseTimeEntity {
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
-
 }
