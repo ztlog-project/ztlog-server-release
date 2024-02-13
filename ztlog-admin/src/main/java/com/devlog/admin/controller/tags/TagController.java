@@ -1,8 +1,8 @@
 package com.devlog.admin.controller.tags;
 
-import com.devlog.admin.dto.tag.request.TagsInfoReqDto;
-import com.devlog.admin.dto.tag.response.TagResDto;
-import com.devlog.admin.service.tags.TagsService;
+import com.devlog.admin.service.tags.dto.TagReqDto;
+import com.devlog.admin.service.tags.dto.TagResDto;
+import com.devlog.admin.service.tags.TagService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,9 +21,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1")
-public class TagsController {
+public class TagController {
 
-    private final TagsService tagsService;
+    private final TagService tagService;
 
     /**
      * 태그 목록 조회하기
@@ -38,7 +38,7 @@ public class TagsController {
     })
     @GetMapping(value = "/tags")
     public ResponseEntity<Response<List<TagResDto>>> getTagsList() {
-        return Response.success(ResponseCode.OK_SUCCESS, tagsService.getTagsList());
+        return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagsList());
     }
 
     /**
@@ -53,8 +53,8 @@ public class TagsController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping(value = "/tag")
-    public ResponseEntity<Response<String>> createTagsInfo(@RequestBody TagsInfoReqDto reqDto) {
-        tagsService.createTagsInfo(reqDto);
+    public ResponseEntity<Response<String>> createTagsInfo(@RequestBody TagReqDto reqDto) {
+        tagService.createTagsInfo(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 
@@ -71,8 +71,8 @@ public class TagsController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping(value = "/tag")
-    public ResponseEntity<Response<String>> updateTagsInfo(@RequestBody TagsInfoReqDto reqDto) {
-        tagsService.updateTagsInfo(reqDto);
+    public ResponseEntity<Response<String>> updateTagsInfo(@RequestBody TagReqDto reqDto) {
+        tagService.updateTagsInfo(reqDto);
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 
@@ -90,7 +90,7 @@ public class TagsController {
     })
     @DeleteMapping(value = "/tags/{tagsNo}")
     public ResponseEntity<Response<String>> deleteTagsInfo(@PathVariable Long tagsNo) {
-        tagsService.deleteTagsInfo(tagsNo);
+        tagService.deleteTagsInfo(tagsNo);
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 

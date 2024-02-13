@@ -1,4 +1,4 @@
-package com.devlog.admin.service.content.dto.response;
+package com.devlog.admin.service.content.dto;
 
 import com.devlog.core.common.constants.CommonConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;

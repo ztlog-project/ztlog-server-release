@@ -1,4 +1,4 @@
-package com.devlog.admin.service.content.dto.request;
+package com.devlog.admin.service.content.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 @Builder
-public class ContentInfoReqDto implements Serializable {
+public class ContentReqDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 9080199739318840233L;

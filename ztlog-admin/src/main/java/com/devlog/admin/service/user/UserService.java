@@ -1,12 +1,10 @@
 package com.devlog.admin.service.user;
 
-import com.devlog.admin.dto.user.request.LoginReqDto;
-import com.devlog.admin.dto.user.request.SignupReqDto;
-import com.devlog.admin.dto.user.response.UserInfoResDto;
-import com.devlog.admin.mapper.UserMapper;
-import com.devlog.admin.vo.user.UserVo;
+import com.devlog.admin.service.user.dto.request.LoginReqDto;
+import com.devlog.admin.service.user.dto.request.SignupReqDto;
+import com.devlog.admin.service.user.dto.response.UserInfoResDto;
+import com.devlog.core.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserMapper userMapper;
+    private final UserRepository userRepository;
+
 
     /**
      * 유저 정보 조회하기
@@ -24,11 +23,8 @@ public class UserService {
      * @return 유저 정보
      */
     public UserInfoResDto getUserInfo(Long userNo) {
-        UserVo userVo = this.userMapper.selectUserByNo(userNo);
 
-        UserInfoResDto resDto = UserInfoResDto.builder().build();
-        BeanUtils.copyProperties(userVo, resDto);
-        return resDto;
+        return null;
     }
 
     public void signupUser(SignupReqDto reqDto) {

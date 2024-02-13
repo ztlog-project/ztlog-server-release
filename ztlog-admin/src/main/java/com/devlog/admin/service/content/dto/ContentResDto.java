@@ -1,6 +1,6 @@
-package com.devlog.admin.service.content.dto.response;
+package com.devlog.admin.service.content.dto;
 
-import com.devlog.admin.dto.tag.response.TagResDto;
+import com.devlog.admin.service.tags.dto.TagResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package com.devlog.admin.dto.user.response;
+package com.devlog.admin.service.user.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,16 +12,17 @@ import java.io.Serializable;
 @Setter
 @ToString
 @Builder
-public class UserInfoResDto implements Serializable {
+public class LoginReqDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 3352408126115467024L;
+    private static final long serialVersionUID = -4963635693182734520L;
 
     private Long userNo;
 
     private String username;
 
-    private String grant;
+    private String password;
 
+    private String grant;
 
 }

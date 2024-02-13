@@ -1,14 +1,13 @@
 package com.devlog.admin.service.content;
 
-import com.devlog.admin.service.content.dto.request.ContentInfoReqDto;
-import com.devlog.admin.service.content.dto.response.ContentResDto;
-import com.devlog.admin.service.content.dto.response.ContentListResDto;
-import com.devlog.admin.dto.tag.response.TagResDto;
+import com.devlog.admin.service.content.dto.ContentReqDto;
+import com.devlog.admin.service.content.dto.ContentResDto;
+import com.devlog.admin.service.content.dto.ContentListResDto;
+import com.devlog.admin.service.tags.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
-import com.devlog.core.config.exception.CoreException;
 import com.devlog.core.config.exception.DataNotFoundException;
-import com.devlog.core.entity.content.ContentEntity;
+import com.devlog.core.entity.content.Content;
 import com.devlog.core.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,16 +40,16 @@ public class ContentService {
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 
         // select content list
-        Page<ContentEntity> contentEntityPage = contentRepository.findAll(PageUtils.getPageable(page));
+        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page));
 
         // setting content entity -> dto list
-        contentEntityPage.getContent().forEach(content -> {
+        contentPage.getContent().forEach(content -> {
             final var dto = ContentListResDto.ContentMainDto.builder().build();
             BeanUtils.copyProperties(content, dto);
             list.add(dto);
         });
 
-        return new ContentListResDto(list, Long.valueOf(contentEntityPage.getTotalElements()).intValue());
+        return new ContentListResDto(list, Long.valueOf(contentPage.getTotalElements()).intValue());
     }
 
     /**
@@ -60,7 +59,7 @@ public class ContentService {
      * @return 컨텐츠 객체
      */
     public ContentResDto getContentDetail(Long ctntNo){
-        ContentEntity content = contentRepository.findById(Long.valueOf(ctntNo))
+        Content content = contentRepository.findById(Long.valueOf(ctntNo))
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
         final var dto = ContentResDto.builder().build();
@@ -83,7 +82,7 @@ public class ContentService {
      *
      * @param reqVo 컨텐츠 요청 객체
      */
-    public void saveContentDetail(ContentInfoReqDto reqVo) {
+    public void saveContentDetail(ContentReqDto reqVo) {
 
         /*
 
@@ -125,7 +124,6 @@ public class ContentService {
      * 컨텐츠 삭제하기
      *
      * @param ctntNo 컨텐츠 번호
-     * @throws CoreException 조회 오류 예외처리
      */
     public void deleteContentDetail(Long ctntNo)  {
 

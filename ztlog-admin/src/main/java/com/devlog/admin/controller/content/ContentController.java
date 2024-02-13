@@ -1,8 +1,8 @@
 package com.devlog.admin.controller.content;
 
-import com.devlog.admin.service.content.dto.request.ContentInfoReqDto;
-import com.devlog.admin.service.content.dto.response.ContentResDto;
-import com.devlog.admin.service.content.dto.response.ContentListResDto;
+import com.devlog.admin.service.content.dto.ContentReqDto;
+import com.devlog.admin.service.content.dto.ContentResDto;
+import com.devlog.admin.service.content.dto.ContentListResDto;
 import com.devlog.admin.service.content.ContentService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
@@ -71,7 +71,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping(value = "/contents")
-    public ResponseEntity<Response<String>> saveContentDetail(@RequestBody ContentInfoReqDto reqVo) {
+    public ResponseEntity<Response<String>> saveContentDetail(@RequestBody ContentReqDto reqVo) {
         contentService.saveContentDetail(reqVo);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }

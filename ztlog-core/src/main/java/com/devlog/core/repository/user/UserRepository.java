@@ -1,13 +1,13 @@
 package com.devlog.core.repository.user;
 
-import com.devlog.core.entity.user.UserEntity;
+import com.devlog.core.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    UserEntity findByUserNo(Long userNo);
+    User findByUserNo(Long userNo);
 
-    UserEntity findByUsername(String username);
+    User findByUsername(String username);
 }

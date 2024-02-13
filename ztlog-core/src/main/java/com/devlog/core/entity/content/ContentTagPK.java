@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContentTagsPKEntity implements Serializable {
+public class ContentTagPK implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5120626339046399508L;

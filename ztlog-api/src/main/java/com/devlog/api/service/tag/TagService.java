@@ -6,7 +6,7 @@ import com.devlog.api.service.tag.dto.TagListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
-import com.devlog.core.entity.tag.TagEntity;
+import com.devlog.core.entity.tag.Tag;
 import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,11 +57,11 @@ public class TagService {
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 
         // select tag entity
-        TagEntity tagEntity = tagRepository.findById(Long.valueOf(tagNo))
+        Tag tag = tagRepository.findById(Long.valueOf(tagNo))
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
         // content entity -> dto
-        tagEntity.getContentTags().stream()
+        tag.getContentTags().stream()
                 .map(contentTags -> contentRepository.findById(contentTags.getContents().getCtntNo())
                         .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()))
                 ).forEach(content -> {

@@ -1,4 +1,4 @@
-package com.devlog.admin.dto.tag.response;
+package com.devlog.admin.service.tags.dto;
 
 import lombok.Builder;
 import lombok.Getter;

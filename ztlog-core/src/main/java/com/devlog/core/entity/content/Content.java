@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Table(name = "contents_mst")
-public class ContentEntity extends BaseTimeEntity {
+public class Content extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +32,10 @@ public class ContentEntity extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private ContentDtlEntity contentDetail;
+    private ContentDetail contentDetail;
 
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL)
     @OrderBy("sort asc")
-    List<ContentTagsEntity> contentTags = new ArrayList<>();
+    List<ContentTag> contentTags = new ArrayList<>();
 
 }

@@ -1,6 +1,6 @@
 package com.devlog.core.entity.tag;
 
-import com.devlog.core.entity.content.ContentTagsEntity;
+import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tags_mst")
-public class TagEntity extends BaseTimeEntity {
+public class Tag extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,6 @@ public class TagEntity extends BaseTimeEntity {
     private String tagName;
 
     @OneToMany(mappedBy = "tags", cascade = CascadeType.ALL)
-    List<ContentTagsEntity> contentTags = new ArrayList<>();
+    List<ContentTag> contentTags = new ArrayList<>();
 
 }

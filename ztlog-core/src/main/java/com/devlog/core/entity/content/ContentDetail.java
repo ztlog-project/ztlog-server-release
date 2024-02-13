@@ -9,7 +9,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "contents_dtl")
-public class ContentDtlEntity {
+public class ContentDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public class ContentDtlEntity {
     @OneToOne
     @MapsId
     @JoinColumn(name = "CTNT_NO")
-    ContentEntity content;
+    Content content;
 
 
 }

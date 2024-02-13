@@ -1,6 +1,6 @@
 package com.devlog.core.entity.content;
 
-import com.devlog.core.entity.tag.TagEntity;
+import com.devlog.core.entity.tag.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,14 +8,14 @@ import lombok.*;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@IdClass(ContentTagsPKEntity.class)
+@IdClass(ContentTagPK.class)
 @Table(name = "contents_tags")
-public class ContentTagsEntity {
+public class ContentTag {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TAG_NO")
-    private TagEntity tags;
+    private Tag tags;
 
     @Column(name = "SORT", nullable = false)
     private Integer sort;
@@ -23,6 +23,6 @@ public class ContentTagsEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CTNT_NO", nullable = false)
-    private ContentEntity contents;
+    private Content contents;
 
 }
