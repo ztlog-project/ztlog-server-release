@@ -22,7 +22,7 @@ public class UserController {
     @Operation(summary = "유저 정보 조회", description = "유저 정보 조회")
     @GetMapping(value = "/info")
     public ResponseEntity<Response<UserInfoResDto>> getUserInfo() {
-        return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(CommonConstants.ADMIN));
+        return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(CommonConstants.ADMIN_NAME));
     }
 
 }

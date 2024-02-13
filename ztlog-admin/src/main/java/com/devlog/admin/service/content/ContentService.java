@@ -80,7 +80,7 @@ public class ContentService {
         BeanUtils.copyProperties(reqVo, vo);
 
         // vo setting
-        vo.setInpUser(CommonConstants.ADMIN);
+        vo.setInpUser(CommonConstants.ADMIN_NAME);
         vo.setInpDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
         vo.setUpdDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
 
