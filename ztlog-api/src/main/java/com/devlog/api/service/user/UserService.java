@@ -1,6 +1,6 @@
 package com.devlog.api.service.user;
 
-import com.devlog.api.service.user.dto.UserInfoResDto;
+import com.devlog.api.service.user.dto.UserResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.user.User;
@@ -18,13 +18,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserInfoResDto getUserInfo(String userName) {
+    public UserResDto getUserInfo(String userName) {
         User user = userRepository.findByUsername(userName);
         if (ObjectUtils.isEmpty(user)) {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
-        UserInfoResDto resDto = UserInfoResDto.builder().build();
+        UserResDto resDto = UserResDto.builder().build();
         BeanUtils.copyProperties(user, resDto);
         return resDto;
     }

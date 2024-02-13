@@ -36,11 +36,8 @@ public class ContentService {
      * @return 컨텐츠 리스트 반환
      */
     public ContentListResDto getContentsList(int page) {
-        List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
-        // select content list
         Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page));
-        // setting content entity -> dto list
-        return getContentListToResDto(list, contentPage);
+        return ContentListResDto.of(contentPage.getContent());
     }
 
     /**
@@ -52,20 +49,7 @@ public class ContentService {
     public ContentResDto getContentsDetail(Integer ctntNo) {
         Content content = contentRepository.findById(Long.valueOf(ctntNo))
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
-
-        final var dto = ContentResDto.builder().build();
-        BeanUtils.copyProperties(content, dto);
-
-        // setting content tags
-        List<TagResDto> tags = content.getContentTags()
-                .stream().map(contentTags -> TagResDto.builder()
-                        .tagNo(contentTags.getTags().getTagNo())
-                        .tagName(contentTags.getTags().getTagName())
-                        .build()
-                ).collect(Collectors.toList());
-        dto.setTags(tags);
-
-        return dto;
+        return ContentResDto.of(content);
     }
 
     /**
@@ -76,33 +60,8 @@ public class ContentService {
      * @return 검색한 키워드 관련 리스트 반환
      */
     public ContentListResDto searchContentList(String param, int page) {
-        List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
-        // select content list
         Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, PageUtils.getPageable(page));
-        // setting content entity -> dto list
-        return getContentListToResDto(list, contentPage);
-    }
-
-    @NotNull
-    private ContentListResDto getContentListToResDto(List<ContentListResDto.ContentMainDto> list, Page<Content> contentEntityPage) {
-        // extract method : get lst
-        for (Content content : contentEntityPage.getContent()) {
-            final var dto = ContentListResDto.ContentMainDto.builder().build();
-            BeanUtils.copyProperties(content, dto);
-
-            List<TagResDto> tags = new ArrayList<>();
-            for (ContentTag contentTag : content.getContentTags()) {
-                TagResDto build = TagResDto.builder()
-                        .tagNo(contentTag.getTags().getTagNo())
-                        .tagName(contentTag.getTags().getTagName())
-                        .build();
-                tags.add(build);
-            }
-            dto.setTags(tags);
-            list.add(dto);
-        }
-
-        return new ContentListResDto(list, Long.valueOf(contentEntityPage.getTotalElements()).intValue());
+        return ContentListResDto.of(contentPage.getContent());
     }
 
 }

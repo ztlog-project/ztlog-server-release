@@ -2,46 +2,45 @@ package com.devlog.api.service.content.dto;
 
 import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.constants.CommonConstants;
+import com.devlog.core.entity.content.Content;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Setter
+import static java.util.stream.Collectors.toList;
+
 @Getter
 @ToString
-@Builder
-public class ContentResDto implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -960846485183605173L;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+public class ContentResDto {
 
     @Schema(description = "게시물 번호")
     private Long ctntNo;
 
     @Schema(description = "게시물 제목")
     @Size(max = CommonConstants.CONTENT_TITLE_SIZE, message = "content title length is too long!!")
-    private String ctntTitle;
+    private String title;
 
     @Schema(description = "게시물 내용")
-    private String ctntBody;
+    private String body;
+
+    @Schema(description = "게시물 태그 목록")
+    private List<TagResDto> tags;
 
     @Schema(description = "게시물 경로")
-    private String ctntPath;
+    private String path;
 
     @Schema(description = "게시물 이름")
-    private String ctntName;
+    private String name;
 
     @Schema(description = "게시물 파일 확장자")
-    private String ctntExt;
+    private String ext;
 
     @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
     private String inpUser;
@@ -54,6 +53,19 @@ public class ContentResDto implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
     private LocalDateTime updDttm;
 
-    @Schema(description = "게시물 태그 목록")
-    private List<TagResDto> tags;
+    public static ContentResDto of(Content content) {
+        return ContentResDto.builder()
+                .ctntNo(content.getCtntNo())
+                .title(content.getCtntTitle())
+                .body(content.getContentDetail().getCtntBody())
+                .tags(TagResDto.toTagResDtoList(content.getContentTags()))
+                .path(content.getContentDetail().getCtntPath())
+                .name(content.getContentDetail().getCtntName())
+                .ext(content.getContentDetail().getCtntExt())
+                .inpUser(content.getInpUser())
+                .inpDttm(content.getInpDttm())
+                .updDttm(content.getUpdDttm())
+                .build();
+    }
+
 }

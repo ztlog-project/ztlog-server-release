@@ -1,7 +1,7 @@
 package com.devlog.api.controller.user;
 
 import com.devlog.api.service.user.UserService;
-import com.devlog.api.service.user.dto.UserInfoResDto;
+import com.devlog.api.service.user.dto.UserResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,7 @@ public class UserController {
 
     @Operation(summary = "유저 정보 조회", description = "유저 정보 조회")
     @GetMapping("/user/info")
-    public ResponseEntity<Response<UserInfoResDto>> getUserInfo() {
+    public ResponseEntity<Response<UserResDto>> getUserInfo() {
         return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(CommonConstants.ADMIN_NAME));
     }
 

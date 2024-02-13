@@ -2,12 +2,13 @@ package com.devlog.api.service.tag;
 
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.api.service.tag.dto.TagResDto;
-import com.devlog.api.service.tag.dto.TagListResDto;
+import com.devlog.api.service.tag.dto.TagMainResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
+import com.devlog.core.entity.content.Content;
+import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.entity.tag.Tag;
-import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,22 +29,15 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    private final ContentRepository contentRepository;
-
     /**
      * 태그 목록 조회하기
      *
      * @return 태그 리스트
      */
-    public List<TagListResDto> getTagList() {
-        // select list -> loop -> entity to dto
+    public List<TagMainResDto> getTagList() {
         return tagRepository.findAll().stream()
-                .map(tag -> TagListResDto.builder()
-                        .tagNo(tag.getTagNo())
-                        .tagName(tag.getTagName())
-                        .count(tag.getContentTags().size())
-                        .build()
-                ).collect(Collectors.toList());
+                .map(TagMainResDto::of)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -54,36 +48,16 @@ public class TagService {
      * @return 태그 게시물 리스트
      */
     public ContentListResDto getTagContentList(Integer tagNo, Integer page) {
-        List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
-
-        // select tag entity
         Tag tag = tagRepository.findById(Long.valueOf(tagNo))
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
-        // content entity -> dto
-        tag.getContentTags().stream()
-                .map(contentTags -> contentRepository.findById(contentTags.getContents().getCtntNo())
-                        .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()))
-                ).forEach(content -> {
-                    final var dto = ContentListResDto.ContentMainDto.builder().build();
-                    BeanUtils.copyProperties(content, dto);
+        List<Content> contents = tag.getContentTags().stream()
+                .map(ContentTag::getContents)
+                .collect(Collectors.toList());
 
-                    // setting content tags
-                    List<TagResDto> tags = content.getContentTags().stream()
-                            .map(tagsEntity -> TagResDto.builder()
-                                    .tagNo(tagsEntity.getTags().getTagNo())
-                                    .tagName(tagsEntity.getTags().getTagName())
-                                    .build()
-                            ).collect(Collectors.toList());
-                    dto.setTags(tags);
-                    list.add(dto);
-                });
+        int start = PageUtils.getStartIdx(page);
+        int end = Math.min(PageUtils.getEndIdx(page, start), contents.size());
 
-        // paging
-        PageRequest pageRequest = PageUtils.getPageable(page);
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), list.size());
-
-        return new ContentListResDto(list.subList(start, end), list.size());
+        return ContentListResDto.of(contents.subList(start, end));
     }
 }
