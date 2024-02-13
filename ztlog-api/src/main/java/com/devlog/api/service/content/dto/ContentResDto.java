@@ -3,6 +3,7 @@ package com.devlog.api.service.content.dto;
 import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
+import com.devlog.core.entity.content.ContentDetail;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
@@ -54,14 +55,15 @@ public class ContentResDto {
     private LocalDateTime updDttm;
 
     public static ContentResDto of(Content content) {
+        ContentDetail contentDetail = content.getContentDetail();
         return ContentResDto.builder()
                 .ctntNo(content.getCtntNo())
                 .title(content.getCtntTitle())
-                .body(content.getContentDetail().getCtntBody())
+                .body(contentDetail.getCtntBody())
                 .tags(TagResDto.toTagResDtoList(content.getContentTags()))
-                .path(content.getContentDetail().getCtntPath())
-                .name(content.getContentDetail().getCtntName())
-                .ext(content.getContentDetail().getCtntExt())
+                .path(contentDetail.getCtntPath())
+                .name(contentDetail.getCtntName())
+                .ext(contentDetail.getCtntExt())
                 .inpUser(content.getInpUser())
                 .inpDttm(content.getInpDttm())
                 .updDttm(content.getUpdDttm())

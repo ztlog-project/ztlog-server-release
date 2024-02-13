@@ -3,7 +3,6 @@ package com.devlog.admin.service.content;
 import com.devlog.admin.service.content.dto.ContentReqDto;
 import com.devlog.admin.service.content.dto.ContentResDto;
 import com.devlog.admin.service.content.dto.ContentListResDto;
-import com.devlog.admin.service.tags.dto.TagListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
@@ -11,14 +10,10 @@ import com.devlog.core.entity.content.Content;
 import com.devlog.core.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

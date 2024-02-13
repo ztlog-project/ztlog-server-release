@@ -31,7 +31,7 @@ public class ContentListResDto {
         return ContentListResDto.builder()
                 .count(contents.size())
                 .list(contents.stream()
-                        .map(content -> ContentMainDto.of(content, content.getContentTags()))
+                        .map(ContentMainDto::of)
                         .collect(toList()))
                 .build();
     }
@@ -64,7 +64,7 @@ public class ContentListResDto {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
         private LocalDateTime inpDttm;
 
-        public static ContentMainDto of(Content content, List<ContentTag> contentTags) {
+        public static ContentMainDto of(Content content) {
             return ContentMainDto.builder()
                     .ctntNo(content.getCtntNo())
                     .title(content.getCtntTitle())
