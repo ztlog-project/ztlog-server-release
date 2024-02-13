@@ -2,7 +2,7 @@ package com.devlog.api.controller.tag;
 
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.api.service.tag.TagService;
-import com.devlog.api.service.tag.dto.TagMainResDto;
+import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,11 +32,11 @@ public class TagController {
      */
     @Operation(summary = "태그 목록 조회", description = "태그 목록 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagMainResDto.class))),
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagResDto.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping("/tags")
-    public ResponseEntity<Response<List<TagMainResDto>>> getTagList() {
+    public ResponseEntity<Response<List<TagResDto>>> getTagList() {
         return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagList());
     }
 

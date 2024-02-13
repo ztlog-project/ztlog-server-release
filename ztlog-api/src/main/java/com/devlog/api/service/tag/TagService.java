@@ -2,7 +2,6 @@ package com.devlog.api.service.tag;
 
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.api.service.tag.dto.TagResDto;
-import com.devlog.api.service.tag.dto.TagMainResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
@@ -12,12 +11,9 @@ import com.devlog.core.entity.tag.Tag;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,9 +30,9 @@ public class TagService {
      *
      * @return 태그 리스트
      */
-    public List<TagMainResDto> getTagList() {
+    public List<TagResDto> getTagList() {
         return tagRepository.findAll().stream()
-                .map(TagMainResDto::of)
+                .map(TagResDto::of)
                 .collect(Collectors.toList());
     }
 

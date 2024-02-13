@@ -60,20 +60,38 @@ public class ContentController {
 
 
     /**
-     * 컨텐츠 등록/수정하기
+     * 컨텐츠 등록하기
      *
      * @param reqVo 컨텐츠 객체
      * @return 성공 응답
      */
-    @Operation(summary = "컨텐츠 등록/수정", description = "컨텐츠 등록/수정")
+    @Operation(summary = "컨텐츠 등록", description = "컨텐츠 등록")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping(value = "/contents")
-    public ResponseEntity<Response<String>> saveContentDetail(@RequestBody ContentReqDto reqVo) {
-        contentService.saveContentDetail(reqVo);
+    public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentReqDto reqVo) {
+        contentService.createContentDetail(reqVo);
+        return Response.success(ResponseCode.CREATED_SUCCESS);
+    }
+
+    /**
+     * 컨텐츠 수정하기
+     *
+     * @param reqVo 컨텐츠 객체
+     * @return 성공 응답
+     */
+    @Operation(summary = "컨텐츠 수정", description = "컨텐츠 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+    })
+    @PutMapping(value = "/contents")
+    public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentReqDto reqVo) {
+        contentService.createContentDetail(reqVo);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 

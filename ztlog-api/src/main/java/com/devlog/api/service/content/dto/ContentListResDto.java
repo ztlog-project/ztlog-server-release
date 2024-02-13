@@ -1,8 +1,7 @@
 package com.devlog.api.service.content.dto;
 
-import com.devlog.api.service.tag.dto.TagResDto;
+import com.devlog.api.service.tag.dto.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
-import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.entity.content.Content;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,7 +54,7 @@ public class ContentListResDto {
         private String subTitle;
 
         @Schema(description = "게시물 태그 목록")
-        private List<TagResDto> tags;
+        private List<TagInfoDto> tags;
 
         @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
         private String inpUser;
@@ -69,7 +68,7 @@ public class ContentListResDto {
                     .ctntNo(content.getCtntNo())
                     .title(content.getCtntTitle())
                     .subTitle(content.getCtntSubTitle())
-                    .tags(TagResDto.toTagResDtoList(content.getContentTags()))
+                    .tags(TagInfoDto.toTagResDtoList(content.getContentTags()))
                     .inpUser(content.getInpUser())
                     .inpDttm(content.getInpDttm())
                     .build();

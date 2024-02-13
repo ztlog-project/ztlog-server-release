@@ -3,6 +3,7 @@ package com.devlog.admin.controller.tags;
 import com.devlog.admin.service.tags.dto.TagReqDto;
 import com.devlog.admin.service.tags.dto.TagListResDto;
 import com.devlog.admin.service.tags.TagService;
+import com.devlog.admin.service.tags.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,20 +42,54 @@ public class TagController {
     }
 
     /**
-     * 태그 등록/수정하기
+     * 태그 목록 조회하기
+     *
+     * @return 태그 리스트
+     */
+    @Operation(summary = "태그 상세 조회", description = "태그 상세 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagListResDto.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+    })
+    @GetMapping(value = "/tags/{tagNo}")
+    public ResponseEntity<Response<TagResDto>> getTagDetail(@PathVariable Long tagNo) {
+        return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagDetail(tagNo));
+    }
+
+    /**
+     * 태그 등록하기
      *
      * @param reqDto 태그 정보 객체
      * @return 성공 응답
      */
-    @Operation(summary = "태그 등록/수정", description = "태그 등록/수정")
+    @Operation(summary = "태그 등록", description = "태그 등록")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @PostMapping(value = "/tag")
-    public ResponseEntity<Response<String>> saveTagDetail(@RequestBody TagReqDto reqDto) {
-        tagService.saveTagDetail(reqDto);
+    @PostMapping(value = "/tags")
+    public ResponseEntity<Response<String>> createTagDetail(@RequestBody TagReqDto reqDto) {
+        tagService.createTagDetail(reqDto);
+        return Response.success(ResponseCode.CREATED_SUCCESS);
+    }
+
+    /**
+     * 태그 수정하기
+     *
+     * @param reqDto 태그 정보 객체
+     * @return 성공 응답
+     */
+    @Operation(summary = "태그 수정", description = "태그 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+    })
+    @PutMapping(value = "/tags")
+    public ResponseEntity<Response<String>> updateTagDetail(@RequestBody TagReqDto reqDto) {
+        tagService.updateTagDetail(reqDto);
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 

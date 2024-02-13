@@ -1,6 +1,6 @@
 package com.devlog.api.service.content.dto;
 
-import com.devlog.api.service.tag.dto.TagResDto;
+import com.devlog.api.service.tag.dto.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;
@@ -11,8 +11,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Getter
 @ToString
@@ -32,7 +30,7 @@ public class ContentResDto {
     private String body;
 
     @Schema(description = "게시물 태그 목록")
-    private List<TagResDto> tags;
+    private List<TagInfoDto> tags;
 
     @Schema(description = "게시물 경로")
     private String path;
@@ -60,7 +58,7 @@ public class ContentResDto {
                 .ctntNo(content.getCtntNo())
                 .title(content.getCtntTitle())
                 .body(contentDetail.getCtntBody())
-                .tags(TagResDto.toTagResDtoList(content.getContentTags()))
+                .tags(TagInfoDto.toTagResDtoList(content.getContentTags()))
                 .path(contentDetail.getCtntPath())
                 .name(contentDetail.getCtntName())
                 .ext(contentDetail.getCtntExt())

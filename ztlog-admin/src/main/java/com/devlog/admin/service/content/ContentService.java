@@ -41,9 +41,13 @@ public class ContentService {
      * @return 컨텐츠 객체
      */
     public ContentResDto getContentDetail(Long ctntNo){
-        Content content = contentRepository.findById(Long.valueOf(ctntNo))
+        Content content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         return ContentResDto.of(content);
+    }
+
+    public void createContentDetail(ContentReqDto reqVo) {
+
     }
 
     /**
@@ -51,7 +55,7 @@ public class ContentService {
      *
      * @param reqVo 컨텐츠 요청 객체
      */
-    public void saveContentDetail(ContentReqDto reqVo) {
+    public void updateContentDetail(ContentReqDto reqVo) {
 
         /*
 

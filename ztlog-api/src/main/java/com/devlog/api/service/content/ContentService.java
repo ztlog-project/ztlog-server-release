@@ -2,24 +2,17 @@ package com.devlog.api.service.content;
 
 import com.devlog.api.service.content.dto.ContentResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
-import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
-import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,8 +39,8 @@ public class ContentService {
      * @param ctntNo 컨텐츠 번호
      * @return 컨텐츠 반환
      */
-    public ContentResDto getContentsDetail(Integer ctntNo) {
-        Content content = contentRepository.findById(Long.valueOf(ctntNo))
+    public ContentResDto getContentsDetail(Long ctntNo) {
+        Content content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         return ContentResDto.of(content);
     }

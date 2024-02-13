@@ -52,7 +52,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping(value = "contents/{ctntNo}")
-    public ResponseEntity<Response<ContentResDto>> getContentsDetail(@PathVariable Integer ctntNo) {
+    public ResponseEntity<Response<ContentResDto>> getContentsDetail(@PathVariable Long ctntNo) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentsDetail(ctntNo));
     }
 
