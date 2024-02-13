@@ -3,7 +3,7 @@ package com.devlog.admin.service.content;
 import com.devlog.admin.service.content.dto.ContentReqDto;
 import com.devlog.admin.service.content.dto.ContentResDto;
 import com.devlog.admin.service.content.dto.ContentListResDto;
-import com.devlog.admin.service.tags.dto.TagResDto;
+import com.devlog.admin.service.tags.dto.TagListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContentService {
 
-//    private final ContentMapper contentMapper;
-
     private final ContentRepository contentRepository;
 
     /**
@@ -37,19 +35,8 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-        List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
-
-        // select content list
         Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page));
-
-        // setting content entity -> dto list
-        contentPage.getContent().forEach(content -> {
-            final var dto = ContentListResDto.ContentMainDto.builder().build();
-            BeanUtils.copyProperties(content, dto);
-            list.add(dto);
-        });
-
-        return new ContentListResDto(list, Long.valueOf(contentPage.getTotalElements()).intValue());
+        return ContentListResDto.of(contentPage.getContent());
     }
 
     /**
@@ -61,20 +48,7 @@ public class ContentService {
     public ContentResDto getContentDetail(Long ctntNo){
         Content content = contentRepository.findById(Long.valueOf(ctntNo))
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
-
-        final var dto = ContentResDto.builder().build();
-        BeanUtils.copyProperties(content, dto);
-
-        // setting content tags
-        List<TagResDto> tags = content.getContentTags()
-                .stream().map(contentTags -> TagResDto.builder()
-                        .tagNo(contentTags.getTags().getTagNo())
-                        .tagName(contentTags.getTags().getTagName())
-                        .build()
-                ).collect(Collectors.toList());
-        dto.setTags(tags);
-
-        return dto;
+        return ContentResDto.of(content);
     }
 
     /**
@@ -102,22 +76,6 @@ public class ContentService {
 
          */
 
-
-//        ContentEntity content = contentRepository.findById(reqVo.getCtntNo())
-
-
-//        ContentVo vo = new ContentVo();
-//        BeanUtils.copyProperties(reqVo, vo);
-//
-//        // vo setting
-//        vo.setInpUser(CommonConstants.ADMIN_NAME);
-//        vo.setInpDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
-//        vo.setUpdDttm(LocalDateTime.now().format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT)));
-//
-//        // insert
-//        this.contentMapper.insertContentMaster(vo);
-//        this.contentMapper.insertContentDetail(vo);
-
     }
 
     /**
@@ -128,18 +86,6 @@ public class ContentService {
     public void deleteContentDetail(Long ctntNo)  {
 
 
-        // check content exist
-//        ContentVo vo = this.contentMapper.selectContentByCtntNo(ctntNo);
-//        if (ObjectUtils.isEmpty(vo)) {
-//            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage());
-//        }
-//
-//        // contents delete
-//        this.contentMapper.deleteContentMaster(ctntNo);
-//        this.contentMapper.deleteContentDetail(ctntNo);
-
-        // tag delete
-//        this.tagMapper.deleteContentTags(ctntNo);
     }
 
 }

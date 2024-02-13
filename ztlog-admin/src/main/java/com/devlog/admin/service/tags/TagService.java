@@ -1,15 +1,15 @@
 package com.devlog.admin.service.tags;
 
 import com.devlog.admin.service.tags.dto.TagReqDto;
-import com.devlog.admin.service.tags.dto.TagResDto;
+import com.devlog.admin.service.tags.dto.TagListResDto;
+import com.devlog.core.common.util.PageUtils;
+import com.devlog.core.entity.tag.Tag;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -24,33 +24,9 @@ public class TagService {
      *
      * @return 태그 리스트
      */
-    public List<TagResDto> getTagsList() {
-        List<TagResDto> list = new ArrayList<>();
-
-//        this.tagsMapper.selectTagsList().forEach(vo -> {
-//            TagResDto resDto = TagResDto.builder().build();
-//            BeanUtils.copyProperties(resDto, vo);
-//            list.add(resDto);
-//        });
-
-        return list;
-    }
-
-    /**
-     * 태그 등록하기
-     *
-     * @param reqDto 태그 요청 객체
-     */
-    public void createTagsInfo(TagReqDto reqDto) {
-//        TagsVo tagsVo = new TagsVo();
-//        tagsVo.setTagName(reqDto.getTagsName());
-        // check tag name
-//        if (!ObjectUtils.isEmpty(this.tagsMapper.selectTagsByName(tagsVo.getTagName()))) {
-//            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
-//        }
-
-        // insert vo
-//        this.tagsMapper.insertTagsMaster(tagsVo);
+    public TagListResDto getTagList(Integer page) {
+        Page<Tag> tagPage = tagRepository.findAll(PageUtils.getPageable(page));
+        return TagListResDto.of(tagPage.getContent());
     }
 
     /**
@@ -58,7 +34,7 @@ public class TagService {
      *
      * @param reqDto 태그 요청 객체
      */
-    public void updateTagsInfo(TagReqDto reqDto) {
+    public void saveTagDetail(TagReqDto reqDto) {
 //        TagsVo tagsVo = this.tagsMapper.selectTagsByNo(reqDto.getTagsNo());
         // check tag exist
 //        if (ObjectUtils.isEmpty(tagsVo)) {
@@ -75,7 +51,7 @@ public class TagService {
      *
      * @param tagNo 태그 번호
      */
-    public void deleteTagsInfo(Long tagNo) {
+    public void deleteTagDetail(Long tagNo) {
 //        TagsVo tagsVo = this.tagsMapper.selectTagsByNo(tagNo);
         // check tag exist
 //        if (ObjectUtils.isEmpty(tagsVo)) {
