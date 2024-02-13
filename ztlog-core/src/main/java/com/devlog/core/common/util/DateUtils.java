@@ -4,7 +4,6 @@ import com.devlog.core.common.constants.CommonConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,11 +20,11 @@ public class DateUtils {
 		return LocalDateTime.parse(date, DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT));
 	}
 
-	public static String toString(LocalDate localDate) {
+	public static String dateToString(LocalDate localDate) {
 		return localDate.format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATE_FORMAT));
 	}
 
-	public static String toString(LocalDateTime localDateTime) {
+	public static String datetomeToString(LocalDateTime localDateTime) {
 		return localDateTime.format(DateTimeFormatter.ofPattern(CommonConstants.DEFAULT_DATETIME_FORMAT));
 	}
 
