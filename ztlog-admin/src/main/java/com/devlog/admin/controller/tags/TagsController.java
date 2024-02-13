@@ -1,10 +1,10 @@
 package com.devlog.admin.controller.tags;
 
 import com.devlog.admin.dto.tag.request.TagsInfoReqDto;
-import com.devlog.admin.dto.tag.response.TagsInfoResDto;
+import com.devlog.admin.dto.tag.response.TagResDto;
 import com.devlog.admin.service.tags.TagsService;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.vo.Response;
+import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,12 +32,12 @@ public class TagsController {
      */
     @Operation(summary = "태그 목록 조회", description = "태그 목록 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagsInfoResDto.class))),
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagResDto.class))),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping(value = "/tags")
-    public ResponseEntity<Response<List<TagsInfoResDto>>> getTagsList() {
+    public ResponseEntity<Response<List<TagResDto>>> getTagsList() {
         return Response.success(ResponseCode.OK_SUCCESS, tagsService.getTagsList());
     }
 

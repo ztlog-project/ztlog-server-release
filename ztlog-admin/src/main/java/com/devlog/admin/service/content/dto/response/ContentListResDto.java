@@ -1,11 +1,13 @@
-package com.devlog.api.service.content.dto;
+package com.devlog.admin.service.content.dto.response;
 
-import com.devlog.api.service.tag.dto.TagResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,10 +17,11 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
+@Builder
 public class ContentListResDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 7660421737047809693L;
+    private static final long serialVersionUID = -1579563584503765980L;
 
     @Schema(description = "게시물 갯수")
     private Integer count;
@@ -55,12 +58,9 @@ public class ContentListResDto implements Serializable {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
         private LocalDateTime inpDttm;
 
-//        @Schema(description = "게시물 수정일시")
-//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
-//        private LocalDateTime updDttm;
-
-        @Schema(description = "게시물 태그 목록")
-        private List<TagResDto> tags;
+        @Schema(description = "게시물 수정일시")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
+        private LocalDateTime updDttm;
 
     }
 

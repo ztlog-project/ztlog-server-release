@@ -4,7 +4,7 @@ import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.api.service.tag.TagService;
 import com.devlog.api.service.tag.dto.TagListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.vo.Response;
+import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +20,7 @@ import java.util.List;
 @Tag(name = "태그 컨트롤러", description = "태그 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/tags")
+@RequestMapping(value = "/api/v1")
 public class TagController {
 
     private final TagService tagService;
@@ -35,9 +35,9 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TagListResDto.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping()
-    public ResponseEntity<Response<List<TagListResDto>>> getTagsList() {
-        return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagsList());
+    @GetMapping("/tags")
+    public ResponseEntity<Response<List<TagListResDto>>> getTagList() {
+        return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagList());
     }
 
     /**
@@ -53,12 +53,12 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/{tagNo}")
-    public ResponseEntity<Response<ContentListResDto>> getTagsSearchList(
+    @GetMapping("/tags/{tagNo}")
+    public ResponseEntity<Response<ContentListResDto>> getTagContentList(
             @PathVariable Integer tagNo,
             @RequestParam(value = "no", defaultValue = "1") Integer page
     ) {
-        return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagsSearchList(tagNo, page));
+        return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagContentList(tagNo, page));
     }
 
 

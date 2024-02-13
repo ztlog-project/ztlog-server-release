@@ -1,13 +1,13 @@
 package com.devlog.admin.dto.user.request;
 
+import com.devlog.core.entity.user.UserEntity;
 import lombok.Value;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * DTO for {@link com.devlog.core.domain.entity.user.UserEntity}
+ * DTO for {@link UserEntity}
  */
 @Value
 public class SignupReqDto implements Serializable {

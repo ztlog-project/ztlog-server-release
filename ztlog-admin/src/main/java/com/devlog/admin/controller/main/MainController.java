@@ -2,7 +2,7 @@ package com.devlog.admin.controller.main;
 
 import com.devlog.admin.service.main.MainService;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.vo.Response;
+import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

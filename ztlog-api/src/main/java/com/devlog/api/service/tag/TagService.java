@@ -6,9 +6,9 @@ import com.devlog.api.service.tag.dto.TagListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
-import com.devlog.core.domain.entity.tag.TagEntity;
-import com.devlog.core.domain.repository.content.ContentRepository;
-import com.devlog.core.domain.repository.tag.TagRepository;
+import com.devlog.core.entity.tag.TagEntity;
+import com.devlog.core.repository.content.ContentRepository;
+import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -35,7 +35,7 @@ public class TagService {
      *
      * @return 태그 리스트
      */
-    public List<TagListResDto> getTagsList() {
+    public List<TagListResDto> getTagList() {
         // select list -> loop -> entity to dto
         return tagRepository.findAll().stream()
                 .map(tag -> TagListResDto.builder()
@@ -53,7 +53,7 @@ public class TagService {
      * @param page  페이지 번호 (기본값 = 1)
      * @return 태그 게시물 리스트
      */
-    public ContentListResDto getTagsSearchList(Integer tagNo, Integer page) {
+    public ContentListResDto getTagContentList(Integer tagNo, Integer page) {
         List<ContentListResDto.ContentMainDto> list = new ArrayList<>();
 
         // select tag entity

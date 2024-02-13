@@ -4,7 +4,7 @@ import com.devlog.api.service.content.ContentService;
 import com.devlog.api.service.content.dto.ContentResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.vo.Response;
+import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "컨텐츠 컨트롤러", description = "컨텐츠 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/contents")
+@RequestMapping(value = "/api/v1")
 public class ContentController {
 
     private final ContentService contentService;
@@ -34,7 +34,7 @@ public class ContentController {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),
             @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping
+    @GetMapping("/contents")
     public ResponseEntity<Response<ContentListResDto>> getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentsList(page));
     }
@@ -51,9 +51,9 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/{ctntNo}")
-    public ResponseEntity<Response<ContentResDto>> getContentInfo(@PathVariable Integer ctntNo) {
-        return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentInfo(ctntNo));
+    @GetMapping(value = "contents/{ctntNo}")
+    public ResponseEntity<Response<ContentResDto>> getContentsDetail(@PathVariable Integer ctntNo) {
+        return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentsDetail(ctntNo));
     }
 
     /**
@@ -69,11 +69,12 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/search")
-    public ResponseEntity<Response<ContentListResDto>> searchContentsInfo(
+    @GetMapping(value = "contents/search")
+    public ResponseEntity<Response<ContentListResDto>> searchContentList(
             @RequestParam(value = "param") String param,
             @RequestParam(value = "no", defaultValue = "1") Integer page
     ) {
-        return Response.success(ResponseCode.OK_SUCCESS, contentService.searchContentsInfo(param, page));
+        return Response.success(ResponseCode.OK_SUCCESS, contentService.searchContentList(param, page));
     }
+
 }

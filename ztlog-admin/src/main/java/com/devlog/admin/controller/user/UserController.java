@@ -4,7 +4,7 @@ import com.devlog.admin.dto.user.request.SignupReqDto;
 import com.devlog.admin.dto.user.response.UserInfoResDto;
 import com.devlog.admin.service.user.UserService;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.vo.Response;
+import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
