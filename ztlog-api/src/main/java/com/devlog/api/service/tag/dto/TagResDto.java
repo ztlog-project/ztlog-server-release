@@ -25,6 +25,7 @@ public class TagResDto implements Serializable {
     private Long tagNo;
 
     @Schema(description = "태그 이름")
+    @NotNull(message = "tag name can not be null!!")
     @Size(max = CommonConstants.TAG_NAME_SIZE, message = "tag name length is too long!!")
     private String tagName;
 

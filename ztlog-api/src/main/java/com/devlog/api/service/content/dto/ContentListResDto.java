@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-@AllArgsConstructor
 public class ContentListResDto implements Serializable {
 
     @Serial
@@ -26,6 +25,11 @@ public class ContentListResDto implements Serializable {
 
     @Schema(description = "게시물 목록")
     private List<ContentMainDto> list;
+
+    public ContentListResDto(List<ContentMainDto> list, Integer count) {
+        this.list = list;
+        this.count = count;
+    }
 
     @Getter
     @Setter
