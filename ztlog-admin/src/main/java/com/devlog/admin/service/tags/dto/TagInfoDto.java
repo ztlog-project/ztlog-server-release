@@ -8,7 +8,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,7 +37,8 @@ public class TagInfoDto {
     }
 
     public static List<TagInfoDto> toTagInfoList(List<ContentTag> contentTags) {
-        return contentTags.stream()
+        return Optional.ofNullable(contentTags).orElseGet(Collections::emptyList)
+                .stream()
                 .map(contentTag -> TagInfoDto.of(contentTag.getTags()))
                 .collect(toList());
     }

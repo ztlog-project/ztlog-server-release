@@ -1,6 +1,5 @@
 package com.devlog.admin.service.content.dto;
 
-import com.devlog.admin.service.tags.dto.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentTag;
@@ -10,7 +9,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -49,7 +50,8 @@ public class ContentInfoDto {
     }
 
     public static List<ContentInfoDto> toContentInfoList(List<ContentTag> contentTags) {
-        return contentTags.stream()
+        return Optional.ofNullable(contentTags).orElseGet(Collections::emptyList)
+                .stream()
                 .map(contentTag -> ContentInfoDto.of(contentTag.getContents()))
                 .collect(toList());
     }
