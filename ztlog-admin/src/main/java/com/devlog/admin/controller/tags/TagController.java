@@ -96,7 +96,7 @@ public class TagController {
     /**
      * 태그 삭제하기
      *
-     * @param tagsNo 태그 번호
+     * @param tagNo 태그 번호
      * @return 성공 응답
      */
     @Operation(summary = "태그 삭제", description = "태그 삭제")
@@ -105,9 +105,9 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @DeleteMapping(value = "/tags/{tagsNo}")
-    public ResponseEntity<Response<String>> deleteTagDetail(@PathVariable Long tagsNo) {
-        tagService.deleteTagDetail(tagsNo);
+    @DeleteMapping(value = "/tags/{tagNo}")
+    public ResponseEntity<Response<String>> deleteTagDetail(@PathVariable Long tagNo) {
+        tagService.deleteTagDetail(tagNo);
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 

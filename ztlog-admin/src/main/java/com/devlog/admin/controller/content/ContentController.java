@@ -62,7 +62,7 @@ public class ContentController {
     /**
      * 컨텐츠 등록하기
      *
-     * @param reqVo 컨텐츠 객체
+     * @param reqDto 컨텐츠 객체
      * @return 성공 응답
      */
     @Operation(summary = "컨텐츠 등록", description = "컨텐츠 등록")
@@ -72,15 +72,15 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping(value = "/contents")
-    public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentReqDto reqVo) {
-        contentService.createContentDetail(reqVo);
+    public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentReqDto reqDto) {
+        contentService.createContentDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 
     /**
      * 컨텐츠 수정하기
      *
-     * @param reqVo 컨텐츠 객체
+     * @param reqDto 컨텐츠 객체
      * @return 성공 응답
      */
     @Operation(summary = "컨텐츠 수정", description = "컨텐츠 수정")
@@ -90,8 +90,8 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping(value = "/contents")
-    public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentReqDto reqVo) {
-        contentService.createContentDetail(reqVo);
+    public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentReqDto reqDto) {
+        contentService.updateContentDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 

@@ -85,9 +85,9 @@ public class ContentService {
     /**
      * 컨텐츠 수정하기
      *
-     * @param reqVo 컨텐츠 요청 객체
+     * @param reqDto 컨텐츠 요청 객체
      */
-    public void updateContentDetail(ContentReqDto reqVo) {
+    public void updateContentDetail(ContentReqDto reqDto) {
 
         /*
 
