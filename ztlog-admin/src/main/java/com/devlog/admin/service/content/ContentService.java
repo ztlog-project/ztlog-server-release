@@ -121,7 +121,7 @@ public class ContentService {
         // delete db data
         contentRepository.deleteById(content.getCtntNo());
         contentDtlRepository.deleteById(content.getCtntNo());
-        contentTagRepository.deleteById(content.getCtntNo());
+        contentTagRepository.deleteAll(content.getContentTags());
     }
 
 }
