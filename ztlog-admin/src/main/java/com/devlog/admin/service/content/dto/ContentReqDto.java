@@ -1,6 +1,6 @@
 package com.devlog.admin.service.content.dto;
 
-import com.devlog.admin.service.tags.dto.TagReqDto;
+import com.devlog.admin.service.tag.dto.TagReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;

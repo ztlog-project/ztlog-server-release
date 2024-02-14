@@ -1,4 +1,4 @@
-package com.devlog.admin.service.tags.dto;
+package com.devlog.admin.service.tag.dto;
 
 import com.devlog.core.entity.tag.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,9 +1,8 @@
 package com.devlog.admin.service.content.dto;
 
-import com.devlog.admin.service.tags.dto.TagInfoDto;
+import com.devlog.admin.service.tag.dto.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
-import com.devlog.core.entity.content.ContentTag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;

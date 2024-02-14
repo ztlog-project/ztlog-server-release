@@ -1,13 +1,10 @@
-package com.devlog.admin.service.tags.dto;
+package com.devlog.admin.service.tag.dto;
 
 import com.devlog.core.common.constants.CommonConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 @Getter
 @ToString

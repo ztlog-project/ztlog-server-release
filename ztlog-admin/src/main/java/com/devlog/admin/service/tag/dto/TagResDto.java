@@ -1,4 +1,4 @@
-package com.devlog.admin.service.tags.dto;
+package com.devlog.admin.service.tag.dto;
 
 import com.devlog.admin.service.content.dto.ContentInfoDto;
 import com.devlog.core.common.constants.CommonConstants;

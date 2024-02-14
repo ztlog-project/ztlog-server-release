@@ -68,9 +68,7 @@ public class ContentService {
      * @param reqDto 컨텐츠 요청 객체
      */
     public void createContentDetail(ContentReqDto reqDto) {
-        // save detail entity
         final var contentDetail =  contentDtlRepository.save(ContentDetail.created(reqDto.getTitle(), reqDto.getBody(), CommonConstants.ADMIN_NAME));
-        // save master entity
         final var content = contentRepository.save(Content.created(contentDetail));
 
         // content - tag
@@ -80,6 +78,7 @@ public class ContentService {
                     .orElse(tagRepository.save(Tag.created(tagReqDto.getTagName())));
             contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
         });
+
         contentTagRepository.saveAll(contentTags);
     }
 

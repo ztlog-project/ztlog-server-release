@@ -1,8 +1,8 @@
-package com.devlog.admin.service.tags;
+package com.devlog.admin.service.tag;
 
-import com.devlog.admin.service.tags.dto.TagReqDto;
-import com.devlog.admin.service.tags.dto.TagListResDto;
-import com.devlog.admin.service.tags.dto.TagResDto;
+import com.devlog.admin.service.tag.dto.TagReqDto;
+import com.devlog.admin.service.tag.dto.TagListResDto;
+import com.devlog.admin.service.tag.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.util.PageUtils;
 import com.devlog.core.config.exception.DataConflictException;
