@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
-@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Table(name = "contents_dtl")
 public class ContentDetail {
 
@@ -39,5 +39,15 @@ public class ContentDetail {
     @JoinColumn(name = "CTNT_NO")
     Content content;
 
+    public static ContentDetail created(String title, String body, String user) {
+        return ContentDetail.builder()
+                .ctntTitle(title)
+                .ctntBody(body)
+//                .ctntPath(path)
+//                .ctntName(name)
+//                .ctntExt(ext)
+                .inpUser(user)
+                .build();
+    }
 
 }

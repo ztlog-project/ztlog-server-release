@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Table(name = "contents_mst")
 public class Content extends BaseTimeEntity {
 
@@ -27,9 +26,6 @@ public class Content extends BaseTimeEntity {
     @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
 
-    @Column(name = "INP_USER", nullable = false)
-    private String inpUser;
-
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private ContentDetail contentDetail;
@@ -37,5 +33,19 @@ public class Content extends BaseTimeEntity {
     @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL)
     @OrderBy("sort asc")
     List<ContentTag> contentTags = new ArrayList<>();
+
+    @Column(name = "INP_USER", nullable = false)
+    private String inpUser;
+
+    public static Content created(ContentDetail contentDetail) {
+        return Content.builder()
+                .ctntNo(contentDetail.getCtntNo())
+                .ctntTitle(contentDetail.getCtntTitle())
+                .ctntSubTitle(contentDetail.getCtntBody().substring(0, 300))
+                .contentDetail(contentDetail)
+//                .contentTags(contentTags)
+                .inpUser(contentDetail.getInpUser())
+                .build();
+    }
 
 }

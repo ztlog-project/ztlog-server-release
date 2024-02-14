@@ -5,9 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder (access = AccessLevel.PRIVATE)
 @IdClass(ContentTagPK.class)
 @Table(name = "contents_tags")
 public class ContentTag {
@@ -25,4 +26,11 @@ public class ContentTag {
     @JoinColumn(name = "CTNT_NO", nullable = false)
     private Content contents;
 
+    public static ContentTag created(Tag tag, int sort, Content content) {
+        return ContentTag.builder()
+                .tags(tag)
+                .sort(sort)
+                .contents(content)
+                .build();
+    }
 }

@@ -5,9 +5,9 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContentTagPK implements Serializable {
 
     @Serial
