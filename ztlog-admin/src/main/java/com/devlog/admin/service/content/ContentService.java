@@ -115,8 +115,13 @@ public class ContentService {
      * @param ctntNo 컨텐츠 번호
      */
     public void deleteContentDetail(Long ctntNo)  {
+        final var content = contentRepository.findById(ctntNo)
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
 
-
+        // delete db data
+        contentRepository.deleteById(content.getCtntNo());
+        contentDtlRepository.deleteById(content.getCtntNo());
+        contentTagRepository.deleteById(content.getCtntNo());
     }
 
 }
