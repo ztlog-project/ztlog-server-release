@@ -40,7 +40,7 @@ public class ContentService {
      * @return 컨텐츠 반환
      */
     public ContentResDto getContentsDetail(Long ctntNo) {
-        Content content = contentRepository.findById(ctntNo)
+        final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         return ContentResDto.of(content);
     }

@@ -44,7 +44,7 @@ public class TagService {
      * @return 태그 게시물 리스트
      */
     public ContentListResDto getTagContentList(Integer tagNo, Integer page) {
-        Tag tag = tagRepository.findById(Long.valueOf(tagNo))
+        final var tag = tagRepository.findById(Long.valueOf(tagNo))
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
         List<Content> contents = tag.getContentTags().stream()

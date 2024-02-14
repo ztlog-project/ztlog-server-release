@@ -41,7 +41,7 @@ public class ContentService {
      * @return 컨텐츠 객체
      */
     public ContentResDto getContentDetail(Long ctntNo){
-        Content content = contentRepository.findById(ctntNo)
+        final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         return ContentResDto.of(content);
     }
