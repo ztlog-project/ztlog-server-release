@@ -1,4 +1,4 @@
-package com.devlog.core.common.util;
+package com.devlog.core.common.utils;
 
 import com.devlog.core.common.constants.CommonConstants;
 import lombok.AccessLevel;

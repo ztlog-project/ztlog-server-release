@@ -5,6 +5,8 @@ public class CommonConstants {
     // string
     public static final String ZTLOG = "ztlog";
     public static final String ADMIN_NAME = "yjchoi";
+
+    // number
     public static final int PAGE_SIZE = 5;
     public static final int TAG_NAME_SIZE = 15;
     public static final int CONTENT_TITLE_SIZE = 100;

@@ -4,7 +4,7 @@ import com.devlog.admin.service.tag.dto.TagReqDto;
 import com.devlog.admin.service.tag.dto.TagListResDto;
 import com.devlog.admin.service.tag.dto.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.util.PageUtils;
+import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataConflictException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.tag.Tag;

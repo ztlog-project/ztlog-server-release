@@ -5,7 +5,7 @@ import com.devlog.admin.service.content.dto.ContentResDto;
 import com.devlog.admin.service.content.dto.ContentListResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.util.PageUtils;
+import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;
