@@ -18,7 +18,7 @@ import com.devlog.admin.service.user.dto.request.LoginReqDto;
 @Tag(name = "유저 컨트롤러", description = "유저 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     private final UserService userService;
@@ -29,7 +29,7 @@ public class UserController {
      * @return 유저 정보
      */
     @Operation(summary = "유저 정보 조회", description = "유저 정보 조회")
-    @GetMapping(value = "/info")
+    @GetMapping("/info")
     public ResponseEntity<Response<UserInfoResDto>> getUserInfo() {
         // TODO : 테스트용 api -> 추후 삭제 or 수정 요망
         return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(1L));
@@ -42,7 +42,7 @@ public class UserController {
      * @return 성공 응답
      */
     @Operation(summary = "회원가입하기", description = "회원가입하기")
-    @PostMapping(value = "/signup")
+    @PostMapping("/signup")
     public ResponseEntity<Response<String>> signupUser(@RequestBody @Valid SignupReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
         userService.signupUser(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
@@ -55,7 +55,7 @@ public class UserController {
      * @return 성공 응답
      */
     @Operation(summary = "로그인하기", description = "로그인하기")
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public ResponseEntity<Response<String>> loginUser(@RequestBody @Valid LoginReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
         userService.loginUser(reqDto);
         return Response.success(ResponseCode.OK_SUCCESS);
@@ -67,7 +67,7 @@ public class UserController {
      * @return 성공 응답
      */
     @Operation(summary = "로그아웃하기", description = "로그아웃하기")
-    @PostMapping(value = "/logout")
+    @PostMapping("/logout")
     public ResponseEntity<Response<String>> logoutUser(HttpServletRequest request, HttpServletResponse response) {
         userService.logoutUser();
         return Response.success(ResponseCode.OK_SUCCESS);

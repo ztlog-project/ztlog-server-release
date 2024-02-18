@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "메인(대쉬보드) 컨트롤러", description = "메인(대쉬보드) 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1")
+@RequestMapping("/api/v1")
 public class MainController {
 
     private final MainService mainService;
@@ -25,7 +25,7 @@ public class MainController {
      * @return 메인화면(대쉬보드) 정보
      */
     @Operation(summary = "메인화면(대쉬보드) 조회", description = "메인화면(대쉬보드) 조회")
-    @GetMapping(value = "/main")
+    @GetMapping("/main")
     public ResponseEntity<Response<Object>> getMainStatusInfo() {
         return Response.success(ResponseCode.OK_SUCCESS, mainService.getMainStatusInfo());
     }

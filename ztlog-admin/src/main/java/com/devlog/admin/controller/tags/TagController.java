@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "태그 컨트롤러", description = "태그 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1")
+@RequestMapping("/api/v1")
 public class TagController {
 
     private final TagService tagService;
@@ -36,7 +36,7 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/tags")
+    @GetMapping("/tags")
     public ResponseEntity<Response<TagListResDto>> getTagList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
         return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagList(page));
     }
@@ -52,7 +52,7 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/tags/{tagNo}")
+    @GetMapping("/tags/{tagNo}")
     public ResponseEntity<Response<TagResDto>> getTagDetail(@PathVariable Long tagNo) {
         return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagDetail(tagNo));
     }
@@ -69,7 +69,7 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @PostMapping(value = "/tags")
+    @PostMapping("/tags")
     public ResponseEntity<Response<String>> createTagDetail(@RequestBody TagReqDto reqDto) {
         tagService.createTagDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
@@ -87,7 +87,7 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @PutMapping(value = "/tags")
+    @PutMapping("/tags")
     public ResponseEntity<Response<String>> updateTagDetail(@RequestBody TagReqDto reqDto) {
         tagService.updateTagDetail(reqDto);
         return Response.success(ResponseCode.OK_SUCCESS);
@@ -105,7 +105,7 @@ public class TagController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @DeleteMapping(value = "/tags/{tagNo}")
+    @DeleteMapping("/tags/{tagNo}")
     public ResponseEntity<Response<String>> deleteTagDetail(@PathVariable Long tagNo) {
         tagService.deleteTagDetail(tagNo);
         return Response.success(ResponseCode.OK_SUCCESS);

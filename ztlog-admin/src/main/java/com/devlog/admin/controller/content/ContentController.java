@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "컨텐츠 컨트롤러", description = "컨텐츠 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1")
+@RequestMapping("/api/v1")
 public class ContentController {
 
     private final ContentService contentService;
@@ -36,7 +36,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/contents")
+    @GetMapping("/contents")
     public ResponseEntity<Response<ContentListResDto>> getContentList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentList(page));
     }
@@ -53,7 +53,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "/contents/{ctntNo}")
+    @GetMapping("/contents/{ctntNo}")
     public ResponseEntity<Response<ContentResDto>> getContentDetail(@PathVariable Long ctntNo) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentDetail(ctntNo));
     }
@@ -71,7 +71,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @PostMapping(value = "/contents")
+    @PostMapping("/contents")
     public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentReqDto reqDto) {
         contentService.createContentDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
@@ -89,7 +89,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @PutMapping(value = "/contents")
+    @PutMapping("/contents")
     public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentReqDto reqDto) {
         contentService.updateContentDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
@@ -107,7 +107,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @DeleteMapping(value = "/contents/{ctntNo}")
+    @DeleteMapping("/contents/{ctntNo}")
     public ResponseEntity<Response<String>> deleteContentDetail(@PathVariable Long ctntNo) {
         contentService.deleteContentDetail(ctntNo);
         return Response.success(ResponseCode.OK_SUCCESS);

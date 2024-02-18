@@ -51,7 +51,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "contents/{ctntNo}")
+    @GetMapping( "contents/{ctntNo}")
     public ResponseEntity<Response<ContentResDto>> getContentsDetail(@PathVariable Long ctntNo) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentsDetail(ctntNo));
     }
@@ -69,7 +69,7 @@ public class ContentController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    @GetMapping(value = "contents/search")
+    @GetMapping( "contents/search")
     public ResponseEntity<Response<ContentListResDto>> searchContentList(
             @RequestParam(value = "param") String param,
             @RequestParam(value = "no", defaultValue = "1") Integer page
