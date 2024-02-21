@@ -2,7 +2,7 @@ package com.devlog.admin.service.user;
 
 import com.devlog.admin.service.user.dto.request.LoginReqDto;
 import com.devlog.admin.service.user.dto.request.SignupReqDto;
-import com.devlog.admin.service.user.dto.response.UserInfoResDto;
+import com.devlog.admin.service.user.dto.response.UserInfoDto;
 import com.devlog.core.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserService {
      * @param userNo 유저 번호
      * @return 유저 정보
      */
-    public UserInfoResDto getUserInfo(Long userNo) {
+    public UserInfoDto getUserInfo(Long userNo) {
 
         return null;
     }

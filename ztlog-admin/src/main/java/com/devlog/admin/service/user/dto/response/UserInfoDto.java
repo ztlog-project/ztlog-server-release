@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 @Builder
-public class UserInfoResDto implements Serializable {
+public class UserInfoDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 3352408126115467024L;
@@ -20,6 +20,8 @@ public class UserInfoResDto implements Serializable {
     private Long userNo;
 
     private String username;
+
+    private String password;
 
     private String grant;
 
