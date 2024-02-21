@@ -22,7 +22,7 @@ public class UserDetailDto implements UserDetails {
     private static final long serialVersionUID = -3594757551317618173L;
 
     @Delegate
-    private final UserInfoDto user;
+    private final User user;
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override
@@ -30,7 +30,7 @@ public class UserDetailDto implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority(user.getGrant()));
     }
 
-    public static UserDetailDto of(UserInfoDto user, Collection<? extends GrantedAuthority> authorities) {
+    public static UserDetailDto of(User user, Collection<? extends GrantedAuthority> authorities) {
         return new UserDetailDto(user, authorities);
     }
 

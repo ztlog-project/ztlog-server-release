@@ -2,7 +2,6 @@ package com.devlog.admin.service.user;
 
 import com.devlog.admin.service.user.dto.request.LoginReqDto;
 import com.devlog.admin.service.user.dto.request.SignupReqDto;
-import com.devlog.admin.service.user.dto.response.UserInfoDto;
 import com.devlog.core.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

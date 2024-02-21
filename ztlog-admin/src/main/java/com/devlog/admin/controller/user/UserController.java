@@ -1,7 +1,6 @@
 package com.devlog.admin.controller.user;
 
 import com.devlog.admin.service.user.dto.request.SignupReqDto;
-import com.devlog.admin.service.user.dto.response.UserInfoDto;
 import com.devlog.admin.service.user.UserService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
@@ -22,18 +21,6 @@ import com.devlog.admin.service.user.dto.request.LoginReqDto;
 public class UserController {
 
     private final UserService userService;
-
-    /**
-     * 유저 정보 조회
-     *
-     * @return 유저 정보
-     */
-    @Operation(summary = "유저 정보 조회", description = "유저 정보 조회")
-    @GetMapping("/info")
-    public ResponseEntity<Response<UserInfoDto>> getUserInfo() {
-        // TODO : 테스트용 api -> 추후 삭제 or 수정 요망
-        return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(1L));
-    }
 
     /**
      * 회원가입하기
