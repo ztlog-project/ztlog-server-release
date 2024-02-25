@@ -5,12 +5,9 @@ import java.io.Serial;
 import java.io.Serializable;
 
 
-public class SignupReqDto implements Serializable {
+public class SignupReqDto {
 
-    @Serial
-    private static final long serialVersionUID = 767758686263528683L;
-
-    private String username;
+    private String userId;
 
     private String password;
 

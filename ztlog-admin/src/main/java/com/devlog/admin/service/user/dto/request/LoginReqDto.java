@@ -12,12 +12,11 @@ import java.io.Serializable;
 @Setter
 @ToString
 @Builder
-public class LoginReqDto implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -4963635693182734520L;
+public class LoginReqDto {
 
     private Long userNo;
+
+    private String userId;
 
     private String username;
 
