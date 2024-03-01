@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
 public class TagResDto {
+
     @Schema(description = "태그 번호")
     private Long tagNo;
 
