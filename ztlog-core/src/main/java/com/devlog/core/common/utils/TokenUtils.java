@@ -26,7 +26,7 @@ public class TokenUtils {
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 6 * 30 * 24 * 60 * 60 * 1000L;    // 180일
 
-    private static final String USER_ID = "USER_ID";
+     private static final String USER_ID = "USER_ID";
 
 
     /**
