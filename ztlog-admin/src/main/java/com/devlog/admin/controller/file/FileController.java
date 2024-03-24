@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "파일 컨트롤러", description = "파일 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/admin/v1")
 public class FileController {
 
     private final FileService fileService;

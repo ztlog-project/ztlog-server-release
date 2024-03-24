@@ -17,7 +17,7 @@ import com.devlog.admin.service.user.dto.request.LoginReqDto;
 @Tag(name = "유저 컨트롤러", description = "유저 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/admin/v1/user")
 public class UserController {
 
     private final UserService userService;
