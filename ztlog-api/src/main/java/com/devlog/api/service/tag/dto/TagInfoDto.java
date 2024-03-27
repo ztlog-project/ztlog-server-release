@@ -15,6 +15,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

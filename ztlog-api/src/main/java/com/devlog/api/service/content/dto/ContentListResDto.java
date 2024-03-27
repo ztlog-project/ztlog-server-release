@@ -36,6 +36,7 @@ public class ContentListResDto {
     }
 
     @Getter
+    @Setter
     @ToString
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
