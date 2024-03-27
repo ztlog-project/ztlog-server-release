@@ -6,11 +6,13 @@ import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.user.User;
 import com.devlog.core.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -20,6 +22,8 @@ public class UserService {
 
     public UserResDto getUserInfo(String userName) {
         User user = userRepository.findByUsername(userName);
+        log.info("user = {}", user.toString());
+
         if (ObjectUtils.isEmpty(user)) {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }

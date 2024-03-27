@@ -17,8 +17,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "USER_NO", nullable = false)
     private Long userNo;
 
-    @Column(name = "USER_ID")
-    private String userId;
+//    @Column(name = "USER_ID")
+//    private String userId;
 
     @Column(name = "USERNAME")
     private String username;
