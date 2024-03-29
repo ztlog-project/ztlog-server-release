@@ -15,7 +15,7 @@ public class ContentTag {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TAG_NO")
+    @JoinColumn(name = "TAG_NO", nullable = false)
     private Tag tags;
 
     @Column(name = "SORT", nullable = false)

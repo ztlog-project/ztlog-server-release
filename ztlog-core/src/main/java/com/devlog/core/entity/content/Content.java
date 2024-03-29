@@ -27,12 +27,12 @@ public class Content extends BaseTimeEntity {
     private String ctntSubTitle;
 
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @PrimaryKeyJoinColumn(name = "CTNT_NO")
     private ContentDetail contentDetail;
 
-    @OneToMany(mappedBy = "contents", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "contents", fetch = FetchType.LAZY)
     @OrderBy("sort asc")
-    List<ContentTag> contentTags = new ArrayList<>();
+    private List<ContentTag> contentTags = new ArrayList<>();
 
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
@@ -43,7 +43,7 @@ public class Content extends BaseTimeEntity {
                 .ctntTitle(contentDetail.getCtntTitle())
                 .ctntSubTitle(contentDetail.getCtntBody().substring(0, 300))
                 .contentDetail(contentDetail)
-//                .contentTags(contentTags)
+                .contentTags(contentDetail.content.getContentTags())
                 .inpUser(contentDetail.getInpUser())
                 .build();
     }

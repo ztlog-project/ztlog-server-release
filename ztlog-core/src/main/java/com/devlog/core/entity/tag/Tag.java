@@ -24,7 +24,7 @@ public class Tag extends BaseTimeEntity {
     @Column(name = "TAG_NAME", nullable = false)
     private String tagName;
 
-    @OneToMany(mappedBy = "tags", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     List<ContentTag> contentTags = new ArrayList<>();
 
     public static Tag created(String tagName) {
