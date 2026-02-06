@@ -47,4 +47,9 @@ public class Content extends BaseTimeEntity {
                 .build();
     }
 
+    public void updated(String title, String body) {
+        this.ctntTitle = title;
+        this.ctntSubTitle = body.length() > 300 ? body.substring(0, 300) : body;
+    }
+
 }

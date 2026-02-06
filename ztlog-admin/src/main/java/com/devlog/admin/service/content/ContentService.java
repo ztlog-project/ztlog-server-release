@@ -68,14 +68,17 @@ public class ContentService {
      * @param reqDto 컨텐츠 요청 객체
      */
     public void createContentDetail(ContentReqDto reqDto) {
-        final var contentDetail =  contentDtlRepository.save(ContentDetail.created(reqDto.getTitle(), reqDto.getBody(), CommonConstants.ADMIN_NAME));
-        final var content = contentRepository.save(Content.created(contentDetail));
+        ContentDetail contentDetail = ContentDetail.created(reqDto.getTitle(), reqDto.getBody(), CommonConstants.ADMIN_NAME);
+        Content content = Content.created(contentDetail);
+
+        this.contentRepository.save(content);
 
         // content - tag
         List<ContentTag> contentTags = new ArrayList<>();
+        // 새 태그 등록 (없으면 생성)
         reqDto.getTags().forEach(tagReqDto -> {
             final var tag = tagRepository.findById(tagReqDto.getTagNo())
-                    .orElse(tagRepository.save(Tag.created(tagReqDto.getTagName())));
+                    .orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
             contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
         });
 
@@ -88,25 +91,26 @@ public class ContentService {
      * @param reqDto 컨텐츠 요청 객체
      */
     public void updateContentDetail(ContentReqDto reqDto) {
+        Content content = contentRepository.findById(reqDto.getCtntNo())
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
-        /*
+        // 컨텐츠 마스터 수정
+        content.updated(reqDto.getTitle(), reqDto.getBody());
 
-          프로세트 정리
-          1. 컨텐츠 존재 확인
+        // 컨텐츠 상세 수정
+        content.getContentDetail().updated(reqDto.getTitle(), reqDto.getBody());
 
-           -> 1.1 존재하지 않을 경우 등록
-            새 객체 생성
+        // 기존 태그 삭제 후 새 태그 등록
+        contentTagRepository.deleteAll(content.getContentTags());
 
-            컨텐츠 마스터 / 컨텐츠 디테일 / 컨텐츠 태그
+        List<ContentTag> contentTags = new ArrayList<>();
+        reqDto.getTags().forEach(tagReqDto -> {
+            Tag tag = tagRepository.findById(tagReqDto.getTagNo())
+                    .orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
+            contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
+        });
 
-           -> 1.2 존재할 경우 수정
-
-            컨텐츠 마스터 / 컨텐츠 디테일 / 컨텐츠 태그
-
-
-
-         */
-
+        contentTagRepository.saveAll(contentTags);
     }
 
     /**
@@ -118,10 +122,9 @@ public class ContentService {
         final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
 
-        // delete db data
-        contentRepository.deleteById(content.getCtntNo());
-        contentDtlRepository.deleteById(content.getCtntNo());
+        // delete
         contentTagRepository.deleteAll(content.getContentTags());
+        contentRepository.delete(content);
     }
 
 }
