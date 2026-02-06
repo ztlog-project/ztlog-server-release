@@ -18,6 +18,11 @@ spring:
       hibernate.default_batch_fetch_size: 1000
 
 # local, dev, prod 공통 설정
+jwt:
+  secret: thisIsASecretKeyUsedForJwtTokenGenerationAndItIsLongEnoughToMeetTheRequirementOf256Bits
+  access-token-expire-time: 600000 # 10분
+  refresh-token-expire-time: 15552000000 # 180일
+
 server:
   port: 8086
   servlet:

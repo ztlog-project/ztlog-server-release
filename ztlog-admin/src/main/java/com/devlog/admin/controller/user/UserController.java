@@ -4,6 +4,7 @@ import com.devlog.admin.service.user.dto.request.SignupReqDto;
 import com.devlog.admin.service.user.UserService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
+import com.devlog.core.common.dto.TokenInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,9 +44,9 @@ public class UserController {
      */
     @Operation(summary = "로그인하기", description = "로그인하기")
     @PostMapping("/login")
-    public ResponseEntity<Response<String>> loginUser(@RequestBody @Valid LoginReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
-        userService.loginUser(reqDto);
-        return Response.success(ResponseCode.OK_SUCCESS);
+    public ResponseEntity<Response<TokenInfo>> loginUser(@RequestBody @Valid LoginReqDto reqDto, HttpServletRequest request, HttpServletResponse response) {
+        TokenInfo tokenInfo = userService.loginUser(reqDto, request);
+        return Response.success(ResponseCode.OK_SUCCESS, tokenInfo);
     }
 
     /**

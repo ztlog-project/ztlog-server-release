@@ -25,6 +25,12 @@ server:
   port: 8086
   servlet:
     context-path: '/front'
+    session:
+      timeout: 30m
+      cookie:
+        http-only: true
+        secure: false # local 개발 환경이므로 false, 운영 환경에서는 true 권장
+        name: ZTLOG_SESSION_ID
 
 springdoc:
   packages-to-scan: com.devlog.api.controller

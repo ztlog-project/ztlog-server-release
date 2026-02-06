@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.DecodingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,15 +19,24 @@ import java.util.Date;
 @Component
 public class TokenUtils {
 
-    private static final String secretKey = "thisIsASecretKeyUsedForJwtTokenGenerationAndItIsLongEnoughToMeetTheRequirementOf256Bits";
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    @Value("${jwt.access-token-expire-time}")
+    private long accessTokenExpireTime;
+
+    @Value("${jwt.refresh-token-expire-time}")
+    private long refreshTokenExpireTime;
+
+    private static final String USER_ID = "USER_ID";
 
     private Key key;
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 10 * 60 * 1000L;              // 10분
-
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 6 * 30 * 24 * 60 * 60 * 1000L;    // 180일
-
-     private static final String USER_ID = "USER_ID";
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        byte[] keyBytes = io.jsonwebtoken.security.Keys.hmacShaKeyFor(secretKey.getBytes()).getEncoded();
+        this.key = io.jsonwebtoken.security.Keys.hmacShaKeyFor(keyBytes);
+    }
 
 
     /**
@@ -36,11 +46,12 @@ public class TokenUtils {
      */
     public TokenInfo generateToken(String userId) {
         long now = (new Date()).getTime();
-        Date accessTokenExpires = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        Date refreshTokenExpires = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
+        Date accessTokenExpires = new Date(now + accessTokenExpireTime);
+        Date refreshTokenExpires = new Date(now + refreshTokenExpireTime);
 
         // Access Token 생성
         String accessToken = Jwts.builder()
+                .setSubject(userId)
                 .claim(USER_ID, userId)
                 .setExpiration(accessTokenExpires)
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -62,6 +73,21 @@ public class TokenUtils {
     }
 
     /**
+     * 토큰에서 userId 추출
+     *
+     * @param token 토큰
+     * @return userId
+     */
+    public String getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+    }
+
+    /**
      * 토큰 검증
      *
      * @param token 토큰
@@ -70,7 +96,7 @@ public class TokenUtils {
      */
     public boolean validateToken(String token, HttpServletResponse response) {
         try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | DecodingException e) {
             log.warn("Invalid JWT Token", e);
