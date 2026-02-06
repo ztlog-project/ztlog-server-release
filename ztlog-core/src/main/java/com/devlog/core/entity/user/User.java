@@ -30,4 +30,20 @@ public class User extends BaseTimeEntity {
     @Column(name = "GRANT")
     private String grant;
 
+    /**
+     * 회원가입 시 사용자 생성
+     *
+     * @param username 사용자명
+     * @param encodedPassword 암호화된 비밀번호
+     * @param role 권한
+     * @return User 엔티티
+     */
+    public static User created(String username, String encodedPassword, String role) {
+        return User.builder()
+                .username(username)
+                .password(encodedPassword)
+                .grant(role)
+                .build();
+    }
+
 }
