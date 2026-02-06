@@ -39,7 +39,6 @@ public class Content extends BaseTimeEntity {
 
     public static Content created(ContentDetail contentDetail) {
         return Content.builder()
-                .ctntNo(contentDetail.getCtntNo())
                 .ctntTitle(contentDetail.getCtntTitle())
                 .ctntSubTitle(contentDetail.getCtntBody().substring(0, 300))
                 .contentDetail(contentDetail)

@@ -5,10 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
-@ToString
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Table(name = "file_mst")
 public class File extends BaseTimeEntity {
 

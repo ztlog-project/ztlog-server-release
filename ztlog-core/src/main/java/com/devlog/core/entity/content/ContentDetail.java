@@ -43,9 +43,6 @@ public class ContentDetail {
         return ContentDetail.builder()
                 .ctntTitle(title)
                 .ctntBody(body)
-//                .ctntPath(path)
-//                .ctntName(name)
-//                .ctntExt(ext)
                 .inpUser(user)
                 .build();
     }
