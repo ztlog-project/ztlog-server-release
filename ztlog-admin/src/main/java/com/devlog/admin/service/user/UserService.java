@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,8 @@ public class UserService {
     private final TokenUtils tokenUtils;
     private final PasswordEncoder passwordEncoder;
 
-    private static final String DEFAULT_ROLE = "ROLE_USER";
+    @Value("${user.default-role:ADMIN}")
+    private String defaultRole;
 
     /**
      * 유저 정보 조회하기
@@ -56,13 +58,13 @@ public class UserService {
      */
     public void signupUser(SignupReqDto reqDto) {
         // 중복 사용자 검증
-        if (userRepository.existsByUsername(reqDto.getUsername())) {
+        if (userRepository.existsByUserId(reqDto.getUserId())) {
             throw new DataConflictException(ResponseCode.CONFLICT_USER_ERROR.getMessage());
         }
 
         // 비밀번호 암호화 및 사용자 생성
         String encodedPassword = passwordEncoder.encode(reqDto.getPassword());
-        User user = User.created(reqDto.getUsername(), encodedPassword, DEFAULT_ROLE);
+        User user = User.created(reqDto.getUserId(), reqDto.getUsername(), encodedPassword, defaultRole);
 
         userRepository.save(user);
     }
