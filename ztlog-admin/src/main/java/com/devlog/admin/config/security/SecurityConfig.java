@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -56,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/v2/api-docs/**", "/swagger-resources/**").permitAll()
                         .requestMatchers("/main/**").permitAll()
                         .requestMatchers("/error.html").permitAll()
-                        .requestMatchers("/admin/v1/user/login", "/admin/v1/user/signup").permitAll()
+                        .requestMatchers("/api/v1/user/login", "/api/v1/user/signup").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -74,7 +75,9 @@ public class SecurityConfig {
         return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .requestMatchers(
                         "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**",
+                        "/api/v1/user/login",
+                        "/api/v1/user/signup"
                 );
     }
 
