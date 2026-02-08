@@ -1,25 +1,17 @@
 package com.devlog.admin.service.user.dto.request;
 
-import lombok.Builder;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
-@ToString
-@Builder
+@NoArgsConstructor
 public class LoginReqDto {
 
-    private Long userNo;
-
+    @NotBlank(message = "사용자 ID는 필수입니다.")
     private String userId;
 
-    private String username;
-
+    @NotBlank(message = "비밀번호는 필수입니다.")
     private String password;
-
-    private String grant;
 
 }

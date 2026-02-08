@@ -17,7 +17,7 @@ import com.devlog.admin.service.user.dto.request.LoginReqDto;
 @Tag(name = "유저 컨트롤러", description = "유저 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/v1/user")
+@RequestMapping(value = "/api/v1")
 public class UserController {
 
     private final UserService userService;
@@ -29,7 +29,7 @@ public class UserController {
      * @return 성공 응답
      */
     @Operation(summary = "회원가입하기", description = "회원가입하기")
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public ResponseEntity<Response<String>> signupUser(@RequestBody @Valid SignupReqDto reqDto) {
         userService.signupUser(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
@@ -39,13 +39,12 @@ public class UserController {
      * 로그인하기
      *
      * @param reqDto 로그인 요청 객체
-     * @param request HTTP 요청
      * @return JWT 토큰 정보
      */
     @Operation(summary = "로그인하기", description = "로그인하기")
-    @PostMapping("/login")
-    public ResponseEntity<Response<TokenInfo>> loginUser(@RequestBody @Valid LoginReqDto reqDto, HttpServletRequest request) {
-        TokenInfo tokenInfo = userService.loginUser(reqDto, request);
+    @PostMapping("/user/login")
+    public ResponseEntity<Response<TokenInfo>> loginUser(@RequestBody @Valid LoginReqDto reqDto) {
+        TokenInfo tokenInfo = userService.loginUser(reqDto);
         return Response.success(ResponseCode.OK_SUCCESS, tokenInfo);
     }
 
@@ -56,7 +55,7 @@ public class UserController {
      * @return 성공 응답
      */
     @Operation(summary = "로그아웃하기", description = "로그아웃하기")
-    @PostMapping("/logout")
+    @PostMapping("/user/logout")
     public ResponseEntity<Response<String>> logoutUser(HttpServletRequest request) {
         userService.logoutUser(request);
         return Response.success(ResponseCode.OK_SUCCESS);
@@ -69,7 +68,7 @@ public class UserController {
      * @return 성공 응답
      */
     @Operation(summary = "회원탈퇴하기", description = "회원탈퇴하기")
-    @DeleteMapping("/withdraw")
+    @DeleteMapping("/user/withdraw")
     public ResponseEntity<Response<String>> withdrawUser(HttpServletRequest request) {
         userService.withdrawUser(request);
         return Response.success(ResponseCode.OK_SUCCESS);

@@ -15,8 +15,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -73,21 +75,24 @@ public class UserService {
      * 로그인
      *
      * @param reqDto 로그인 요청 정보
-     * @param request HTTP 요청
      * @return JWT 토큰 정보
      */
-    public TokenInfo loginUser(LoginReqDto reqDto, HttpServletRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(reqDto.getUsername(), reqDto.getPassword())
-        );
+    public TokenInfo loginUser(LoginReqDto reqDto) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(reqDto.getUserId(), reqDto.getPassword())
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (authentication.getPrincipal() instanceof UserDetailDto userDetailDto) {
-            return tokenUtils.generateToken(userDetailDto.getUsername());
+            if (authentication.getPrincipal() instanceof UserDetailDto userDetailDto) {
+                return tokenUtils.generateToken(userDetailDto.getUserId());
+            }
+
+            throw new InternalServerException(ResponseCode.INTERNAL_SERVER_ERROR.getMessage());
+        } catch (AuthenticationException e) {
+            throw new DataNotFoundException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
-
-        throw new InternalServerException(ResponseCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
     /**
@@ -118,8 +123,8 @@ public class UserService {
             throw new InternalServerException(ResponseCode.UNAUTHORIZED_USER_GRANT.getMessage());
         }
 
-        String username = authentication.getName();
-        User user = userRepository.findByUsername(username);
+        String userId = authentication.getName();
+        User user = userRepository.findByUserId(userId);
         if (user == null) {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }

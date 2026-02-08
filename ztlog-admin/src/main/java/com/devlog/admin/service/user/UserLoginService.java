@@ -19,14 +19,14 @@ import java.util.Collections;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class UserLoginService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        // userRepository 에서 유저 객체를 받아온다.
-        User user = userRepository.findByUsername(userName);
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        // userRepository 에서 userId로 유저 객체를 조회
+        User user = userRepository.findByUserId(userId);
         if (ObjectUtils.isEmpty(user))
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
 
