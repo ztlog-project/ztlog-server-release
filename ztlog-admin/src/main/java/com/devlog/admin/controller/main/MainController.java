@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "메인(대쉬보드) 컨트롤러", description = "메인(대쉬보드) 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/v1")
+@RequestMapping("/api/v1")
 public class MainController {
 
     private final MainService mainService;
