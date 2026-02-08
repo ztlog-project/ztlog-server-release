@@ -56,7 +56,7 @@ public class TagController {
     @GetMapping("/tags/{tagNo}")
     public ResponseEntity<Response<ContentListResDto>> getTagContentList(
             @PathVariable Integer tagNo,
-            @RequestParam(value = "no", defaultValue = "1") Integer page
+            @RequestParam(value = "page", defaultValue = "1") Integer page
     ) {
         return Response.success(ResponseCode.OK_SUCCESS, tagService.getTagContentList(tagNo, page));
     }

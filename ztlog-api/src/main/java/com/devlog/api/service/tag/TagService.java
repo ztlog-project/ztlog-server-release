@@ -6,10 +6,11 @@ import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
-import com.devlog.core.entity.content.ContentTag;
+import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final ContentRepository contentRepository;
 
     /**
      * 태그 목록 조회하기
@@ -43,16 +45,11 @@ public class TagService {
      * @return 태그 게시물 리스트
      */
     public ContentListResDto getTagContentList(Integer tagNo, Integer page) {
-        final var tag = tagRepository.findById(Long.valueOf(tagNo))
-                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+        if (!tagRepository.existsById(Long.valueOf(tagNo))) {
+            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
+        }
 
-        List<Content> contents = tag.getContentTags().stream()
-                .map(ContentTag::getContents)
-                .collect(Collectors.toList());
-
-        int start = PageUtils.getStartIdx(page);
-        int end = Math.min(PageUtils.getEndIdx(page, start), contents.size());
-
-        return ContentListResDto.of(contents.subList(start, end));
+        Page<Content> contentPage = contentRepository.findAllByContentTagsTagsTagNo(Long.valueOf(tagNo), PageUtils.getPageable(page));
+        return ContentListResDto.of(contentPage);
     }
 }
