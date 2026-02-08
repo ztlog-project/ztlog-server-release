@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 @Slf4j
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
+                        .requestMatchers("/", "/index.html").permitAll()
                         .requestMatchers("/v2/api-docs/**", "/swagger-resources/**").permitAll()
                         .requestMatchers("/main/**").permitAll()
                         .requestMatchers("/error.html").permitAll()

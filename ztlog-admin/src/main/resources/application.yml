@@ -20,11 +20,16 @@ spring:
     properties:
       hibernate.default_batch_fetch_size: 1000
 
+jwt:
+  secret: thisIsASecretKeyUsedForJwtTokenGenerationAndItIsLongEnoughToMeetTheRequirementOf256Bits
+  access-token-expire-time: 600000
+  refresh-token-expire-time: 15552000000
+
 # local, dev, prod 공통 설정
 server:
-  port: 8086
+  port: 8080
   servlet:
-    context-path: '/front'
+    context-path: '/admin'
     session:
       timeout: 30m
       cookie:
@@ -33,7 +38,7 @@ server:
         name: ZTLOG_SESSION_ID
 
 springdoc:
-  packages-to-scan: com.devlog.api.controller
+  packages-to-scan: com.devlog.admin.controller
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
