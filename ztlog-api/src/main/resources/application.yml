@@ -19,6 +19,12 @@ spring:
     open-in-view: false
     properties:
       hibernate.default_batch_fetch_size: 1000
+
+jwt:
+  secret: thisIsASecretKeyUsedForJwtTokenGenerationAndItIsLongEnoughToMeetTheRequirementOf256Bits
+  access-token-expire-time: 600000
+  refresh-token-expire-time: 15552000000
+
 server:
   port: 8086
   servlet:
