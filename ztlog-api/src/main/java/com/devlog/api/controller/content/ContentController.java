@@ -35,7 +35,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping("/contents")
-    public ResponseEntity<Response<ContentListResDto>> getContentsList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
+    public ResponseEntity<Response<ContentListResDto>> getContentsList(@RequestParam(value = "page", defaultValue = "1") Integer page) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentsList(page));
     }
 

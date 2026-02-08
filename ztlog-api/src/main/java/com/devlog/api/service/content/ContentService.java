@@ -30,7 +30,7 @@ public class ContentService {
      */
     public ContentListResDto getContentsList(int page) {
         Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page));
-        return ContentListResDto.of(contentPage.getContent());
+        return ContentListResDto.of(contentPage);
     }
 
     /**
@@ -54,7 +54,7 @@ public class ContentService {
      */
     public ContentListResDto searchContentList(String param, int page) {
         Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, PageUtils.getPageable(page));
-        return ContentListResDto.of(contentPage.getContent());
+        return ContentListResDto.of(contentPage);
     }
 
 }
