@@ -37,7 +37,7 @@ public enum ResponseCode {
     // 401 UnAuthorized
     UNAUTHORIZED_USER_GRANT(401, "권한이 없습니다."),
     UNAUTHORIZED_INVALID_TOKEN(401, "유효하지 않은 토큰입니다."),
-    // UNAUTHORIZED_EXPIRED_TOKEN(401, "토큰이 만료되었습니다. 다시 로그인 해주세요."),
+    UNAUTHORIZED_EXPIRED_TOKEN(401, "토큰이 만료되었습니다. 다시 로그인 해주세요."),
 
     // 403 Forbidden
     FORBIDDEN_FILE_TYPE(403, "허용되지 않은 파일 형식입니다."),

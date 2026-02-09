@@ -1,6 +1,7 @@
 package com.devlog.admin.config.security;
 
 import com.devlog.core.common.utils.TokenUtils;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,17 +33,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = tokenUtils.resolveAccessToken(request);
 
-        // JWT 토큰이 없는 경우 세션에서 인증 정보 확인 (스프링 시큐리티 기본 필터가 처리하도록 함)
-        if (StringUtils.hasText(token) && tokenUtils.validateToken(token, response)) {
-            String userId = tokenUtils.getUserIdFromToken(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+        try {
+            // JWT 토큰이 없는 경우 세션에서 인증 정보 확인 (스프링 시큐리티 기본 필터가 처리하도록 함)
+            if (StringUtils.hasText(token) && tokenUtils.validateToken(token)) {
+                String userId = tokenUtils.getUserIdFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
-            if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (userDetails != null) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+        } catch (JwtException e) {
+            request.setAttribute("exception", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

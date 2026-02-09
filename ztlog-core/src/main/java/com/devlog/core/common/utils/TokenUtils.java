@@ -91,25 +91,28 @@ public class TokenUtils {
      * 토큰 검증
      *
      * @param token 토큰
-     * @param response 응답
      * @return 검증 여부
      */
-    public boolean validateToken(String token, HttpServletResponse response) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | DecodingException e) {
             log.warn("Invalid JWT Token", e);
+            throw new JwtException("INVALID_TOKEN");
         } catch (ExpiredJwtException e) {
             log.warn("Expired JWT Token", e);
+            throw new JwtException("EXPIRED_TOKEN");
         } catch (UnsupportedJwtException e) {
             log.warn("Unsupported JWT Token", e);
+            throw new JwtException("UNSUPPORTED_TOKEN");
         } catch (IllegalArgumentException e) {
             log.warn("JWT claims string is empty.", e);
+            throw new JwtException("EMPTY_TOKEN");
         } catch (Exception e) {
             log.error("Unhandled JWT exception", e);
+            throw new JwtException("UNKNOWN_ERROR");
         }
-        return false;
     }
 
     /**

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class CustomExceptionHandler {
 
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<Response<String>> handleDataNotFoundException(DataNotFoundException e) {
