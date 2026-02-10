@@ -4,8 +4,9 @@ import com.devlog.core.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static com.devlog.core.common.constants.CommonConstants.SUBTITLE_SIZE;
 
 @Getter
 @Entity
@@ -38,18 +39,32 @@ public class Content extends BaseTimeEntity {
     private String inpUser;
 
     public static Content created(ContentDetail contentDetail) {
-        return Content.builder()
+        Content content = Content.builder()
                 .ctntTitle(contentDetail.getCtntTitle())
-                .ctntSubTitle(contentDetail.getCtntBody().substring(0, 300))
+                .ctntSubTitle(truncated(contentDetail.getCtntBody()))
                 .contentDetail(contentDetail)
-                .contentTags(contentDetail.content.getContentTags())
+                .contentTags(Optional.ofNullable(contentDetail.getContent())
+                        .map(Content::getContentTags)
+                        .orElse(null))
                 .inpUser(contentDetail.getInpUser())
                 .build();
+
+        // ContentDetail에게 부모(Content)를 연결 (MapsId 에러 해결 지점)
+        contentDetail.updated(content.ctntTitle, content.ctntSubTitle, content);
+
+        return content;
+    }
+
+    private static String truncated(String text) {
+        if (text == null || text.length() <= SUBTITLE_SIZE) {
+            return text;
+        }
+        return text.substring(0, SUBTITLE_SIZE);
     }
 
     public void updated(String title, String body) {
         this.ctntTitle = title;
-        this.ctntSubTitle = body.length() > 300 ? body.substring(0, 300) : body;
+        this.ctntSubTitle = body.length() > SUBTITLE_SIZE ? body.substring(0, SUBTITLE_SIZE) : body;
     }
 
 }

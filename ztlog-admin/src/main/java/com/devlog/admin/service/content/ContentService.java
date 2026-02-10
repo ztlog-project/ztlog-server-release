@@ -98,7 +98,7 @@ public class ContentService {
         content.updated(reqDto.getTitle(), reqDto.getBody());
 
         // 컨텐츠 상세 수정
-        content.getContentDetail().updated(reqDto.getTitle(), reqDto.getBody());
+        content.getContentDetail().updated(reqDto.getTitle(), reqDto.getBody(), content);
 
         // 기존 태그 삭제 후 새 태그 등록
         contentTagRepository.deleteAll(content.getContentTags());

@@ -47,9 +47,10 @@ public class ContentDetail {
                 .build();
     }
 
-    public void updated(String title, String body) {
+    public void updated(String title, String body, Content content) {
         this.ctntTitle = title;
         this.ctntBody = body;
+        this.content = content;
     }
 
 }

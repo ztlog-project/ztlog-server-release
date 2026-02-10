@@ -9,8 +9,8 @@ public class CommonConstants {
     // number
     public static final int PAGE_SIZE = 5;
     public static final int TAG_NAME_SIZE = 15;
-    public static final int CONTENT_TITLE_SIZE = 100;
-    public static final int CONTENT_SUBTITLE_SIZE = 300;
+    public static final int TITLE_SIZE = 100;
+    public static final int SUBTITLE_SIZE = 200;
 
     // auth
     public static final String BEARER_TYPE = "Bearer";

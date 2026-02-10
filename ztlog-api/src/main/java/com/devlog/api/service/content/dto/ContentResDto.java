@@ -24,7 +24,7 @@ public class ContentResDto {
     private Long ctntNo;
 
     @Schema(description = "게시물 제목")
-    @Size(max = CommonConstants.CONTENT_TITLE_SIZE, message = "content title length is too long!!")
+    @Size(max = CommonConstants.TITLE_SIZE, message = "content title length is too long!!")
     private String title;
 
     @Schema(description = "게시물 내용")
