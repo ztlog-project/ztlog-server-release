@@ -19,17 +19,13 @@ import java.util.Date;
 @Component
 public class TokenUtils {
 
+    private static final String USER_ID = "USER_ID";
     @Value("${jwt.secret}")
     private String secretKey;
-
     @Value("${jwt.access-token-expire-time}")
     private long accessTokenExpireTime;
-
     @Value("${jwt.refresh-token-expire-time}")
     private long refreshTokenExpireTime;
-
-    private static final String USER_ID = "USER_ID";
-
     private Key key;
 
     @jakarta.annotation.PostConstruct
@@ -41,6 +37,7 @@ public class TokenUtils {
 
     /**
      * JWT 토큰 생성
+     *
      * @param userId 유저 ID
      * @return JWT 토큰
      */
@@ -98,16 +95,16 @@ public class TokenUtils {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | DecodingException e) {
-            log.warn("Invalid JWT Token", e);
+            log.warn("[TokenUtils] Invalid JWT Token - {}", e.getMessage());
             throw new JwtException("INVALID_TOKEN");
         } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT Token", e);
+            log.warn("[TokenUtils - Expired JWT Token] - {}", e.getMessage());
             throw new JwtException("EXPIRED_TOKEN");
         } catch (UnsupportedJwtException e) {
-            log.warn("Unsupported JWT Token", e);
+            log.warn("[TokenUtils] Unsupported JWT Token - {}", e.getMessage());
             throw new JwtException("UNSUPPORTED_TOKEN");
         } catch (IllegalArgumentException e) {
-            log.warn("JWT claims string is empty.", e);
+            log.warn("[TokenUtils] JWT claims string is empty. - {}", e.getMessage());
             throw new JwtException("EMPTY_TOKEN");
         } catch (Exception e) {
             log.error("Unhandled JWT exception", e);
@@ -119,7 +116,7 @@ public class TokenUtils {
      * access 토큰 헤더에 세팅
      *
      * @param accessToken 액세스 토큰
-     * @param response 응답
+     * @param response    응답
      */
     public void accessTokenSetHeader(String accessToken, HttpServletResponse response) {
         String headerValue = CommonConstants.BEARER_PREFIX + accessToken;
@@ -130,7 +127,7 @@ public class TokenUtils {
      * refresh 토큰 헤더에 세팅
      *
      * @param refreshToken refresh 토큰
-     * @param response 응답
+     * @param response     응답
      */
     public void refresshTokenSetHeader(String refreshToken, HttpServletResponse response) {
         response.setHeader("Refresh", refreshToken);
