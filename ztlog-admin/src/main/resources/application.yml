@@ -52,7 +52,8 @@ mybatis:
     map-underscore-to-camel-case: true
     default-fetch-size: 100
     default-statement-timeout: 30
-  mapper-locations: classpath:mybatis/mapper/**/**.xml
+#  mapper-locations: classpath:mybatis/mapper/**/**.xml
+  mapper-locations: classpath:mapper/**/**.xml
   type-aliases-package: com.devlog.admin.vo
 
 
@@ -66,7 +67,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ztlog?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: root
-    password: 12345678
+    password: Cy07351258!
   mvc:
     async:
       request-timeout: 2000
