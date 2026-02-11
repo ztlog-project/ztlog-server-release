@@ -37,7 +37,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping("/contents")
-    public ResponseEntity<Response<ContentListResDto>> getContentList(@RequestParam(value = "no", defaultValue = "1") Integer page) {
+    public ResponseEntity<Response<ContentListResDto>> getContentList(@RequestParam(value = "page", defaultValue = "1") Integer page) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.getContentList(page));
     }
 

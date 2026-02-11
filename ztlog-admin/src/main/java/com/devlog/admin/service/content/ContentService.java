@@ -19,6 +19,7 @@ import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +49,8 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page));
+
+        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page, 10).withSort(Sort.Direction.DESC, "inpDttm"));
         return ContentListResDto.of(contentPage.getContent());
     }
 

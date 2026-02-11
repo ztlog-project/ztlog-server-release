@@ -12,6 +12,10 @@ public class PageUtils {
         return PageRequest.of(page - 1, CommonConstants.PAGE_SIZE);
     }
 
+    public static PageRequest getPageable(int page, int size) {
+        return PageRequest.of(page - 1, size);
+    }
+
     public static int getStartIdx(int page) {
         return Long.valueOf(PageRequest.of(page - 1, CommonConstants.PAGE_SIZE).getOffset()).intValue();
     }
