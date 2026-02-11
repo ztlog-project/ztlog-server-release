@@ -1,6 +1,7 @@
 package com.devlog.admin.controller.main;
 
-import com.devlog.admin.service.main.MainService;
+import com.devlog.admin.service.main.MainDashBoardService;
+import com.devlog.admin.service.main.dto.MainDashBoardResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class MainController {
+public class MainDashBoardController {
 
-    private final MainService mainService;
+    private final MainDashBoardService mainDashBoardService;
 
     /**
      * 메인화면(대쉬보드) 조회
@@ -26,8 +27,8 @@ public class MainController {
      */
     @Operation(summary = "메인화면(대쉬보드) 조회", description = "메인화면(대쉬보드) 조회")
     @GetMapping("/main")
-    public ResponseEntity<Response<Object>> getMainStatusInfo() {
-        return Response.success(ResponseCode.OK_SUCCESS, mainService.getMainStatusInfo());
+    public ResponseEntity<Response<MainDashBoardResDto>> getMainStatusInfo() {
+        return Response.success(ResponseCode.OK_SUCCESS, mainDashBoardService.getMainStatusInfo());
     }
 
 }
