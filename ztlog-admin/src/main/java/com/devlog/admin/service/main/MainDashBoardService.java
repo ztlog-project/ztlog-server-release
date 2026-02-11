@@ -1,7 +1,7 @@
 package com.devlog.admin.service.main;
 
 import com.devlog.admin.mapper.main.MainDashBoardMapper;
-import com.devlog.admin.dto.main.request.MainDashBoardDto;
+import com.devlog.admin.dto.main.request.MainStatisticsDto;
 import com.devlog.admin.dto.main.response.MainDashBoardResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +16,9 @@ public class MainDashBoardService {
 
     private final MainDashBoardMapper mainDashboardMapper;
 
-    public MainDashBoardResDto getMainStatusInfo() {
-        MainDashBoardDto dto = new MainDashBoardDto();
-        dto = mainDashboardMapper.selectMainStatisticInfo();
-
-        MainDashBoardResDto resDto = new MainDashBoardResDto();
-
-        return resDto;
+    public MainDashBoardResDto getMainStatisticsInfo() {
+        MainStatisticsDto dto = mainDashboardMapper.selectMainStatistics();
+        return MainDashBoardResDto.of(dto);
     }
 
 }

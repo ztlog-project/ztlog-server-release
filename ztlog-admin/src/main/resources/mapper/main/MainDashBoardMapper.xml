@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devlog.admin.mapper.main.MainDashBoardMapper">
-    <select id="selectMainStatisticInfo" resultType="MainDashBoardDto">
-        select *
-        from content_mst cm
-        where 1=1
+    <select id="selectMainStatistics" resultType="MainStatisticsDto">
+        SELECT
+            (SELECT COUNT(*) FROM contents_mst cm) AS totalPostCount,
+            (SELECT COUNT(*) FROM tags_mst tm)     AS totalTagCount
     </select>
 
 </mapper>

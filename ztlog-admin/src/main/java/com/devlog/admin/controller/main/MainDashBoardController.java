@@ -27,8 +27,8 @@ public class MainDashBoardController {
      */
     @Operation(summary = "메인화면(대쉬보드) 조회", description = "메인화면(대쉬보드) 조회")
     @GetMapping("/main")
-    public ResponseEntity<Response<MainDashBoardResDto>> getMainStatusInfo() {
-        return Response.success(ResponseCode.OK_SUCCESS, mainDashBoardService.getMainStatusInfo());
+    public ResponseEntity<Response<MainDashBoardResDto>> getMainStatisticsInfo() {
+        return Response.success(ResponseCode.OK_SUCCESS, mainDashBoardService.getMainStatisticsInfo());
     }
 
 }
