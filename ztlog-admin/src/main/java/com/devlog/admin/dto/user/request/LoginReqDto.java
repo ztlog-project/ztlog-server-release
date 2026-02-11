@@ -1,4 +1,4 @@
-package com.devlog.admin.service.user.dto.request;
+package com.devlog.admin.dto.user.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

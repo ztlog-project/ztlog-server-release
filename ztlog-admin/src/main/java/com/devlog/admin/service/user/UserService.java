@@ -1,10 +1,11 @@
 package com.devlog.admin.service.user;
 
-import com.devlog.admin.service.user.dto.request.LoginReqDto;
-import com.devlog.admin.service.user.dto.request.SignupReqDto;
-import com.devlog.admin.service.user.dto.response.UserDetailDto;
+import com.devlog.admin.dto.user.request.LoginReqDto;
+import com.devlog.admin.dto.user.request.SignupReqDto;
+import com.devlog.admin.dto.user.response.UserDetailDto;
 import com.devlog.core.common.dto.TokenInfo;
 import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.enumulation.UserRole;
 import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataConflictException;
 import com.devlog.core.config.exception.DataNotFoundException;
@@ -15,12 +16,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +34,6 @@ public class UserService {
     private final TokenUtils tokenUtils;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${user.default-role:ADMIN}")
-    private String defaultRole;
 
     /**
      * 유저 정보 조회하기
@@ -66,7 +63,7 @@ public class UserService {
 
         // 비밀번호 암호화 및 사용자 생성
         String encodedPassword = passwordEncoder.encode(reqDto.getPassword());
-        User user = User.created(reqDto.getUserId(), reqDto.getUsername(), encodedPassword, defaultRole);
+        User user = User.created(reqDto.getUserId(), reqDto.getUsername(), encodedPassword, UserRole.ADMIN.value());
 
         userRepository.save(user);
     }

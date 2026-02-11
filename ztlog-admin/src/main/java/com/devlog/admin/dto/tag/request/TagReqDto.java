@@ -1,4 +1,4 @@
-package com.devlog.admin.service.tag.dto;
+package com.devlog.admin.dto.tag.request;
 
 import com.devlog.core.common.constants.CommonConstants;
 import io.swagger.v3.oas.annotations.media.Schema;

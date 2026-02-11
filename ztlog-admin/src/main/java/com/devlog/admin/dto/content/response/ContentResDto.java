@@ -1,6 +1,6 @@
-package com.devlog.admin.service.content.dto;
+package com.devlog.admin.dto.content.response;
 
-import com.devlog.admin.service.tag.dto.TagInfoDto;
+import com.devlog.admin.dto.tag.request.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;

@@ -1,9 +1,9 @@
 package com.devlog.admin.service.content;
 
+import com.devlog.admin.dto.content.request.ContentInfoDto;
 import com.devlog.admin.mapper.content.ContentStatisticsMapper;
-import com.devlog.admin.service.content.dto.ContentReqDto;
-import com.devlog.admin.service.content.dto.ContentResDto;
-import com.devlog.admin.service.content.dto.ContentListResDto;
+import com.devlog.admin.dto.content.response.ContentResDto;
+import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.utils.PageUtils;
@@ -69,7 +69,7 @@ public class ContentService {
      *
      * @param reqDto 컨텐츠 요청 객체
      */
-    public void createContentDetail(ContentReqDto reqDto) {
+    public void createContentDetail(ContentInfoDto.ContentReqDto reqDto) {
         ContentDetail contentDetail = ContentDetail.created(reqDto.getTitle(), reqDto.getBody(), CommonConstants.ADMIN_NAME);
         Content content = Content.created(contentDetail);
 
@@ -92,7 +92,7 @@ public class ContentService {
      *
      * @param reqDto 컨텐츠 요청 객체
      */
-    public void updateContentDetail(ContentReqDto reqDto) {
+    public void updateContentDetail(ContentInfoDto.ContentReqDto reqDto) {
         Content content = contentRepository.findById(reqDto.getCtntNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 

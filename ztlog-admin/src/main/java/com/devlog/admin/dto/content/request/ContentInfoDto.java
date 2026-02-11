@@ -1,5 +1,6 @@
-package com.devlog.admin.service.content.dto;
+package com.devlog.admin.dto.content.request;
 
+import com.devlog.admin.dto.tag.request.TagReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentTag;
@@ -54,5 +55,39 @@ public class ContentInfoDto {
                 .stream()
                 .map(contentTag -> ContentInfoDto.of(contentTag.getContents()))
                 .collect(toList());
+    }
+
+    @Getter
+    @ToString
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Builder(access = AccessLevel.PRIVATE)
+    public static class ContentReqDto {
+
+        @Schema(description = "게시물 번호")
+        private Long ctntNo;
+
+        @Schema(description = "게시물 제목")
+        @Size(max = CommonConstants.TITLE_SIZE, message = "content title length is too long!!")
+        private String title;
+
+        @Schema(description = "게시물 내용")
+        private String body;
+
+        @Schema(description = "게시물 경로")
+        private String path;
+
+        @Schema(description = "게시물 이름")
+        private String name;
+
+        @Schema(description = "게시물 확장자")
+        private String ext;
+
+        @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
+        private String inpUser;
+
+        @Schema(description = "게시물 태그 번호 목록")
+        List<TagReqDto> tags;
+
     }
 }

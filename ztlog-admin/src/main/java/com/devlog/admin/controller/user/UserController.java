@@ -1,6 +1,6 @@
 package com.devlog.admin.controller.user;
 
-import com.devlog.admin.service.user.dto.request.SignupReqDto;
+import com.devlog.admin.dto.user.request.SignupReqDto;
 import com.devlog.admin.service.user.UserService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.devlog.admin.service.user.dto.request.LoginReqDto;
+import com.devlog.admin.dto.user.request.LoginReqDto;
 
 @Tag(name = "유저 컨트롤러", description = "유저 컨트롤러")
 @RestController

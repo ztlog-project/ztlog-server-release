@@ -1,47 +1,56 @@
-
 dependencies {
+    // [Spring Boot Starters] - admin 모듈에서 공유하도록 api 사용 고려 가능
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-    // jwt
+
+    // [JWT] - JJWT 0.11.5 설정
     api 'io.jsonwebtoken:jjwt-api:0.11.5'
-    api 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    api 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-    // com.sun.xml.bind
-    implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
-    implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
-    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-    // querydsl javax -> jakarta
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // [Jakarta XML Bind] - 구버전(javax) 삭제 후 Spring Boot 3 표준으로 교체
+    // CVE-2024-49203 등 잠재적 취약점 방지를 위해 최신 런타임 사용
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
+
+    // [QueryDSL] - Jakarta(Spring Boot 3) 전용 설정
     implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
     implementation "com.querydsl:querydsl-core:5.0.0"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
-    //testImplementation 'org.springframework.security:spring-security-test'
 
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // [Database]
     runtimeOnly 'com.h2database:h2'
-    runtimeOnly "com.mysql:mysql-connector-j"
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // [Lombok]
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    // querydsl 쿼리 타입 생성 (QClass 생성 시 @Entity 탐색), NoClassDefFoundError 에러 방지
+
+    // [Annotation Processors] - QClass 생성 및 Jakarta API 탐색
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 
+    // [Test]
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // [Utils]
+    compileOnly 'org.jetbrains:annotations:24.1.0'
 }
 
-def queryDslDir = 'build/querydsl/generated'
+// QueryDSL QClass 생성 경로 설정
+def queryDslDir = "build/generated/querydsl"
 
 sourceSets {
-    main.java.srcDirs += [queryDslDir]
+    main.java.srcDirs += [ queryDslDir ]
 }
 
-tasks.withType(JavaCompile) {
-    options.generatedSourceOutputDirectory = file(queryDslDir)
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(queryDslDir))
 }
 
-clean.doLast {
-    file(queryDslDir).deleteDir()
+clean {
+    delete queryDslDir
 }

@@ -1,8 +1,8 @@
 package com.devlog.admin.service.main;
 
 import com.devlog.admin.mapper.main.MainDashBoardMapper;
-import com.devlog.admin.service.main.dto.MainDashBoardDto;
-import com.devlog.admin.service.main.dto.MainDashBoardResDto;
+import com.devlog.admin.dto.main.request.MainDashBoardDto;
+import com.devlog.admin.dto.main.response.MainDashBoardResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class MainDashBoardService {
 
     public MainDashBoardResDto getMainStatusInfo() {
         MainDashBoardDto dto = new MainDashBoardDto();
-        dto = mainDashboardMapper.getMainStatusInfo();
+        dto = mainDashboardMapper.selectMainStatisticInfo();
 
         MainDashBoardResDto resDto = new MainDashBoardResDto();
 

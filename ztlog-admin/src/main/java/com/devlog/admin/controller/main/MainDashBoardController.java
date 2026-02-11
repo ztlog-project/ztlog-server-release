@@ -1,7 +1,7 @@
 package com.devlog.admin.controller.main;
 
 import com.devlog.admin.service.main.MainDashBoardService;
-import com.devlog.admin.service.main.dto.MainDashBoardResDto;
+import com.devlog.admin.dto.main.response.MainDashBoardResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;

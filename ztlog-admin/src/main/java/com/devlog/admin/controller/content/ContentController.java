@@ -1,8 +1,8 @@
 package com.devlog.admin.controller.content;
 
-import com.devlog.admin.service.content.dto.ContentReqDto;
-import com.devlog.admin.service.content.dto.ContentResDto;
-import com.devlog.admin.service.content.dto.ContentListResDto;
+import com.devlog.admin.dto.content.request.ContentInfoDto;
+import com.devlog.admin.dto.content.response.ContentResDto;
+import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.admin.service.content.ContentService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
@@ -72,7 +72,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping("/contents")
-    public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentReqDto reqDto) {
+    public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentInfoDto.ContentReqDto reqDto) {
         contentService.createContentDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
@@ -90,7 +90,7 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping("/contents")
-    public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentReqDto reqDto) {
+    public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentInfoDto.ContentReqDto reqDto) {
         contentService.updateContentDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }

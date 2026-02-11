@@ -1,6 +1,6 @@
-package com.devlog.admin.service.tag.dto;
+package com.devlog.admin.dto.tag.response;
 
-import com.devlog.admin.service.content.dto.ContentInfoDto;
+import com.devlog.admin.dto.content.request.ContentInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;

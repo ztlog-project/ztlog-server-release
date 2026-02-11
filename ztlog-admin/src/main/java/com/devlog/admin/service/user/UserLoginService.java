@@ -1,6 +1,6 @@
 package com.devlog.admin.service.user;
 
-import com.devlog.admin.service.user.dto.response.UserDetailDto;
+import com.devlog.admin.dto.user.response.UserDetailDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.user.User;

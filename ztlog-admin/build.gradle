@@ -1,21 +1,26 @@
-
 dependencies {
     api(project(":ztlog-core"))
+
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-security"
-//    implementation "org.springframework.session:spring-session-data-redis"
+
+    // [MyBatis]
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-//    runtimeOnly "com.mysql:mysql-connector-j"
-    compileOnly "org.jetbrains:annotations:16.0.2"
-//    implementation "org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE"
-//    implementation "org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE"
-//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
-//	implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    // [OpenAPI / Swagger]
+    // 버전을 2.8.4에서 2.3.0으로 낮추거나, locator의 버전을 제거합니다.
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'org.webjars:webjars-locator-core' // 버전 제거 (Spring Boot가 결정하게 함)
+
+    implementation('org.apache.commons:commons-lang3:3.18.0')
+
+    constraints {
+        implementation('commons-beanutils:commons-beanutils:1.10.0')
+    }
+
+    compileOnly "org.jetbrains:annotations:24.1.0"
     testImplementation "org.springframework.security:spring-security-test"
-
 }
