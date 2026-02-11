@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TagService {
 
+    // repository
     private final TagRepository tagRepository;
-
     private final ContentTagRepository contentTagRepository;
 
     /**

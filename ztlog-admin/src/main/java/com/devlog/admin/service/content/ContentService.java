@@ -1,5 +1,6 @@
 package com.devlog.admin.service.content;
 
+import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.service.content.dto.ContentReqDto;
 import com.devlog.admin.service.content.dto.ContentResDto;
 import com.devlog.admin.service.content.dto.ContentListResDto;
@@ -31,13 +32,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContentService {
 
+    // repository
     private final ContentRepository contentRepository;
-
     private final ContentDtlRepository contentDtlRepository;
-
     private final ContentTagRepository contentTagRepository;
-
     private final TagRepository tagRepository;
+
+    // mapper
+    private final ContentStatisticsMapper contentStatisticsMapper;
 
     /**
      * 컨텐츠 리스트 조회하기
