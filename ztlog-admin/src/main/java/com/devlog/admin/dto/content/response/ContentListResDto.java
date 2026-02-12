@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,15 +21,40 @@ import static java.util.stream.Collectors.toList;
 @Builder(access = AccessLevel.PRIVATE)
 public class ContentListResDto {
 
-    @Schema(description = "게시물 갯수")
+    @Schema(description = "현재 페이지 게시물 수")
     private Integer count;
+
+    @Schema(description = "전체 게시물 수")
+    private Long totalCount;
+
+    @Schema(description = "전체 페이지 수")
+    private Integer totalPages;
+
+    @Schema(description = "현재 페이지 번호")
+    private Integer currentPage;
+
+    @Schema(description = "페이지 크기")
+    private Integer pageSize;
+
+    @Schema(description = "다음 페이지 존재 여부")
+    private Boolean hasNext;
+
+    @Schema(description = "이전 페이지 존재 여부")
+    private Boolean hasPrevious;
 
     @Schema(description = "게시물 목록")
     private List<ContentMainDto> list;
 
-    public static ContentListResDto of(List<Content> contents) {
+    public static ContentListResDto of(Page<Content> contents) {
         return ContentListResDto.builder()
-                .count(contents.size())
+                .count(contents.getNumberOfElements())
+                .totalCount(contents.getTotalElements())
+                .totalPages(contents.getTotalPages())
+                .currentPage(contents.getNumber() + 1)
+                .pageSize(contents.getSize())
+                .hasNext(contents.hasNext())
+                .hasPrevious(contents.hasPrevious())
+                .hasPrevious(contents.hasPrevious())
                 .list(contents.stream()
                         .map(ContentMainDto::of)
                         .collect(toList()))

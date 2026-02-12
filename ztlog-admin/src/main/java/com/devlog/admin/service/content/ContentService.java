@@ -49,9 +49,8 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-
         Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page, 10).withSort(Sort.Direction.DESC, "inpDttm"));
-        return ContentListResDto.of(contentPage.getContent());
+        return ContentListResDto.of(contentPage);
     }
 
     /**

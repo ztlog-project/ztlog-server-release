@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devlog.admin.mapper.tag.TagMapper">
+    <select id="selectTagInfoList" resultType="TagCountResDto">
+        SELECT
+            ti.TAG_NO,
+            ti.TAG_NAME,
+            COUNT(ct.CTNT_NO) AS TAG_COUNT, -- 해당 태그가 달린 콘텐츠 갯수
+            ti.INP_DTTM,
+            ti.UPD_DTTM
+        FROM tags_mst ti
+                 LEFT JOIN contents_tags ct ON ti.TAG_NO = ct.TAG_NO
+        GROUP BY ti.TAG_NO, ti.TAG_NAME
+        ORDER BY ti.TAG_NO
+    </select>
+</mapper>
