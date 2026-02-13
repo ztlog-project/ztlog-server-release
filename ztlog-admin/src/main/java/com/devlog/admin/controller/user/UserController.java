@@ -1,6 +1,7 @@
 package com.devlog.admin.controller.user;
 
 import com.devlog.admin.dto.user.request.SignupReqDto;
+import com.devlog.admin.dto.user.response.UserResDto;
 import com.devlog.admin.service.user.UserService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
@@ -21,6 +22,18 @@ import com.devlog.admin.dto.user.request.LoginReqDto;
 public class UserController {
 
     private final UserService userService;
+
+    /**
+     * 어드민 정보 조회
+     *
+     * @param request HTTP 요청 객체
+     * @return 어드민 정보 반환
+     */
+    @Operation(summary = "어드민 정보 조회", description = "어드민 정보 조회")
+    @GetMapping("/user/info")
+    public ResponseEntity<Response<UserResDto>> getUserInfo(HttpServletRequest request) {
+        return Response.success(ResponseCode.OK_SUCCESS, userService.getUserInfo(request));
+    }
 
     /**
      * 회원가입하기

@@ -3,6 +3,7 @@ package com.devlog.admin.service.user;
 import com.devlog.admin.dto.user.request.LoginReqDto;
 import com.devlog.admin.dto.user.request.SignupReqDto;
 import com.devlog.admin.dto.user.response.UserDetailDto;
+import com.devlog.admin.dto.user.response.UserResDto;
 import com.devlog.core.common.dto.TokenInfo;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UserRole;
@@ -24,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -36,18 +39,17 @@ public class UserService {
 
 
     /**
-     * 유저 정보 조회하기
+     * 사용자 정보 조회
      *
-     * @param userNo 유저 번호
-     * @return 유저 정보
+     * @param request HTTP 요청 객체
+     * @return UserResDto
      */
     @Transactional(readOnly = true)
-    public UserDetailDto getUserInfo(Long userNo) {
-        User user = userRepository.findByUserNo(userNo);
-        if (user == null) {
-            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
-        }
-        return UserDetailDto.of(user, null);
+    public UserResDto getUserInfo(HttpServletRequest request) {
+        String userId = tokenUtils.getUserIdFromHeader(request);
+        User user = userRepository.findByUserId(userId);
+        Optional.ofNullable(user).orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+        return UserResDto.of(user);
     }
 
     /**
@@ -72,13 +74,11 @@ public class UserService {
      * 로그인
      *
      * @param reqDto 로그인 요청 정보
-     * @return JWT 토큰 정보
+     * @return TokenInfo JWT 토큰 정보
      */
     public TokenInfo loginUser(LoginReqDto reqDto) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(reqDto.getUserId(), reqDto.getPassword())
-            );
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(reqDto.getUserId(), reqDto.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -111,7 +111,7 @@ public class UserService {
     /**
      * 회원탈퇴
      *
-     * @param request HTTP 요청
+     * @param request HTTP 요청 객체
      */
     public void withdrawUser(HttpServletRequest request) {
         // 현재 인증된 사용자 정보 조회
@@ -122,9 +122,7 @@ public class UserService {
 
         String userId = authentication.getName();
         User user = userRepository.findByUserId(userId);
-        if (user == null) {
-            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
-        }
+        Optional.ofNullable(user).orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
         // 사용자 삭제
         userRepository.delete(user);

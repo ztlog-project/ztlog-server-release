@@ -20,12 +20,16 @@ import java.util.Date;
 public class TokenUtils {
 
     private static final String USER_ID = "USER_ID";
+
     @Value("${jwt.secret}")
     private String secretKey;
+
     @Value("${jwt.access-token-expire-time}")
     private long accessTokenExpireTime;
+
     @Value("${jwt.refresh-token-expire-time}")
     private long refreshTokenExpireTime;
+
     private Key key;
 
     @jakarta.annotation.PostConstruct
@@ -83,6 +87,39 @@ public class TokenUtils {
                 .getBody();
         return claims.getSubject();
     }
+
+    /**
+     * 헤더에서 userId 추출
+     *
+     * @param request 요청
+     * @return userId
+     */
+    public String getUserIdFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader(CommonConstants.AUTHORIZATION_HEADER);
+
+        // 1. 유효성 검증 및 토큰 추출
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(CommonConstants.BEARER_PREFIX)) {
+            log.info("[TokenUtils] Bearer Token : {}", bearerToken);
+
+            // substring(7) 대신 상수 길이를 사용하여 가독성 확보
+            String token = bearerToken.substring(7);
+            log.info("[TokenUtils] JWT Token : {}", token);
+
+            // 2. JWT 파싱 및 Subject 반환
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } else {
+            log.warn("[TokenUtils] INVALID TOKEN ERROR");
+            throw new JwtException("INVALID_TOKEN");
+        }
+
+    }
+
+
 
     /**
      * 토큰 검증
