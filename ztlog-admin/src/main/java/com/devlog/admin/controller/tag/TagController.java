@@ -1,4 +1,4 @@
-package com.devlog.admin.controller.tags;
+package com.devlog.admin.controller.tag;
 
 import com.devlog.admin.dto.tag.request.TagReqDto;
 import com.devlog.admin.dto.tag.response.TagCountListResDto;
