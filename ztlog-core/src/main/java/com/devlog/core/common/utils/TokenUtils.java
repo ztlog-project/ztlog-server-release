@@ -82,6 +82,7 @@ public class TokenUtils {
     public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
+                .setAllowedClockSkewSeconds(60) // 60초 clock skew 허용
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -97,29 +98,42 @@ public class TokenUtils {
     public String getUserIdFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(CommonConstants.AUTHORIZATION_HEADER);
 
-        // 1. 유효성 검증 및 토큰 추출
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(CommonConstants.BEARER_PREFIX)) {
-            log.info("[TokenUtils] Bearer Token : {}", bearerToken);
+        // 1. 유효성 검증 (Early Return)
+        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith(CommonConstants.BEARER_PREFIX)) {
+            log.warn("[TokenUtils] INVALID TOKEN ERROR: Bearer prefix missing or empty");
+            throw new JwtException("INVALID_TOKEN");
+        }
 
-            // substring(7) 대신 상수 길이를 사용하여 가독성 확보
-            String token = bearerToken.substring(7);
-            log.info("[TokenUtils] JWT Token : {}", token);
+        log.info("[TokenUtils] Bearer Token : {}", bearerToken);
 
-            // 2. JWT 파싱 및 Subject 반환
+        // Prefix 제거 (상수 길이 활용 권장: CommonConstants.BEARER_PREFIX.length())
+        String token = bearerToken.substring(7);
+        log.info("[TokenUtils] JWT Token : {}", token);
+
+        // 2. JWT 파싱 및 Subject 반환
+        try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
+                    .setAllowedClockSkewSeconds(60)
                     .build()
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
-        } else {
-            log.warn("[TokenUtils] INVALID TOKEN ERROR");
-            throw new JwtException("INVALID_TOKEN");
+
+        } catch (ExpiredJwtException e) {
+            return handleJwtException("Expired", "EXPIRED_TOKEN", e);
+        } catch (SecurityException | MalformedJwtException | DecodingException e) {
+            return handleJwtException("Invalid", "INVALID_TOKEN", e);
+        } catch (UnsupportedJwtException e) {
+            return handleJwtException("Unsupported", "UNSUPPORTED_TOKEN", e);
+        } catch (IllegalArgumentException e) {
+            return handleJwtException("Empty", "EMPTY_TOKEN", e);
+        } catch (Exception e) {
+            log.error("[TokenUtils] Unhandled JWT exception", e);
+            throw new JwtException("UNKNOWN_ERROR");
         }
 
     }
-
-
 
     /**
      * 토큰 검증
@@ -129,22 +143,26 @@ public class TokenUtils {
      */
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .setAllowedClockSkewSeconds(60)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | DecodingException e) {
-            log.warn("[TokenUtils] Invalid JWT Token - {}", e.getMessage());
-            throw new JwtException("INVALID_TOKEN");
         } catch (ExpiredJwtException e) {
-            log.warn("[TokenUtils - Expired JWT Token] - {}", e.getMessage());
+            log.warn("[TokenUtils] Expired JWT Token: {}", e.getMessage());
             throw new JwtException("EXPIRED_TOKEN");
+        } catch (SecurityException | MalformedJwtException | DecodingException e) {
+            log.warn("[TokenUtils] Invalid JWT Token: {}", e.getMessage());
+            throw new JwtException("INVALID_TOKEN");
         } catch (UnsupportedJwtException e) {
-            log.warn("[TokenUtils] Unsupported JWT Token - {}", e.getMessage());
+            log.warn("[TokenUtils] Unsupported JWT Token: {}", e.getMessage());
             throw new JwtException("UNSUPPORTED_TOKEN");
         } catch (IllegalArgumentException e) {
-            log.warn("[TokenUtils] JWT claims string is empty. - {}", e.getMessage());
+            log.warn("[TokenUtils] JWT claims string is empty: {}", e.getMessage());
             throw new JwtException("EMPTY_TOKEN");
         } catch (Exception e) {
-            log.error("Unhandled JWT exception", e);
+            log.error("[TokenUtils] Unhandled JWT exception", e);
             throw new JwtException("UNKNOWN_ERROR");
         }
     }
@@ -184,5 +202,10 @@ public class TokenUtils {
         return null;
     }
 
+    // 로그 기록 및 예외 발생을 공통화 (선택 사항)
+    private String handleJwtException(String type, String message, Exception e) {
+        log.warn("[TokenUtils] {} JWT Token - {}", type, e.getMessage());
+        throw new JwtException(message);
+    }
 }
 
