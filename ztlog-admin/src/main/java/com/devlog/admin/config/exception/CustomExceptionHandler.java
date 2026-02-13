@@ -5,9 +5,11 @@ import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataConflictException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.config.exception.InternalServerException;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +36,15 @@ public class CustomExceptionHandler {
         return Response.error(ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Response<String>> handleJwtException(JwtException e) {
+        log.warn("JwtException: {}", e.getMessage());
+        ResponseCode responseCode = e.getMessage().contains("EXPIRED")
+            ? ResponseCode.UNAUTHORIZED_EXPIRED_TOKEN
+            : ResponseCode.UNAUTHORIZED_INVALID_TOKEN;
+        return Response.error(responseCode);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response<String>> handleValidationException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldErrors().stream()
@@ -42,6 +53,16 @@ public class CustomExceptionHandler {
                 .orElse("유효성 검사 실패");
         log.warn("ValidationException: {}", message);
         return Response.error(ResponseCode.INVALID_DATA_ERROR, message);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Response<String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String errorMessage = "잘못된 JSON 형식입니다. UTF-8 인코딩을 확인하고 특수문자(스마트 따옴표 등)를 제거해주세요.";
+        log.error("HttpMessageNotReadableException: {}", e.getMessage());
+        if (e.getMessage() != null && e.getMessage().contains("UTF-8")) {
+            log.error("UTF-8 encoding error detected. Check for smart quotes or non-UTF-8 characters in request body.");
+        }
+        return Response.error(ResponseCode.INVALID_DATA_ERROR, errorMessage);
     }
 
     @ExceptionHandler(Exception.class)

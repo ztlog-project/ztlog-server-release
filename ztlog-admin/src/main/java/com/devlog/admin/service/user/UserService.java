@@ -13,9 +13,11 @@ import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.config.exception.InternalServerException;
 import com.devlog.core.entity.user.User;
 import com.devlog.core.repository.user.UserRepository;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -46,10 +49,23 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public UserResDto getUserInfo(HttpServletRequest request) {
-        String userId = tokenUtils.getUserIdFromHeader(request);
-        User user = userRepository.findByUserId(userId);
-        Optional.ofNullable(user).orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
-        return UserResDto.of(user);
+        try {
+            // 2. 헤더에서 유저 ID 추출 (내부에서 인코딩 문제 여부 확인 필요)
+            String userId = tokenUtils.getUserIdFromHeader(request);
+
+            // 3. 유저 조회 및 DTO 변환 (Optional 사용 최적화)
+            return userRepository.findOptionalByUserId(userId)
+                    .map(UserResDto::of)
+                    .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+
+        } catch (JwtException e) {
+            log.error("[TokenService] JWT exception in service layer: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("[TokenService] Unexpected error while retrieving user info", e);
+            throw new JwtException("사용자 정보 조회 중 알 수 없는 오류가 발생했습니다.");
+        }
+
     }
 
     /**
@@ -121,8 +137,8 @@ public class UserService {
         }
 
         String userId = authentication.getName();
-        User user = userRepository.findByUserId(userId);
-        Optional.ofNullable(user).orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+        User user = userRepository.findOptionalByUserId(userId)
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
         // 사용자 삭제
         userRepository.delete(user);

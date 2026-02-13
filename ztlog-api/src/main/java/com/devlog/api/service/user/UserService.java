@@ -21,15 +21,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserResDto getUserInfo(String userName) {
-        User user = userRepository.findByUsername(userName);
-        log.info("user = {}", user.toString());
-
-        if (ObjectUtils.isEmpty(user)) {
-            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
-        }
-
-        UserResDto resDto = UserResDto.builder().build();
-        BeanUtils.copyProperties(user, resDto);
+        UserResDto resDto = userRepository.findOptionalByUsername(userName)
+                .map(UserResDto::of)
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+        log.info("user = {}", resDto.toString());
         return resDto;
     }
 }
