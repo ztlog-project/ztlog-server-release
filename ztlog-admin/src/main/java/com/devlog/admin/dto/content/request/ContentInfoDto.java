@@ -30,6 +30,10 @@ public class ContentInfoDto {
     @Size(max = CommonConstants.TITLE_SIZE, message = "content title length is too long!!")
     private String title;
 
+    @Schema(description = "게시물 부제목")
+    @Size(max = CommonConstants.SUBTITLE_SIZE, message = "content sub-title length is too long!!")
+    private String subTitle;
+
     @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
     private String inpUser;
 
@@ -70,6 +74,10 @@ public class ContentInfoDto {
         @Schema(description = "게시물 제목")
         @Size(max = CommonConstants.TITLE_SIZE, message = "content title length is too long!!")
         private String title;
+
+        @Schema(description = "게시물 부제목")
+        @Size(max = CommonConstants.SUBTITLE_SIZE, message = "content sub-title length is too long!!")
+        private String subTitle;
 
         @Schema(description = "게시물 내용")
         private String body;

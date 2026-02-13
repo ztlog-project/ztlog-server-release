@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,8 @@ public class ContentController {
     /**
      * 컨텐츠 등록하기
      *
-     * @param reqDto 컨텐츠 객체
+     * @param request HTTP 요청 객체
+     * @param reqDto  컨텐츠 객체
      * @return 성공 응답
      */
     @Operation(summary = "컨텐츠 등록", description = "컨텐츠 등록")
@@ -72,8 +74,8 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping("/contents")
-    public ResponseEntity<Response<String>> createContentDetail(@RequestBody ContentInfoDto.ContentReqDto reqDto) {
-        contentService.createContentDetail(reqDto);
+    public ResponseEntity<Response<String>> createContentDetail(HttpServletRequest request, @RequestBody ContentInfoDto.ContentReqDto reqDto) {
+        contentService.createContentDetail(request,reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 
@@ -90,8 +92,8 @@ public class ContentController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping("/contents")
-    public ResponseEntity<Response<String>> updateContentDetail(@RequestBody ContentInfoDto.ContentReqDto reqDto) {
-        contentService.updateContentDetail(reqDto);
+    public ResponseEntity<Response<String>> updateContentDetail(HttpServletRequest request, @RequestBody ContentInfoDto.ContentReqDto reqDto) {
+        contentService.updateContentDetail(request, reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 

@@ -6,9 +6,8 @@ import lombok.*;
 
 import java.util.*;
 
-import static com.devlog.core.common.constants.CommonConstants.SUBTITLE_SIZE;
-
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,33 +37,20 @@ public class Content extends BaseTimeEntity {
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
-    public static Content created(ContentDetail contentDetail) {
+    public static Content created(String title, String subTitle, String body, String userId) {
         Content content = Content.builder()
-                .ctntTitle(contentDetail.getCtntTitle())
-                .ctntSubTitle(truncated(contentDetail.getCtntBody()))
-                .contentDetail(contentDetail)
-                .contentTags(Optional.ofNullable(contentDetail.getContent())
-                        .map(Content::getContentTags)
-                        .orElse(null))
-                .inpUser(contentDetail.getInpUser())
+                .ctntTitle(title)
+                .ctntSubTitle(subTitle)
+                .inpUser(userId)
                 .build();
-
-        // ContentDetail에게 부모(Content)를 연결 (MapsId 에러 해결 지점)
-        contentDetail.updated(content.ctntTitle, content.ctntSubTitle, content);
+        content.contentDetail = ContentDetail.created(title, body, userId, content);
 
         return content;
     }
 
-    private static String truncated(String text) {
-        if (text == null || text.length() <= SUBTITLE_SIZE) {
-            return text;
-        }
-        return text.substring(0, SUBTITLE_SIZE);
-    }
-
-    public void updated(String title, String body) {
+    public void updated(String title, String subtitle) {
         this.ctntTitle = title;
-        this.ctntSubTitle = body.length() > SUBTITLE_SIZE ? body.substring(0, SUBTITLE_SIZE) : body;
+        this.ctntSubTitle = subtitle;
     }
 
 }

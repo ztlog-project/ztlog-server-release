@@ -1,12 +1,13 @@
 package com.devlog.admin.service.content;
 
 import com.devlog.admin.dto.content.request.ContentInfoDto;
+import com.devlog.admin.dto.tag.request.TagReqDto;
 import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
-import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.utils.PageUtils;
+import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;
@@ -16,6 +17,7 @@ import com.devlog.core.repository.content.ContentDtlRepository;
 import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,6 +43,7 @@ public class ContentService {
 
     // mapper
     private final ContentStatisticsMapper contentStatisticsMapper;
+    private final TokenUtils tokenUtils;
 
     /**
      * 컨텐츠 리스트 조회하기
@@ -68,39 +71,35 @@ public class ContentService {
     /**
      * 컨텐츠 등록하기
      *
-     * @param reqDto 컨텐츠 요청 객체
+     * @param request http 요청 객체
+     * @param reqDto  컨텐츠 요청 객체
      */
-    public void createContentDetail(ContentInfoDto.ContentReqDto reqDto) {
-        ContentDetail contentDetail = ContentDetail.created(reqDto.getTitle(), reqDto.getBody(), CommonConstants.ADMIN_NAME);
-        Content content = Content.created(contentDetail);
+    public void createContentDetail(HttpServletRequest request, ContentInfoDto.ContentReqDto reqDto) {
+        Content content = Content.created(reqDto.getTitle(), reqDto.getSubTitle(), reqDto.getBody(), tokenUtils.getUserIdFromHeader(request));
+        contentRepository.save(content);
 
-        this.contentRepository.save(content);
-
-        // content - tag
+        // Create and save tags after content has ID
         List<ContentTag> contentTags = new ArrayList<>();
-        // 새 태그 등록 (없으면 생성)
         reqDto.getTags().forEach(tagReqDto -> {
             final var tag = tagRepository.findById(tagReqDto.getTagNo())
                     .orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
             contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
         });
-
         contentTagRepository.saveAll(contentTags);
     }
 
     /**
      * 컨텐츠 수정하기
      *
-     * @param reqDto 컨텐츠 요청 객체
+     * @param request
+     * @param reqDto  컨텐츠 요청 객체
      */
-    public void updateContentDetail(ContentInfoDto.ContentReqDto reqDto) {
+    public void updateContentDetail(HttpServletRequest request,ContentInfoDto.ContentReqDto reqDto) {
         Content content = contentRepository.findById(reqDto.getCtntNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
-        // 컨텐츠 마스터 수정
-        content.updated(reqDto.getTitle(), reqDto.getBody());
-
-        // 컨텐츠 상세 수정
+        // 컨텐츠 수정
+        content.updated(reqDto.getTitle(), reqDto.getSubTitle());
         content.getContentDetail().updated(reqDto.getTitle(), reqDto.getBody(), content);
 
         // 기존 태그 삭제 후 새 태그 등록
@@ -112,7 +111,6 @@ public class ContentService {
                     .orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
             contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
         });
-
         contentTagRepository.saveAll(contentTags);
     }
 

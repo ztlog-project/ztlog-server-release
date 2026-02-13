@@ -39,11 +39,12 @@ public class ContentDetail {
     @JoinColumn(name = "CTNT_NO")
     Content content;
 
-    public static ContentDetail created(String title, String body, String user) {
+    public static ContentDetail created(String title, String body, String user, Content content) {
         return ContentDetail.builder()
                 .ctntTitle(title)
                 .ctntBody(body)
                 .inpUser(user)
+                .content(content)
                 .build();
     }
 
