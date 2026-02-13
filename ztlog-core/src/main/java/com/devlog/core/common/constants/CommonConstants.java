@@ -4,7 +4,7 @@ public class CommonConstants {
 
     // string
     public static final String ZTLOG = "ztlog";
-    public static final String ADMIN_NAME = "yjchoi";
+    public static final String ADMIN_NAME = "admin";
 
     // number
     public static final int PAGE_SIZE = 5;
