@@ -11,6 +11,11 @@ import lombok.*;
 @Table(name = "contents_dtl")
 public class ContentDetail {
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "CTNT_NO")
+    Content content;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CTNT_NO", nullable = false)
@@ -33,11 +38,6 @@ public class ContentDetail {
 
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "CTNT_NO")
-    Content content;
 
     public static ContentDetail created(String title, String body, String user, Content content) {
         return ContentDetail.builder()

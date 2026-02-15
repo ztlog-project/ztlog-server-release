@@ -14,7 +14,7 @@ public class MainDashBoardResDto {
     private long totalViewCount;
     private long totalCommentCount;
 
-    public static  MainDashBoardResDto of(MainStatisticsDto statistics) {
+    public static MainDashBoardResDto of(MainStatisticsDto statistics) {
         return MainDashBoardResDto.builder()
                 .totalPostCount(statistics.getTotalPostCount())
                 .totalTagCount(statistics.getTotalTagCount())

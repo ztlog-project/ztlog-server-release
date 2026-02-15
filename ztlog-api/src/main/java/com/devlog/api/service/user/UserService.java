@@ -24,7 +24,7 @@ public class UserService {
         UserResDto resDto = userRepository.findOptionalByUsername(userName)
                 .map(UserResDto::of)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
-        log.info("user = {}", resDto.toString());
+        log.info("[UserService] user = {}", resDto);
         return resDto;
     }
 }

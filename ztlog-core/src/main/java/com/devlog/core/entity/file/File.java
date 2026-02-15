@@ -30,5 +30,4 @@ public class File extends BaseTimeEntity {
     private String ctntNo;
 
 
-
 }

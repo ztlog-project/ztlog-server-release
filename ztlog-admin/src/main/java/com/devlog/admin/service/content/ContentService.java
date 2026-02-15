@@ -62,7 +62,7 @@ public class ContentService {
      * @param ctntNo 컨텐츠 번호
      * @return 컨텐츠 객체
      */
-    public ContentResDto getContentDetail(Long ctntNo){
+    public ContentResDto getContentDetail(Long ctntNo) {
         final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         return ContentResDto.of(content);
@@ -91,10 +91,10 @@ public class ContentService {
     /**
      * 컨텐츠 수정하기
      *
-     * @param request
+     * @param request http 요청 객체
      * @param reqDto  컨텐츠 요청 객체
      */
-    public void updateContentDetail(HttpServletRequest request,ContentInfoDto.ContentReqDto reqDto) {
+    public void updateContentDetail(HttpServletRequest request, ContentInfoDto.ContentReqDto reqDto) {
         Content content = contentRepository.findById(reqDto.getCtntNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
@@ -119,7 +119,7 @@ public class ContentService {
      *
      * @param ctntNo 컨텐츠 번호
      */
-    public void deleteContentDetail(Long ctntNo)  {
+    public void deleteContentDetail(Long ctntNo) {
         final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
 

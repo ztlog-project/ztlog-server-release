@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder (access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @IdClass(ContentTagPK.class)
 @Table(name = "contents_tags")
 public class ContentTag {

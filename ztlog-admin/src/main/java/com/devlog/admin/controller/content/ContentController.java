@@ -75,7 +75,7 @@ public class ContentController {
     })
     @PostMapping("/contents")
     public ResponseEntity<Response<String>> createContentDetail(HttpServletRequest request, @RequestBody ContentInfoDto.ContentReqDto reqDto) {
-        contentService.createContentDetail(request,reqDto);
+        contentService.createContentDetail(request, reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
 

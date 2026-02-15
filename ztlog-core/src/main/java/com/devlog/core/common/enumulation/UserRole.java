@@ -5,16 +5,12 @@ public enum UserRole {
     ADMIN("ADMIN", "관리자"),
     USER("USER", "사용자");
 
-    private String value;
-    private String desc;
+    private final String value;
+    private final String desc;
 
     UserRole(String v, String d) {
         value = v;
         desc = d;
-    }
-
-    public String value() {
-        return value;
     }
 
     public static UserRole fromValue(String v) {
@@ -24,5 +20,9 @@ public enum UserRole {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    public String value() {
+        return value;
     }
 }

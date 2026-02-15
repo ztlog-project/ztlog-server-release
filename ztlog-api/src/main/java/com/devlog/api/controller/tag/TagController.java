@@ -44,7 +44,7 @@ public class TagController {
      * 태그 컨텐츠 목록 조회하기
      *
      * @param tagNo 태그 번호
-     * @param page 페이지 번호 (기본값 = 1)
+     * @param page  페이지 번호 (기본값 = 1)
      * @return 태그 컨텐츠 리스트
      */
     @Operation(summary = "태그 컨텐츠 목록 조회", description = "태그 컨텐츠 목록 조회")

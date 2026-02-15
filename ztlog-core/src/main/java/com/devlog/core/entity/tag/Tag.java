@@ -16,6 +16,9 @@ import java.util.List;
 @Table(name = "tags_mst")
 public class Tag extends BaseTimeEntity {
 
+    @OneToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    List<ContentTag> contentTags = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TAG_NO", nullable = false)
@@ -23,9 +26,6 @@ public class Tag extends BaseTimeEntity {
 
     @Column(name = "TAG_NAME", nullable = false)
     private String tagName;
-
-    @OneToMany(mappedBy = "tags", fetch = FetchType.LAZY)
-    List<ContentTag> contentTags = new ArrayList<>();
 
     public static Tag created(String tagName) {
         return Tag.builder()

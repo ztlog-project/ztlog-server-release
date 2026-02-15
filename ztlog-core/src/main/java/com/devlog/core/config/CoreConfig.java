@@ -11,6 +11,7 @@ public class CoreConfig {
 
     /**
      * 비밀번호 암호화 encoder
+     *
      * @return encoder
      */
     @Bean
@@ -20,7 +21,8 @@ public class CoreConfig {
 
     /**
      * rest template
-     * @return  rest template
+     *
+     * @return rest template
      */
     @Bean
     public RestTemplate restTemplate() {

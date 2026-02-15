@@ -33,10 +33,10 @@ public class User extends BaseTimeEntity {
     /**
      * 회원가입 시 사용자 생성
      *
-     * @param userId 사용자 ID
-     * @param username 사용자명
+     * @param userId          사용자 ID
+     * @param username        사용자명
      * @param encodedPassword 암호화된 비밀번호
-     * @param role 권한
+     * @param role            권한
      * @return User 엔티티
      */
     public static User created(String userId, String username, String encodedPassword, String role) {

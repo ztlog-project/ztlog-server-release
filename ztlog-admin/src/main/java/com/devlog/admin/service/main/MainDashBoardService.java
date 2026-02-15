@@ -16,6 +16,10 @@ public class MainDashBoardService {
 
     private final MainDashBoardMapper mainDashboardMapper;
 
+    /**
+     *
+     * @return 메인화면(대쉬보드) 정보
+     */
     public MainDashBoardResDto getMainStatisticsInfo() {
         MainStatisticsDto dto = mainDashboardMapper.selectMainStatistics();
         return MainDashBoardResDto.of(dto);

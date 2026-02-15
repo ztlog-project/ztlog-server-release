@@ -40,8 +40,8 @@ public class CustomExceptionHandler {
     public ResponseEntity<Response<String>> handleJwtException(JwtException e) {
         log.warn("JwtException: {}", e.getMessage());
         ResponseCode responseCode = e.getMessage().contains("EXPIRED")
-            ? ResponseCode.UNAUTHORIZED_EXPIRED_TOKEN
-            : ResponseCode.UNAUTHORIZED_INVALID_TOKEN;
+                ? ResponseCode.UNAUTHORIZED_EXPIRED_TOKEN
+                : ResponseCode.UNAUTHORIZED_INVALID_TOKEN;
         return Response.error(responseCode);
     }
 
