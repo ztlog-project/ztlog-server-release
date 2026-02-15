@@ -8,6 +8,7 @@ public class CommonConstants {
 
     // number
     public static final int PAGE_SIZE = 5;
+    public static final int PAGE_LIST_SIZE = 10;
     public static final int TAG_NAME_SIZE = 15;
     public static final int TITLE_SIZE = 100;
     public static final int SUBTITLE_SIZE = 200;

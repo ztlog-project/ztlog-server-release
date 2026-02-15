@@ -1,7 +1,6 @@
 package com.devlog.admin.service.content;
 
 import com.devlog.admin.dto.content.request.ContentInfoDto;
-import com.devlog.admin.dto.tag.request.TagReqDto;
 import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
@@ -10,7 +9,6 @@ import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
-import com.devlog.core.entity.content.ContentDetail;
 import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.entity.tag.Tag;
 import com.devlog.core.repository.content.ContentDtlRepository;
@@ -21,7 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +41,7 @@ public class ContentService {
     // mapper
     private final ContentStatisticsMapper contentStatisticsMapper;
     private final TokenUtils tokenUtils;
+    private final PageUtils pageUtils;
 
     /**
      * 컨텐츠 리스트 조회하기
@@ -52,7 +50,7 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page, 10).withSort(Sort.Direction.DESC, "inpDttm"));
+        Page<Content> contentPage = contentRepository.findAll(pageUtils.getPageableEx(page, Content.class));
         return ContentListResDto.of(contentPage);
     }
 

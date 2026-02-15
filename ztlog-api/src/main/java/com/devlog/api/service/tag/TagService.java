@@ -6,6 +6,7 @@ import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
+import com.devlog.core.entity.tag.Tag;
 import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class TagService {
 
     private final TagRepository tagRepository;
     private final ContentRepository contentRepository;
+    private final PageUtils pageUtils;
 
     /**
      * 태그 목록 조회하기
@@ -49,7 +51,7 @@ public class TagService {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
 
-        Page<Content> contentPage = contentRepository.findAllByContentTagsTagsTagNo(Long.valueOf(tagNo), PageUtils.getPageable(page));
+        Page<Content> contentPage = contentRepository.findAllByContentTagsTagsTagNo(Long.valueOf(tagNo), pageUtils.getPageable(page, Content.class));
         return ContentListResDto.of(contentPage);
     }
 }

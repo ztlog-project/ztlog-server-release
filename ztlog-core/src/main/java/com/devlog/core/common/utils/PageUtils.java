@@ -1,27 +1,48 @@
 package com.devlog.core.common.utils;
 
 import com.devlog.core.common.constants.CommonConstants;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
+@RequiredArgsConstructor
 public class PageUtils {
 
-    public static PageRequest getPageable(int page) {
-        return PageRequest.of(page - 1, CommonConstants.PAGE_SIZE);
+    private final EntityManager entityManager;
+
+    public PageRequest getPageable(int page, Class<?> entityClass) {
+        String pkName = getPrimaryKeyName(entityClass);
+        return PageRequest.of(page - 1, CommonConstants.PAGE_SIZE, Sort.by(pkName).descending());
     }
 
-    public static PageRequest getPageable(int page, int size) {
-        return PageRequest.of(page - 1, size);
+    public PageRequest getPageableEx(int page, Class<?> entityClass) {
+        String pkName = getPrimaryKeyName(entityClass);
+        return PageRequest.of(page - 1, CommonConstants.PAGE_LIST_SIZE, Sort.by(pkName).descending());
     }
 
-    public static int getStartIdx(int page) {
+    public int getStartIdx(int page) {
         return Long.valueOf(PageRequest.of(page - 1, CommonConstants.PAGE_SIZE).getOffset()).intValue();
     }
 
-    public static int getEndIdx(int page, int start) {
-        return start + PageUtils.getPageable(page).getPageSize();
+    public int getEndIdx(int start, int page, Class<?> entityClass) {
+        return start + getPageable(page, entityClass).getPageSize();
+    }
+
+    private String getPrimaryKeyName(Class<?> entityClass) {
+        try {
+            //JPA Metamodel을 이용하여 엔티티의 PK 변수명을 동적으로 획득
+            return entityManager.getMetamodel()
+                    .entity(entityClass)
+                    .getId(Long.class)
+                    .getName();
+        } catch (Exception e) {
+            System.out.println("PK를 찾지 못함: " + e.getMessage());
+            // PK를 찾지 못할 경우 기본값 'id' 반환 (Safety Net)
+            return "id";
+        }
     }
 
 }

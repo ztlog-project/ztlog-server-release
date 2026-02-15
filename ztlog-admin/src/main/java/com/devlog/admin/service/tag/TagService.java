@@ -7,6 +7,7 @@ import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.dto.tag.response.TagResDto;
 import com.devlog.admin.mapper.tag.TagMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataConflictException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.tag.Tag;
@@ -14,6 +15,7 @@ import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,18 +31,21 @@ public class TagService {
     private final TagRepository tagRepository;
     private final ContentTagRepository contentTagRepository;
 
-    //mapper
+    // mapper
     private final TagMapper tagMapper;
+
+    // utils
+    private final PageUtils pageUtils;
 
     /**
      * 태그 목록 조회
      *
      * @return 태그 리스트
      */
-    public TagCountListResDto getTagList(Integer page) {
-//        Page<Tag> tagPage = tagRepository.findAll(PageUtils.getPageable(page));
-        List<TagCountResDto> list = tagMapper.selectTagInfoList();
-        return TagCountListResDto.of(list);
+    public TagListResDto getTagList(Integer page) {
+        Page<Tag> tagPage = tagRepository.findAll(pageUtils.getPageableEx(page, Tag.class));
+//        List<TagCountResDto> list = tagMapper.selectTagInfoList();
+        return TagListResDto.of(tagPage.getContent());
     }
 
     /**

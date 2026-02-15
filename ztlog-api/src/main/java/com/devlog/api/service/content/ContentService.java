@@ -10,7 +10,6 @@ import com.devlog.core.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +22,8 @@ public class ContentService {
 
     private final ContentRepository contentRepository;
 
+    private final PageUtils pageUtils;
+
     /**
      * 컨텐츠 목록 조회하기
      *
@@ -30,7 +31,7 @@ public class ContentService {
      * @return 컨텐츠 리스트 반환
      */
     public ContentListResDto getContentsList(int page) {
-        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page).withSort(Sort.Direction.DESC, "ctntNo"));
+        Page<Content> contentPage = contentRepository.findAll(pageUtils.getPageable(page, Content.class));
         return ContentListResDto.of(contentPage);
     }
 
@@ -54,7 +55,7 @@ public class ContentService {
      * @return 검색한 키워드 관련 리스트 반환
      */
     public ContentListResDto searchContentList(String param, int page) {
-        Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, PageUtils.getPageable(page));
+        Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, pageUtils.getPageable(page, Content.class));
         return ContentListResDto.of(contentPage);
     }
 
