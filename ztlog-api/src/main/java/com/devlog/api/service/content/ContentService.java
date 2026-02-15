@@ -10,6 +10,7 @@ import com.devlog.core.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class ContentService {
      * @return 컨텐츠 리스트 반환
      */
     public ContentListResDto getContentsList(int page) {
-        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page));
+        Page<Content> contentPage = contentRepository.findAll(PageUtils.getPageable(page).withSort(Sort.Direction.DESC, "ctntNo"));
         return ContentListResDto.of(contentPage);
     }
 
