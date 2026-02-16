@@ -1,6 +1,6 @@
 package com.devlog.admin.dto.content.request;
 
-import com.devlog.admin.dto.tag.request.TagReqDto;
+import com.devlog.admin.dto.tag.request.TagInsertReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentTag;
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class ContentInfoDto {
+public class ContentReqDto {
 
     @Schema(description = "게시물 번호")
     private Long ctntNo;
@@ -45,8 +45,8 @@ public class ContentInfoDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
     private LocalDateTime updDttm;
 
-    public static ContentInfoDto of(Content content) {
-        return ContentInfoDto.builder()
+    public static ContentReqDto of(Content content) {
+        return ContentReqDto.builder()
                 .ctntNo(content.getCtntNo())
                 .title(content.getCtntTitle())
                 .inpUser(content.getInpUser())
@@ -54,10 +54,10 @@ public class ContentInfoDto {
                 .build();
     }
 
-    public static List<ContentInfoDto> toContentInfoList(List<ContentTag> contentTags) {
+    public static List<ContentReqDto> toContentInfoList(List<ContentTag> contentTags) {
         return Optional.ofNullable(contentTags).orElseGet(Collections::emptyList)
                 .stream()
-                .map(contentTag -> ContentInfoDto.of(contentTag.getContents()))
+                .map(contentTag -> ContentReqDto.of(contentTag.getContents()))
                 .collect(toList());
     }
 
@@ -66,7 +66,7 @@ public class ContentInfoDto {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class ContentReqDto {
+    public static class ContentReqInfoDto {
 
         @Schema(description = "게시물 번호")
         private Long ctntNo;
@@ -82,20 +82,20 @@ public class ContentInfoDto {
         @Schema(description = "게시물 내용")
         private String body;
 
-        @Schema(description = "게시물 경로")
-        private String path;
-
-        @Schema(description = "게시물 이름")
-        private String name;
-
-        @Schema(description = "게시물 확장자")
-        private String ext;
-
         @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
         private String inpUser;
 
-        @Schema(description = "게시물 태그 번호 목록")
-        List<TagReqDto> tags;
+        @Schema(description = "게시물 태그 목록")
+        List<TagInsertReqDto> tags;
+
+        @Schema(description = "게시물 파일 경로")
+        private String path;
+
+        @Schema(description = "게시물 파일 이름")
+        private String name;
+
+        @Schema(description = "게시물 파일 확장자")
+        private String ext;
 
     }
 }

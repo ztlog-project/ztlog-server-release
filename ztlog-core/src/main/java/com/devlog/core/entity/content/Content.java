@@ -44,7 +44,6 @@ public class Content extends BaseTimeEntity {
                 .inpUser(userId)
                 .build();
         content.contentDetail = ContentDetail.created(title, body, userId, content);
-
         return content;
     }
 

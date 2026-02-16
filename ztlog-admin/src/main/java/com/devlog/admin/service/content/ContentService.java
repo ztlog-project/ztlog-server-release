@@ -1,6 +1,6 @@
 package com.devlog.admin.service.content;
 
-import com.devlog.admin.dto.content.request.ContentInfoDto;
+import com.devlog.admin.dto.content.request.ContentReqDto;
 import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
@@ -72,7 +72,7 @@ public class ContentService {
      * @param request http 요청 객체
      * @param reqDto  컨텐츠 요청 객체
      */
-    public void createContentDetail(HttpServletRequest request, ContentInfoDto.ContentReqDto reqDto) {
+    public void createContentDetail(HttpServletRequest request, ContentReqDto.ContentReqInfoDto reqDto) {
         Content content = Content.created(reqDto.getTitle(), reqDto.getSubTitle(), reqDto.getBody(), tokenUtils.getUserIdFromHeader(request));
         contentRepository.save(content);
 
@@ -92,7 +92,7 @@ public class ContentService {
      * @param request http 요청 객체
      * @param reqDto  컨텐츠 요청 객체
      */
-    public void updateContentDetail(HttpServletRequest request, ContentInfoDto.ContentReqDto reqDto) {
+    public void updateContentDetail(HttpServletRequest request, ContentReqDto.ContentReqInfoDto reqDto) {
         Content content = contentRepository.findById(reqDto.getCtntNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
@@ -120,7 +120,6 @@ public class ContentService {
     public void deleteContentDetail(Long ctntNo) {
         final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
-
         // delete
         contentTagRepository.deleteAll(content.getContentTags());
         contentRepository.delete(content);

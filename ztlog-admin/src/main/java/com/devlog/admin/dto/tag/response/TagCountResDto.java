@@ -1,6 +1,7 @@
 package com.devlog.admin.dto.tag.response;
 
 import com.devlog.core.common.constants.CommonConstants;
+import com.devlog.core.entity.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -34,5 +35,15 @@ public class TagCountResDto {
     @Schema(description = "태그 수정일시")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
     private LocalDateTime updDttm;
+
+    public static TagCountResDto of(Tag tag) {
+        return TagCountResDto.builder()
+                .tagNo(tag.getTagNo())
+                .tagName(tag.getTagName())
+                .tagCount(tag.getContentTags().size())
+                .inpDttm(tag.getInpDttm())
+                .updDttm(tag.getUpdDttm())
+                .build();
+    }
 
 }

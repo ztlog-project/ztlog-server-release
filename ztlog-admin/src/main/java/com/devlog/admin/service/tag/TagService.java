@@ -1,8 +1,6 @@
 package com.devlog.admin.service.tag;
 
-import com.devlog.admin.dto.tag.request.TagReqDto;
-import com.devlog.admin.dto.tag.response.TagCountListResDto;
-import com.devlog.admin.dto.tag.response.TagCountResDto;
+import com.devlog.admin.dto.tag.request.TagInsertReqDto;
 import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.dto.tag.response.TagResDto;
 import com.devlog.admin.mapper.tag.TagMapper;
@@ -18,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -45,7 +41,7 @@ public class TagService {
     public TagListResDto getTagList(Integer page) {
         Page<Tag> tagPage = tagRepository.findAll(pageUtils.getPageableEx(page, Tag.class));
 //        List<TagCountResDto> list = tagMapper.selectTagInfoList();
-        return TagListResDto.of(tagPage.getContent());
+        return TagListResDto.of(tagPage);
     }
 
     /**
@@ -65,7 +61,7 @@ public class TagService {
      *
      * @param reqDto 태그 요청 객체
      */
-    public void createTagDetail(TagReqDto reqDto) {
+    public void createTagDetail(TagInsertReqDto reqDto) {
         if (tagRepository.existsByTagName(reqDto.getTagName()))
             throw new DataConflictException(ResponseCode.CONFLICT_DATA_ERROR.getMessage());
         tagRepository.save(Tag.created(reqDto.getTagName()));
@@ -76,7 +72,7 @@ public class TagService {
      *
      * @param reqDto 태그 요청 객체
      */
-    public void updateTagDetail(TagReqDto reqDto) {
+    public void updateTagDetail(TagInsertReqDto reqDto) {
         Tag tag = tagRepository.findById(reqDto.getTagNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         tag.updated(reqDto.getTagName());

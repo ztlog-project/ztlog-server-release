@@ -1,7 +1,6 @@
 package com.devlog.admin.controller.tag;
 
-import com.devlog.admin.dto.tag.request.TagReqDto;
-import com.devlog.admin.dto.tag.response.TagCountListResDto;
+import com.devlog.admin.dto.tag.request.TagInsertReqDto;
 import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.service.tag.TagService;
 import com.devlog.admin.dto.tag.response.TagResDto;
@@ -71,7 +70,7 @@ public class TagController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping("/tags")
-    public ResponseEntity<Response<String>> createTagDetail(@RequestBody TagReqDto reqDto) {
+    public ResponseEntity<Response<String>> createTagDetail(@RequestBody TagInsertReqDto reqDto) {
         tagService.createTagDetail(reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
@@ -89,7 +88,7 @@ public class TagController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping("/tags")
-    public ResponseEntity<Response<String>> updateTagDetail(@RequestBody TagReqDto reqDto) {
+    public ResponseEntity<Response<String>> updateTagDetail(@RequestBody TagInsertReqDto reqDto) {
         tagService.updateTagDetail(reqDto);
         return Response.success(ResponseCode.OK_SUCCESS);
     }

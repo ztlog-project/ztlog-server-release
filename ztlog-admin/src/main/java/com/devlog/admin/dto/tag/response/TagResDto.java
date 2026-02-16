@@ -1,6 +1,6 @@
 package com.devlog.admin.dto.tag.response;
 
-import com.devlog.admin.dto.content.request.ContentInfoDto;
+import com.devlog.admin.dto.content.request.ContentReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,7 +28,7 @@ public class TagResDto {
     private String tagName;
 
     @Schema(description = "태그 게시물")
-    private List<ContentInfoDto> contents;
+    private List<ContentReqDto> contents;
 
     @Schema(description = "태그 생성일시")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
@@ -42,7 +42,7 @@ public class TagResDto {
         return TagResDto.builder()
                 .tagNo(tag.getTagNo())
                 .tagName(tag.getTagName())
-                .contents(ContentInfoDto.toContentInfoList(tag.getContentTags()))
+                .contents(ContentReqDto.toContentInfoList(tag.getContentTags()))
                 .inpDttm(tag.getInpDttm())
                 .updDttm(tag.getUpdDttm())
                 .build();

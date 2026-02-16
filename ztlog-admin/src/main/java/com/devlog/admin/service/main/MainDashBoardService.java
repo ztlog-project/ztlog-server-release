@@ -17,12 +17,13 @@ public class MainDashBoardService {
     private final MainDashBoardMapper mainDashboardMapper;
 
     /**
+     * 메인화면 대쉬보드 통계 조회
      *
      * @return 메인화면(대쉬보드) 정보
      */
     public MainDashBoardResDto getMainStatisticsInfo() {
-        MainStatisticsDto dto = mainDashboardMapper.selectMainStatistics();
-        return MainDashBoardResDto.of(dto);
+        MainStatisticsDto mainStatisticsDto = mainDashboardMapper.selectMainStatistics();
+        return MainDashBoardResDto.of(mainStatisticsDto);
     }
 
 }

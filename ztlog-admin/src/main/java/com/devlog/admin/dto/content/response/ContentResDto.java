@@ -1,6 +1,6 @@
 package com.devlog.admin.dto.content.response;
 
-import com.devlog.admin.dto.tag.request.TagInfoDto;
+import com.devlog.admin.dto.tag.request.TagInfoReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;
@@ -34,7 +34,7 @@ public class ContentResDto {
     private String body;
 
     @Schema(description = "게시물 태그 목록")
-    private List<TagInfoDto> tags;
+    private List<TagInfoReqDto> tags;
 
     @Schema(description = "게시물 경로")
     private String path;
@@ -62,7 +62,7 @@ public class ContentResDto {
                 .ctntNo(content.getCtntNo())
                 .title(content.getCtntTitle())
                 .body(contentDetail.getCtntBody())
-                .tags(TagInfoDto.toTagInfoList(content.getContentTags()))
+                .tags(TagInfoReqDto.toTagInfoList(content.getContentTags()))
                 .path(contentDetail.getCtntPath())
                 .name(contentDetail.getCtntName())
                 .ext(contentDetail.getCtntExt())

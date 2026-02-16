@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class TagInfoDto {
+public class TagInfoReqDto {
 
     @Schema(description = "태그 번호")
     private Long tagNo;
@@ -29,17 +29,17 @@ public class TagInfoDto {
     @Size(max = CommonConstants.TAG_NAME_SIZE, message = "tag name length is too long!!")
     private String tagName;
 
-    public static TagInfoDto of(Tag tag) {
-        return TagInfoDto.builder()
+    public static TagInfoReqDto of(Tag tag) {
+        return TagInfoReqDto.builder()
                 .tagNo(tag.getTagNo())
                 .tagName(tag.getTagName())
                 .build();
     }
 
-    public static List<TagInfoDto> toTagInfoList(List<ContentTag> contentTags) {
+    public static List<TagInfoReqDto> toTagInfoList(List<ContentTag> contentTags) {
         return Optional.ofNullable(contentTags).orElseGet(Collections::emptyList)
                 .stream()
-                .map(contentTag -> TagInfoDto.of(contentTag.getTags()))
+                .map(contentTag -> TagInfoReqDto.of(contentTag.getTags()))
                 .collect(toList());
     }
 }

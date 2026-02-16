@@ -1,6 +1,6 @@
 package com.devlog.admin.dto.content.response;
 
-import com.devlog.admin.dto.tag.request.TagInfoDto;
+import com.devlog.admin.dto.tag.request.TagInfoReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -43,7 +43,7 @@ public class ContentListResDto {
     private Boolean hasPrevious;
 
     @Schema(description = "게시물 목록")
-    private List<ContentMainDto> list;
+    private List<ContentListResInfoDto> list;
 
     public static ContentListResDto of(Page<Content> contents) {
         return ContentListResDto.builder()
@@ -54,9 +54,8 @@ public class ContentListResDto {
                 .pageSize(contents.getSize())
                 .hasNext(contents.hasNext())
                 .hasPrevious(contents.hasPrevious())
-                .hasPrevious(contents.hasPrevious())
                 .list(contents.stream()
-                        .map(ContentMainDto::of)
+                        .map(ContentListResInfoDto::of)
                         .collect(toList()))
                 .build();
     }
@@ -66,7 +65,7 @@ public class ContentListResDto {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder(access = AccessLevel.PRIVATE)
-    public static class ContentMainDto {
+    public static class ContentListResInfoDto {
 
         @Schema(description = "게시물 번호")
         private Long ctntNo;
@@ -80,7 +79,7 @@ public class ContentListResDto {
         private String subTitle;
 
         @Schema(description = "게시물 태그 목록")
-        private List<TagInfoDto> tags;
+        private List<TagInfoReqDto> tags;
 
         @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
         private String inpUser;
@@ -93,12 +92,12 @@ public class ContentListResDto {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
         private LocalDateTime updDttm;
 
-        public static ContentMainDto of(Content content) {
-            return ContentMainDto.builder()
+        public static ContentListResInfoDto of(Content content) {
+            return ContentListResInfoDto.builder()
                     .ctntNo(content.getCtntNo())
                     .title(content.getCtntTitle())
                     .subTitle(content.getCtntSubTitle())
-                    .tags(TagInfoDto.toTagInfoList(content.getContentTags()))
+                    .tags(TagInfoReqDto.toTagInfoList(content.getContentTags()))
                     .inpUser(content.getInpUser())
                     .inpDttm(content.getInpDttm())
                     .build();
