@@ -3,6 +3,7 @@ package com.devlog.api.service.content;
 import com.devlog.api.service.content.dto.ContentResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.enumulation.SearchType;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
@@ -50,12 +51,14 @@ public class ContentService {
     /**
      * 컨텐츠 검색하기
      *
+     * @param type  검색 옵션
      * @param param 검색 키워드
      * @param page  페이지 번호 (기본값 = 1)
      * @return 검색한 키워드 관련 리스트 반환
      */
-    public ContentListResDto searchContentList(String param, int page) {
-        Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, pageUtils.getPageable(page, Content.class));
+    public ContentListResDto searchContentList(SearchType type, String param, int page) {
+//        Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, pageUtils.getPageable(page, Content.class));
+        Page<Content> contentPage = contentRepository.findContentsByCondition(type, param, page);
         return ContentListResDto.of(contentPage);
     }
 

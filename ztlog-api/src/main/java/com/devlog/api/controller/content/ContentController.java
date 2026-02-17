@@ -5,6 +5,7 @@ import com.devlog.api.service.content.dto.ContentResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
+import com.devlog.core.common.enumulation.SearchType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,6 +60,7 @@ public class ContentController {
     /**
      * 컨텐츠 검색하기
      *
+     * @param type  검색 옵션
      * @param param 검색 키워드
      * @param page  페이지 번호 (기본값 = 1)
      * @return 검색한 키워드 관련 리스트 반환
@@ -71,10 +73,11 @@ public class ContentController {
     })
     @GetMapping("/contents/search")
     public ResponseEntity<Response<ContentListResDto>> searchContentList(
+            @RequestParam(value = "type") SearchType type,
             @RequestParam(value = "param") String param,
-            @RequestParam(value = "no", defaultValue = "1") Integer page
+            @RequestParam(value = "page", defaultValue = "1") Integer page
     ) {
-        return Response.success(ResponseCode.OK_SUCCESS, contentService.searchContentList(param, page));
+        return Response.success(ResponseCode.OK_SUCCESS, contentService.searchContentList(type, param, page));
     }
 
 }

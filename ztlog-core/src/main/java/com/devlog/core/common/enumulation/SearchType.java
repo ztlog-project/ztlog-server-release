@@ -1,14 +1,16 @@
 package com.devlog.core.common.enumulation;
 
-public enum UserRole {
+public enum SearchType {
 
-    ADMIN("ADMIN", "관리자"),
-    USER("USER", "사용자");
+    TITLE("TITLE","제목"),
+    CONTENT("CONTENT", "내용"),
+    TITLE_CONTENT("TCONTENT", "제목+내용"),
+    TAG("TAG", "태그");
 
     private final String value;
     private final String desc;
 
-    UserRole(String v, String d) {
+    SearchType(String v, String d) {
         value = v;
         desc = d;
     }
