@@ -57,7 +57,6 @@ public class ContentService {
      * @return 검색한 키워드 관련 리스트 반환
      */
     public ContentListResDto searchContentList(SearchType type, String param, int page) {
-//        Page<Content> contentPage = contentRepository.findAllByCtntTitleContaining(param, pageUtils.getPageable(page, Content.class));
         Page<Content> contentPage = contentRepository.findContentsByCondition(type, param, page);
         return ContentListResDto.of(contentPage);
     }

@@ -1,14 +1,17 @@
 package com.devlog.core.entity.content;
 
+import com.devlog.core.common.enumulation.DELETED_YN;
 import com.devlog.core.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SoftDelete;
 
 import java.util.*;
 
 @Getter
 @Setter
 @Entity
+@SoftDelete(columnName = "DELETED_YN")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
@@ -26,6 +29,9 @@ public class Content extends BaseTimeEntity {
     @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
 
+    @Column(name = "DELETED_YN", nullable = false)
+    private DELETED_YN deletedYn;
+
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "CTNT_NO")
     private ContentDetail contentDetail;
@@ -41,6 +47,7 @@ public class Content extends BaseTimeEntity {
         Content content = Content.builder()
                 .ctntTitle(title)
                 .ctntSubTitle(subTitle)
+                .deletedYn(DELETED_YN.N)
                 .inpUser(userId)
                 .build();
         content.contentDetail = ContentDetail.created(title, body, userId, content);
