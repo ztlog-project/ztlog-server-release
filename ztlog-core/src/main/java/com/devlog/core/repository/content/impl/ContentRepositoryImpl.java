@@ -30,7 +30,8 @@ public class ContentRepositoryImpl implements ContentRepositoryCustom {
     }
 
     private BooleanExpression searchCondition(SearchType type, String keyword) {
-        if (keyword == null || keyword.isBlank()) return null;
+        if (keyword == null || keyword.isBlank())
+            return null;
 
         return switch (type) {
             case TITLE -> content.ctntTitle.contains(keyword);

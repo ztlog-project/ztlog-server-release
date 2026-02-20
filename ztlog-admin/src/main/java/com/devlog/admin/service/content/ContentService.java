@@ -121,11 +121,12 @@ public class ContentService {
     public void deleteContentDetail(Long ctntNo) {
         final var content = contentRepository.findById(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
-        // delete
+        // soft delete 적용
         contentTagRepository.deleteAll(content.getContentTags());
         contentRepository.delete(content);
-        contentRepository.flush();
+        contentRepository.flush();  // DB에 즉시 반영 (UPD_DTTM 갱신됨)
 
+        // DB의 최신 값을 다시 엔티티로 읽어옴
         entityManager.refresh(content);
     }
 
