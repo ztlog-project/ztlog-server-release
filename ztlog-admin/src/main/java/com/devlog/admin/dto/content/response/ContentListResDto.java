@@ -37,8 +37,8 @@ public class ContentListResDto {
     @Schema(description = "게시물 목록")
     private List<ContentResDto> list;
 
-    public static ContentListResDto of(List<ContentResDto> contents, int currentPage) {
-        int totalCount = contents.size();
+    public static ContentListResDto of(List<ContentResDto> list, int currentPage) {
+        int totalCount = list.size();
         int totalPages = (int) Math.ceil((double) totalCount / CommonConstants.PAGE_LIST_SIZE);
 
         return ContentListResDto.builder()
@@ -49,7 +49,7 @@ public class ContentListResDto {
                 .pageSize(CommonConstants.PAGE_LIST_SIZE)
                 .hasNext(currentPage < totalPages)
                 .hasPrevious(currentPage > 1)
-                .list(contents)
+                .list(list)
                 .build();
     }
 

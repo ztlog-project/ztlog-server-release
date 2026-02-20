@@ -1,6 +1,7 @@
 package com.devlog.admin.service.tag;
 
 import com.devlog.admin.dto.tag.request.TagInsertReqDto;
+import com.devlog.admin.dto.tag.response.TagCountResDto;
 import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.dto.tag.response.TagResDto;
 import com.devlog.admin.mapper.tag.TagMapper;
@@ -13,9 +14,10 @@ import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,7 +30,7 @@ public class TagService {
     private final ContentTagRepository contentTagRepository;
 
     // mapper
-    private final TagMapper tagMapper;
+    private final TagMapper tagStatisticMapper;
 
     // utils
     private final PageUtils pageUtils;
@@ -39,9 +41,8 @@ public class TagService {
      * @return 태그 리스트
      */
     public TagListResDto getTagList(Integer page) {
-        Page<Tag> tagPage = tagRepository.findAll(pageUtils.getPageableEx(page, Tag.class));
-//        List<TagCountResDto> list = tagMapper.selectTagInfoList();
-        return TagListResDto.of(tagPage);
+        List<TagCountResDto> tagList = tagStatisticMapper.selectTagList();
+        return TagListResDto.of(tagList, page);
     }
 
     /**

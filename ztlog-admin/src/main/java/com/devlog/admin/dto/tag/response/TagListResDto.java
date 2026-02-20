@@ -1,5 +1,6 @@
 package com.devlog.admin.dto.tag.response;
 
+import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.tag.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -20,7 +21,7 @@ public class TagListResDto {
     private Integer count;
 
     @Schema(description = "전체 게시물 수")
-    private Long totalCount;
+    private Integer totalCount;
 
     @Schema(description = "전체 페이지 수")
     private Integer totalPages;
@@ -40,18 +41,19 @@ public class TagListResDto {
     @Schema(description = "게시물 목록")
     private List<TagCountResDto> list;
 
-    public static TagListResDto of(Page<Tag> tags) {
+    public static TagListResDto of(List<TagCountResDto> list, int currentPage) {
+        int totalCount = list.size();
+        int totalPages = (int) Math.ceil((double) totalCount / CommonConstants.PAGE_LIST_SIZE);
+
         return TagListResDto.builder()
-                .count(tags.getNumberOfElements())
-                .totalCount(tags.getTotalElements())
-                .totalPages(tags.getTotalPages())
-                .currentPage(tags.getNumber() + 1)
-                .pageSize(tags.getSize())
-                .hasNext(tags.hasNext())
-                .hasPrevious(tags.hasPrevious())
-                .list(tags.stream()
-                        .map(TagCountResDto::of)
-                        .collect(toList()))
+                .count(CommonConstants.PAGE_LIST_SIZE)
+                .totalCount(totalCount)
+                .totalPages(totalPages)
+                .currentPage(currentPage)
+                .pageSize(CommonConstants.PAGE_LIST_SIZE)
+                .hasNext(currentPage < totalPages)
+                .hasPrevious(currentPage > 1)
+                .list(list)
                 .build();
     }
 
