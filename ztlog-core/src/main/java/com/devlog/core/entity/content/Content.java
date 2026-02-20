@@ -5,13 +5,14 @@ import com.devlog.core.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SoftDelete;
+import org.hibernate.type.YesNoConverter;
 
 import java.util.*;
 
 @Getter
 @Setter
 @Entity
-@SoftDelete(columnName = "DELETED_YN")
+@SoftDelete(columnName = "DELETED_YN", converter = YesNoConverter.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
@@ -29,6 +30,7 @@ public class Content extends BaseTimeEntity {
     @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "DELETED_YN", nullable = false)
     private DELETED_YN deletedYn;
 
@@ -36,7 +38,7 @@ public class Content extends BaseTimeEntity {
     @PrimaryKeyJoinColumn(name = "CTNT_NO")
     private ContentDetail contentDetail;
 
-    @OneToMany(mappedBy = "contents", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "contents", fetch = FetchType.EAGER)
     @OrderBy("sort asc")
     private List<ContentTag> contentTags = new ArrayList<>();
 

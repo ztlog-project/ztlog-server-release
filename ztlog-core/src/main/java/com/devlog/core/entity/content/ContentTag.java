@@ -22,7 +22,7 @@ public class ContentTag {
     private Integer sort;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CTNT_NO", nullable = false)
     private Content contents;
 
