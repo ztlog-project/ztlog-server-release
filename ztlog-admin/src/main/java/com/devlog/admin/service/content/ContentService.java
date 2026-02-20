@@ -13,6 +13,7 @@ import com.devlog.core.entity.tag.Tag;
 import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContentService {
 
+    private final EntityManager entityManager;
     // repository
     private final ContentRepository contentRepository;
 //    private final ContentDtlRepository contentDtlRepository;
@@ -122,6 +124,9 @@ public class ContentService {
         // delete
         contentTagRepository.deleteAll(content.getContentTags());
         contentRepository.delete(content);
+        contentRepository.flush();
+
+        entityManager.refresh(content);
     }
 
 }
