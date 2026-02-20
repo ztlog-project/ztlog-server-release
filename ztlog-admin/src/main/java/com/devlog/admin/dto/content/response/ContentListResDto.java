@@ -1,18 +1,10 @@
 package com.devlog.admin.dto.content.response;
 
-import com.devlog.admin.dto.tag.request.TagInfoReqDto;
 import com.devlog.core.common.constants.CommonConstants;
-import com.devlog.core.entity.content.Content;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Getter
 @ToString
@@ -45,18 +37,18 @@ public class ContentListResDto {
     @Schema(description = "게시물 목록")
     private List<ContentResDto> list;
 
-    public static ContentListResDto of(List<ContentResDto> contents) {
+    public static ContentListResDto of(List<ContentResDto> contents, int currentPage) {
         int totalCount = contents.size();
         int totalPages = (int) Math.ceil((double) totalCount / CommonConstants.PAGE_LIST_SIZE);
 
         return ContentListResDto.builder()
                 .count(CommonConstants.PAGE_LIST_SIZE)
-                .totalCount(contents.size())
+                .totalCount(totalCount)
                 .totalPages(totalPages)
-                .currentPage(1)
+                .currentPage(currentPage)
                 .pageSize(CommonConstants.PAGE_LIST_SIZE)
-                .hasNext(true)
-                .hasPrevious(false)
+                .hasNext(currentPage < totalPages)
+                .hasPrevious(currentPage > 1)
                 .list(contents)
                 .build();
     }

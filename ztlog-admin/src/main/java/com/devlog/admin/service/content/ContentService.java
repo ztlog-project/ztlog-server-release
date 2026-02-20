@@ -5,13 +5,11 @@ import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.entity.tag.Tag;
-import com.devlog.core.repository.content.ContentDtlRepository;
 import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
@@ -33,14 +31,13 @@ public class ContentService {
 
     // repository
     private final ContentRepository contentRepository;
-    private final ContentDtlRepository contentDtlRepository;
+//    private final ContentDtlRepository contentDtlRepository;
     private final ContentTagRepository contentTagRepository;
     private final TagRepository tagRepository;
 
     // mapper
     private final ContentStatisticsMapper contentStatisticsMapper;
     private final TokenUtils tokenUtils;
-    private final PageUtils pageUtils;
 
     /**
      * 컨텐츠 리스트 조회하기
@@ -49,8 +46,8 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-        List<ContentResDto> contentResDtoList = contentStatisticsMapper.selectContentList();
-        return ContentListResDto.of(contentResDtoList);
+        List<ContentResDto> contentList = contentStatisticsMapper.selectContentList();
+        return ContentListResDto.of(contentList, page);
     }
 
     /**
@@ -60,9 +57,8 @@ public class ContentService {
      * @return 컨텐츠 객체
      */
     public ContentResDto getContentDetail(Long ctntNo) {
-        final var content = contentRepository.findById(ctntNo)
+        return contentStatisticsMapper.selectContent(ctntNo)
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
-        return ContentResDto.of(content);
     }
 
     /**
@@ -72,7 +68,11 @@ public class ContentService {
      * @param reqDto  컨텐츠 요청 객체
      */
     public void createContentDetail(HttpServletRequest request, ContentReqDto.ContentReqInfoDto reqDto) {
-        Content content = Content.created(reqDto.getTitle(), reqDto.getSubTitle(), reqDto.getBody(), tokenUtils.getUserIdFromHeader(request));
+        Content content = Content.created(
+                reqDto.getTitle(),
+                reqDto.getSubTitle(),
+                reqDto.getBody(),
+                tokenUtils.getUserIdFromHeader(request));
         contentRepository.save(content);
 
         // Create and save tags after content has ID

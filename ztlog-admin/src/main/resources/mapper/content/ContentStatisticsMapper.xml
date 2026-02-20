@@ -18,11 +18,47 @@
         where 1=1
         order by cm.CTNT_NO desc, tm.TAG_NO;
     </select>
-    
+
+    <select id="selectContent" resultMap="ContentMap">
+        select
+            cm.CTNT_NO,
+            cm.CTNT_TITLE,
+            cm.CTNT_SUBTITLE,
+            cd.CTNT_BODY,
+            cm.INP_USER,
+            cm.DELETED_YN,
+            tm.TAG_NO,
+            tm.TAG_NAME,
+            cm.INP_DTTM,
+            cm.UPD_DTTM
+        from contents_mst cm
+                 inner join contents_dtl cd on cm.CTNT_NO = cd.CTNT_NO
+                 left join contents_tags ct on cm.CTNT_NO = ct.CTNT_NO
+                 left join tags_mst tm on ct.TAG_NO = tm.TAG_NO
+        where cm.CTNT_NO = #{ctntNp}
+        order by cm.CTNT_NO desc, tm.TAG_NO;
+    </select>
+
     <resultMap id="ContentListMap" type="ContentResDto">
         <result column="CTNT_NO" property="ctntNo"/>
         <result column="CTNT_TITLE" property="title"/>
         <result column="CTNT_SUBTITLE" property="subTitle"/>
+        <result column="INP_USER" property="inpUser"/>
+        <result column="DELETED_YN" property="deletedYn"/>
+        <result column="INP_DTTM" property="inpDttm"/>
+        <result column="UPD_DTTM" property="updDttm"/>
+
+        <collection property="tags" ofType="TagInfoReqDto">
+            <result column="TAG_NO" property="tagNo" />
+            <result column="TAG_NAME" property="tagName" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="ContentMap" type="ContentResDto">
+        <result column="CTNT_NO" property="ctntNo"/>
+        <result column="CTNT_TITLE" property="title"/>
+        <result column="CTNT_SUBTITLE" property="subTitle"/>
+        <result column="CTNT_BODY" property="body"/>
         <result column="INP_USER" property="inpUser"/>
         <result column="DELETED_YN" property="deletedYn"/>
         <result column="INP_DTTM" property="inpDttm"/>
