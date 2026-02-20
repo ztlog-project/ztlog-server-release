@@ -25,7 +25,7 @@ public class ContentListResDto {
     private Integer count;
 
     @Schema(description = "전체 게시물 수")
-    private Long totalCount;
+    private Integer totalCount;
 
     @Schema(description = "전체 페이지 수")
     private Integer totalPages;
@@ -43,66 +43,22 @@ public class ContentListResDto {
     private Boolean hasPrevious;
 
     @Schema(description = "게시물 목록")
-    private List<ContentListResInfoDto> list;
+    private List<ContentResDto> list;
 
-    public static ContentListResDto of(Page<Content> contents) {
+    public static ContentListResDto of(List<ContentResDto> contents) {
+        int totalCount = contents.size();
+        int totalPages = (int) Math.ceil((double) totalCount / CommonConstants.PAGE_LIST_SIZE);
+
         return ContentListResDto.builder()
-                .count(contents.getNumberOfElements())
-                .totalCount(contents.getTotalElements())
-                .totalPages(contents.getTotalPages())
-                .currentPage(contents.getNumber() + 1)
-                .pageSize(contents.getSize())
-                .hasNext(contents.hasNext())
-                .hasPrevious(contents.hasPrevious())
-                .list(contents.stream()
-                        .map(ContentListResInfoDto::of)
-                        .collect(toList()))
+                .count(CommonConstants.PAGE_LIST_SIZE)
+                .totalCount(contents.size())
+                .totalPages(totalPages)
+                .currentPage(1)
+                .pageSize(CommonConstants.PAGE_LIST_SIZE)
+                .hasNext(true)
+                .hasPrevious(false)
+                .list(contents)
                 .build();
-    }
-
-    @Getter
-    @ToString
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @Builder(access = AccessLevel.PRIVATE)
-    public static class ContentListResInfoDto {
-
-        @Schema(description = "게시물 번호")
-        private Long ctntNo;
-
-        @Schema(description = "게시물 제목")
-        @Size(max = CommonConstants.TITLE_SIZE, message = "content title length is too long!!")
-        private String title;
-
-        @Schema(description = "게시물 부제목")
-        @Size(max = CommonConstants.SUBTITLE_SIZE, message = "content title length is too long!!")
-        private String subTitle;
-
-        @Schema(description = "게시물 태그 목록")
-        private List<TagInfoReqDto> tags;
-
-        @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
-        private String inpUser;
-
-        @Schema(description = "게시물 생성일시")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
-        private LocalDateTime inpDttm;
-
-        @Schema(description = "게시물 수정일시")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DEFAULT_DATETIME_FORMAT, timezone = "Asia/Seoul")
-        private LocalDateTime updDttm;
-
-        public static ContentListResInfoDto of(Content content) {
-            return ContentListResInfoDto.builder()
-                    .ctntNo(content.getCtntNo())
-                    .title(content.getCtntTitle())
-                    .subTitle(content.getCtntSubTitle())
-                    .tags(TagInfoReqDto.toTagInfoList(content.getContentTags()))
-                    .inpUser(content.getInpUser())
-                    .inpDttm(content.getInpDttm())
-                    .build();
-        }
-
     }
 
 }

@@ -30,10 +30,6 @@ public class Content extends BaseTimeEntity {
     @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "DELETED_YN", nullable = false)
-    private DELETED_YN deletedYn;
-
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "CTNT_NO")
     private ContentDetail contentDetail;
@@ -49,7 +45,6 @@ public class Content extends BaseTimeEntity {
         Content content = Content.builder()
                 .ctntTitle(title)
                 .ctntSubTitle(subTitle)
-                .deletedYn(DELETED_YN.N)
                 .inpUser(userId)
                 .build();
         content.contentDetail = ContentDetail.created(title, body, userId, content);
