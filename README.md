@@ -65,6 +65,8 @@ controller → service → repository (core) → entity (core)
 
 ## 빌드 및 실행 (Build & Run)
 
+### Gradle로 실행
+
 ```bash
 # 전체 빌드
 ./gradlew build
@@ -87,7 +89,14 @@ controller → service → repository (core) → entity (core)
 ./gradlew clean build
 ```
 
-> **프로파일**: `local`, `dev`, `prd` (공통 설정은 `common` 프로파일로 관리)
+### 🐳 Docker 자동 배포
+
+**GitHub Actions를 통한 자동 배포**
+- `develop` 브랜치 → dev 환경 (포트: 9080, 9088)
+- `main` 브랜치 → prd 환경 (포트: 8080, 8088)
+- 자동으로 Docker 이미지 빌드 및 EC2 배포
+
+**프로파일**: `local`, `dev`, `prd` (공통 설정은 `common` 프로파일로 관리)
 
 ---
 
@@ -102,6 +111,5 @@ controller → service → repository (core) → entity (core)
 
 ## 보안 (Security)
 
-- JWT 기반 인증 (JJWT 0.11.5), 커스텀 `TokenUtils` 및 `JwtAuthenticationEntryPoint`
-- 비밀번호 암호화: `Pbkdf2PasswordEncoder` (HMAC-SHA512, 16-byte salt, 310,000 iterations)
+- JWT 기반 인증 (JJWT 0.11.5)
 - 공개 엔드포인트: `/api/v1/user/login`, `/api/v1/user/signup`, `/main/**`, Swagger 경로

@@ -1,4 +1,4 @@
-name: ZTLog Admin Web Server Deploy to EC2
+name: ZTLog Admin Docker Deploy to EC2
 
 on:
   push:
@@ -6,73 +6,99 @@ on:
     paths:
       - 'ztlog-admin/**'
       - 'ztlog-core/**'
-      - '.github/workflows/deploy-admin.yml'  # workflow 파일 변경시도 배포
+      - 'Dockerfile-admin'
+      - '.github/workflows/deploy-admin.yml'
+
+env:
+  DOCKER_IMAGE_NAME: ztlog-admin
+  CONTAINER_NAME: ztlog-admin
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment variables
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENV=prd" >> $GITHUB_ENV
+            echo "SERVER_PORT=8080" >> $GITHUB_ENV
+            echo "DOCKER_TAG=latest" >> $GITHUB_ENV
+          else
+            echo "ENV=dev" >> $GITHUB_ENV
+            echo "SERVER_PORT=9080" >> $GITHUB_ENV
+            echo "DOCKER_TAG=dev" >> $GITHUB_ENV
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build ADMIN Module
-        run: chmod +x gradlew && ./gradlew :ztlog-admin:build -x test
-
-      - name: Copy JAR to EC2
-        uses: appleboy/scp-action@master
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "ztlog-admin/build/libs/ztlog-admin-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/apps/admin"
-          strip_components: 3
+          context: .
+          file: ./Dockerfile-admin
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: SSH Restart ADMIN
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GITHUB_REF, AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_S3_BUCKET
+          envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN,AWS_ACCESS_KEY,AWS_SECRET_KEY,ENV,SERVER_PORT,DOCKER_IMAGE_NAME,CONTAINER_NAME,DOCKER_TAG
           script: |
-            NOW=$(date +%Y%m%d_%H%M%S)
+            # Docker 로그인
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
-            if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-              ENV="prd"
-              ADM_PORT=8089
-            else
-              ENV="dev"
-              ADM_PORT=9089
-            fi
+            # 기존 컨테이너 중지 및 제거
+            docker stop ${CONTAINER_NAME}-${ENV} 2>/dev/null || true
+            docker rm ${CONTAINER_NAME}-${ENV} 2>/dev/null || true
 
-            # 기존 프로세스 종료
-            PID=$(pgrep -f ztlog-admin || true)
-            if [ -n "$PID" ]; then
-              echo "기존 프로세스($PID) 종료 중..."
-              kill -15 $PID 2>/dev/null || true
-              sleep 5
-              kill -9 $PID 2>/dev/null || true
-            fi
+            # 최신 이미지 Pull
+            docker pull $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
 
             # 로그 디렉토리 생성
             mkdir -p /home/ec2-user/apps/admin/log
 
-            # 새 프로세스 실행
-            nohup java -Xmx256M -Xms256M \
-              -Dspring.profiles.active=$ENV \
-              -Dserver.port=$ADM_PORT \
-              -jar /home/ec2-user/apps/admin/ztlog-admin-0.0.1-SNAPSHOT.jar \
-              >> /home/ec2-user/apps/admin/log/admin_${NOW}.log 2>&1 </dev/null &
+            # 새 컨테이너 실행
+            docker run -d \
+              --name ${CONTAINER_NAME}-${ENV} \
+              --restart unless-stopped \
+              -p ${SERVER_PORT}:${SERVER_PORT} \
+              -e SPRING_PROFILES_ACTIVE=${ENV} \
+              -e SERVER_PORT=${SERVER_PORT} \
+              -e AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
+              -e AWS_SECRET_KEY=${AWS_SECRET_KEY} \
+              -e JAVA_OPTS="-Xmx256M -Xms256M -Daws.credentials.access-key=${AWS_ACCESS_KEY} -Daws.credentials.secret-key=${AWS_SECRET_KEY}" \
+              -v /home/ec2-user/apps/admin/log:/app/log \
+              $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
 
-            disown $!
+            # 이전 이미지 정리 (dangling images)
+            docker image prune -f
 
-            echo "배포 스크립트 실행 완료 (PID: $!)"
-            exit 0
+            echo "✅ Admin 서버 배포 완료!"
+            echo "- 환경: ${ENV}"
+            echo "- 포트: ${SERVER_PORT}"
+            echo "- 컨테이너: ${CONTAINER_NAME}-${ENV}"
+
+            # 컨테이너 상태 확인
+            docker ps | grep ${CONTAINER_NAME}-${ENV}

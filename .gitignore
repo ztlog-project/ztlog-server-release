@@ -40,3 +40,19 @@ out/
 ### CLAUDE ###
 .claude
 CLAUDE.md
+
+### Environment & Secrets ###
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+### Logs ###
+logs/
+*.log
+log/
+
+### Docker ###
+docker-compose.override.yml
