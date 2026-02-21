@@ -49,12 +49,19 @@ jobs:
             
             # 기존 프로세스 종료
             PID=$(pgrep -f ztlog-api)
-            [ -n "$PID" ] && kill -15 $PID && sleep 5
+            if [ -n "$PID" ]; then
+              echo "기존 프로세스($PID) 종료 중..."
+              kill -15 $PID || true
+              sleep 5
+            fi
             
             # 새 프로세스 실행
             nohup java -Xmx256M -Xms256M \
               -Dspring.profiles.active=$ENV \
               -Dserver.port=$API_PORT \
-              -DAWS_ACCESS_KEY=$AWS_ACCESS_KEY \
-              -DAWS_SECRET_KEY=$AWS_SECRET_KEY \
-              -jar /home/ec2-user/apps/api/ztlog-api-0.0.1-SNAPSHOT.jar > /home/ec2-user/apps/api/api.log 2>&1 &
+              -jar /home/ec2-user/apps/api/ztlog-api-0.0.1-SNAPSHOT.jar >> /home/ec2-user/apps/api/api_${NOW}.log 2>&1 &
+            
+            # 4. 강제 성공 처리 (SSH 액션 종료 에러 방지)
+            echo "배포 스크립트 실행 완료"
+            exit 0
+            
