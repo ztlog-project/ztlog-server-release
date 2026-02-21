@@ -2,7 +2,7 @@ name: ZTLog Admin Web Server Deploy to EC2
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "develop", "main" ]
     paths:
       - 'ztlog-admin/**'
       - 'ztlog-core/**'

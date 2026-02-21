@@ -2,7 +2,7 @@ name: ZTLog API Web Server Deploy to EC2
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "develop", "main" ]
     paths:
       - 'ztlog-api/**'
       - 'ztlog-core/**' # 공통 모듈 변경 시 포함
