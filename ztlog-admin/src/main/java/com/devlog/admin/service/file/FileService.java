@@ -48,7 +48,7 @@ public class FileService {
         String s3Url = s3Service.uploadFile(file, directory);
 
         // 4. DB에 파일 메타데이터 저장
-        File savedFile = File.create(s3Url, originalFilename, fileExtension, ctntNo);
+        File savedFile = File.created(s3Url, originalFilename, fileExtension, ctntNo);
         fileRepository.save(savedFile);
 
         log.info("File uploaded successfully: fileNo={}, s3Url={}", savedFile.getFileNo(), s3Url);

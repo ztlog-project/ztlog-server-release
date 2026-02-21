@@ -38,7 +38,7 @@ public class File extends BaseTimeEntity {
      * @param ctntNo   연결된 게시물 번호
      * @return File 엔티티
      */
-    public static File create(String filePath, String fileName, String fileExt, String ctntNo) {
+    public static File created(String filePath, String fileName, String fileExt, String ctntNo) {
         return File.builder()
                 .filePath(filePath)
                 .fileName(fileName)

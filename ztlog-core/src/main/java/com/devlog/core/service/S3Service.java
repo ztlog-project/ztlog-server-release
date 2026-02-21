@@ -45,15 +45,14 @@ public class S3Service {
             String fileExtension = originalFilename != null && originalFilename.contains(".")
                     ? originalFilename.substring(originalFilename.lastIndexOf("."))
                     : "";
-            String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+            String uniqueFileName = UUID.randomUUID() + fileExtension;
 
             // S3 키 생성 (디렉토리/파일명)
             String s3Key = directory.endsWith("/")
                     ? directory + uniqueFileName
                     : directory + "/" + uniqueFileName;
 
-            log.info("Uploading file to S3: bucket={}, key={}, size={} bytes",
-                    bucketName, s3Key, file.getSize());
+            log.info("Uploading file to S3: bucket={}, key={}, size={} bytes", bucketName, s3Key, file.getSize());
 
             // PutObjectRequest 생성
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -67,8 +66,7 @@ public class S3Service {
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
             // S3 URL 생성
-            String s3Url = String.format("https://%s.s3.%s.amazonaws.com/%s",
-                    bucketName, region, s3Key);
+            String s3Url = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, s3Key);
 
             log.info("File uploaded successfully: {}", s3Url);
             return s3Url;
