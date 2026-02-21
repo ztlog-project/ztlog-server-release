@@ -44,7 +44,7 @@ dependencies {
 def queryDslDir = "build/generated/querydsl"
 
 sourceSets {
-    main.java.srcDirs += [ queryDslDir ]
+    main.java.srcDirs += [queryDslDir]
 }
 
 tasks.withType(JavaCompile).configureEach {

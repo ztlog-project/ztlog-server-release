@@ -1,4 +1,4 @@
 FROM openjdk:17-jdk-slim
 LABEL authors="zoetrope56"
-COPY ztlog-api/build/libs/*.jar ztlog-api.jar
-ENTRYPOINT ["java", "-jar", "/ztlog-api.jar"]
+COPY ztlog-api/build/libs/*.jar log-api-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar", "/log-api-0.0.1-SNAPSHOT.jar"]
