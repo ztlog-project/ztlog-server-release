@@ -25,6 +25,18 @@ jwt:
   access-token-expire-time: 600000
   refresh-token-expire-time: 15552000000
 
+# AWS S3 설정
+aws:
+  credentials:
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+  s3:
+    bucket: ztlog-s3-bucket
+  region:
+    static: ap-northeast-2
+  stack:
+    auto: false
+
 # local, dev, prod 공통 설정
 server:
   port: 8086
