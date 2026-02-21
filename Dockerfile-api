@@ -1,0 +1,4 @@
+FROM openjdk:17-jdk-slim
+LABEL authors="zoetrope56"
+COPY ztlog-api/build/libs/*.jar ztlog-api.jar
+ENTRYPOINT ["java", "-jar", "/ztlog-api.jar"]
