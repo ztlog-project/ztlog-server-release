@@ -5,7 +5,8 @@ on:
     branches: [ "develop", "main" ]
     paths:
       - 'ztlog-api/**'
-      - 'ztlog-core/**' # 공통 모듈 변경 시 포함
+      - 'ztlog-core/**'
+      - '.github/workflows/deploy-api.yml'  # workflow 파일 변경시도 배포
 
 jobs:
   deploy:
@@ -33,34 +34,45 @@ jobs:
 
       - name: SSH Restart API
         uses: appleboy/ssh-action@master
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: GITHUB_REF, AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_S3_BUCKET
           script: |
-            if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then 
-              ENV="prd"; 
-              API_PORT=8088; 
-            else 
-              ENV="dev"; 
-              API_PORT=9088; 
+            if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
+              ENV="prd"
+              API_PORT=8088
+            else
+              ENV="dev"
+              API_PORT=9088
             fi
-            
+
+            NOW=$(date +%Y%m%d_%H%M%S)
+
             # 기존 프로세스 종료
-            PID=$(pgrep -f ztlog-api)
+            PID=$(pgrep -f ztlog-api || true)
             if [ -n "$PID" ]; then
               echo "기존 프로세스($PID) 종료 중..."
-              (kill -15 $PID || true) && sleep 5
+              kill -15 $PID 2>/dev/null || true
+              sleep 5
+              kill -9 $PID 2>/dev/null || true
             fi
-            
+
+            # 로그 디렉토리 생성
+            mkdir -p /home/ec2-user/apps/api/log
+
             # 새 프로세스 실행
             nohup java -Xmx256M -Xms256M \
               -Dspring.profiles.active=$ENV \
               -Dserver.port=$API_PORT \
-              -jar /home/ec2-user/apps/api/ztlog-api-0.0.1-SNAPSHOT.jar >> /home/ec2-user/apps/api/log/api_${NOW}.log 2>&1 &
-            
-            # 4. 강제 성공 처리 (SSH 액션 종료 에러 방지)
-            echo "배포 스크립트 실행 완료"
+              -jar /home/ec2-user/apps/api/ztlog-api-0.0.1-SNAPSHOT.jar \
+              >> /home/ec2-user/apps/api/log/api_${NOW}.log 2>&1 </dev/null &
+
+            disown $!
+
+            echo "배포 스크립트 실행 완료 (PID: $!)"
             exit 0
-            
