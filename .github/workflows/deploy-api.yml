@@ -43,6 +43,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: GITHUB_REF, AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_S3_BUCKET
           script: |
+            set +e  # 에러 발생해도 스크립트 계속 실행
+
             if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
               ENV="prd"
               API_PORT=8088
@@ -54,9 +56,8 @@ jobs:
             NOW=$(date +%Y%m%d_%H%M%S)
 
             # 기존 프로세스 종료 (다중 PID 대응)
-            pkill -15 -f ztlog-api 2>/dev/null || true
-            sleep 5
-            pkill -9 -f ztlog-api 2>/dev/null || true
+            pkill -15 -f ztlog-api; sleep 5
+            pkill -9 -f ztlog-api; true
 
             # 로그 디렉토리 생성
             # mkdir -p /home/ec2-user/apps/api/log
