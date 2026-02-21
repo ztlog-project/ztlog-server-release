@@ -51,8 +51,7 @@ jobs:
             PID=$(pgrep -f ztlog-api)
             if [ -n "$PID" ]; then
               echo "기존 프로세스($PID) 종료 중..."
-              kill -15 $PID || true
-              sleep 5
+              (kill -15 $PID || true) && sleep 5
             fi
             
             # 새 프로세스 실행

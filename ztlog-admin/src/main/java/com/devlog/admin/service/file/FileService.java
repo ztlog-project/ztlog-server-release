@@ -54,7 +54,7 @@ public class FileService {
         log.info("File uploaded successfully: fileNo={}, s3Url={}", savedFile.getFileNo(), s3Url);
 
         // 5. 응답 DTO 반환
-        return FileUploadResDto.from(savedFile);
+        return FileUploadResDto.of(savedFile);
     }
 
     /**

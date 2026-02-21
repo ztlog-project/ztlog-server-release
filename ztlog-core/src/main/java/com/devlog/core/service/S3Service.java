@@ -35,7 +35,7 @@ public class S3Service {
      *
      * @param file      업로드할 파일
      * @param directory S3 내 디렉토리 경로 (예: "images/content")
-     * @return S3 파일 URL
+     * @return          S3 파일 URL
      * @throws InternalServerException S3 업로드 실패 시
      */
     public String uploadFile(MultipartFile file, String directory) {
@@ -48,9 +48,7 @@ public class S3Service {
             String uniqueFileName = UUID.randomUUID() + fileExtension;
 
             // S3 키 생성 (디렉토리/파일명)
-            String s3Key = directory.endsWith("/")
-                    ? directory + uniqueFileName
-                    : directory + "/" + uniqueFileName;
+            String s3Key = directory.endsWith("/") ? directory + uniqueFileName : directory + "/" + uniqueFileName;
 
             log.info("Uploading file to S3: bucket={}, key={}, size={} bytes", bucketName, s3Key, file.getSize());
 

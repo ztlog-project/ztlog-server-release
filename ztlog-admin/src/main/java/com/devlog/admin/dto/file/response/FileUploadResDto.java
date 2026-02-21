@@ -40,7 +40,7 @@ public class FileUploadResDto {
      * @param file File 엔티티
      * @return FileUploadResDto
      */
-    public static FileUploadResDto from(File file) {
+    public static FileUploadResDto of(File file) {
         return FileUploadResDto.builder()
                 .fileNo(file.getFileNo())
                 .filePath(file.getFilePath())
