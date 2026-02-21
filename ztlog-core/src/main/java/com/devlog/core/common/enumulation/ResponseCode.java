@@ -60,6 +60,12 @@ public enum ResponseCode {
     CONFLICT_LOGIN_ERROR(409, "이미 로그인 중인 유저입니다."),
     CONFLICT_REQUEST_ERROR(409, "처리중인 요청입니다."),
 
+    // 413 Payload Too Large
+    PAYLOAD_TOO_LARGE_ERROR(413, "파일 크기가 너무 큽니다. 최대 10MB까지 업로드 가능합니다."),
+
+    // 415 Unsupported Media Type
+    UNSUPPORTED_MEDIA_TYPE_ERROR(415, "지원하지 않는 파일 형식입니다."),
+
     // 500
     INTERNAL_SERVER_ERROR(500, "예상치 못한 서버 에러가 발생하였습니다."),
 

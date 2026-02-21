@@ -1,5 +1,7 @@
 package com.devlog.core.common.constants;
 
+import java.util.Set;
+
 public class CommonConstants {
 
     // string
@@ -12,6 +14,11 @@ public class CommonConstants {
     public static final int TAG_NAME_SIZE = 15;
     public static final int TITLE_SIZE = 100;
     public static final int SUBTITLE_SIZE = 200;
+
+    // file upload
+    public static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    public static final Set<String> ALLOWED_IMAGE_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif", "webp");
+    public static final Set<String> ALLOWED_IMAGE_CONTENT_TYPES = Set.of("image/jpeg", "image/png", "image/gif", "image/webp");
 
     // auth
     public static final String BEARER_TYPE = "Bearer";

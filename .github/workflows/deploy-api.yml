@@ -37,7 +37,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GITHUB_REF
+          envs: GITHUB_REF, AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_S3_BUCKET
           script: |
             if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then 
               ENV="prd"; 
@@ -55,4 +55,6 @@ jobs:
             nohup java -Xmx256M -Xms256M \
               -Dspring.profiles.active=$ENV \
               -Dserver.port=$API_PORT \
+              -DAWS_ACCESS_KEY=$AWS_ACCESS_KEY \
+              -DAWS_SECRET_KEY=$AWS_SECRET_KEY \
               -jar /home/ec2-user/apps/api/ztlog-api-0.0.1-SNAPSHOT.jar > /home/ec2-user/apps/api/api.log 2>&1 &

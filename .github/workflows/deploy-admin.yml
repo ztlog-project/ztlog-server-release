@@ -33,11 +33,14 @@ jobs:
 
       - name: SSH Restart ADMIN
         uses: appleboy/ssh-action@master
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GITHUB_REF
+          envs: GITHUB_REF, AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_S3_BUCKET
           script: |
             if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then 
               ENV="prd";
@@ -55,4 +58,6 @@ jobs:
             nohup java -Xmx256M -Xms256M \
               -Dspring.profiles.active=$ENV \
               -Dserver.port=$ADM_PORT \
+              -DAWS_ACCESS_KEY=$AWS_ACCESS_KEY \
+              -DAWS_SECRET_KEY=$AWS_SECRET_KEY \
               -jar /home/ec2-user/apps/admin/ztlog-admin-0.0.1-SNAPSHOT.jar > /home/ec2-user/apps/admin/admin.log 2>&1 &
