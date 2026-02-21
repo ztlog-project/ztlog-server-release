@@ -1,4 +1,6 @@
 FROM eclipse-temurin:17-jdk-jammy
 LABEL authors="zoetrope56"
 COPY ztlog-api/build/libs/*.jar log-api-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar", "/log-api-0.0.1-SNAPSHOT.jar"]
+
+# JAVA_OPTS 변수를 중간에 삽입하여 실행하도록 수정
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /ztlog-api-0.0.1-SNAPSHOT.jar"]

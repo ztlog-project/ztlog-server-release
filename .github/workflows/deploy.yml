@@ -42,6 +42,18 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: 브랜치별 환경 변수 설정
+        shell: bash
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENV=prd" >> $GITHUB_ENV
+            echo "API_PORT=8088" >> $GITHUB_ENV
+            echo "ADM_PORT=8089" >> $GITHUB_ENV
+          else
+            echo "ENV=dev" >> $GITHUB_ENV
+            echo "API_PORT=9088" >> $GITHUB_ENV
+            echo "ADM_PORT=9089" >> $GITHUB_ENV
+          fi
       - name: EC2 SSH Deployment
         uses: appleboy/ssh-action@master
         with:
@@ -52,12 +64,20 @@ jobs:
             # API 서버 실행 (8088)
             docker stop ztlog-api || true && docker rm ztlog-api || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-api
-            docker run -d --name ztlog-api -p 8088:8088 ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-api
+            docker run -d --name ztlog-api 
+              -p 8088:8088 
+              -e "SPRING_PROFILES_ACTIVE=${{ env.ENV }}" \
+              -e "JAVA_OPTS=-Xmx256M -Xms256M" \
+              ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-api
 
             # ADMIN 서버 실행 (8089)
             docker stop ztlog-admin || true && docker rm ztlog-admin || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-admin
-            docker run -d --name ztlog-admin -p 8089:8089 ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-admin
-            
+            docker run -d --name ztlog-admin 
+              -p 8089:8089
+              -e "SPRING_PROFILES_ACTIVE=${{ env.ENV }}" \
+              -e "JAVA_OPTS=-Xmx256M -Xms256M" \
+              ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-admin
+
             # 안쓰는 이미지 삭제 (용량 관리)
             docker image prune -f
