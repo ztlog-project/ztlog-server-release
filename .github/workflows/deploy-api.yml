@@ -53,20 +53,16 @@ jobs:
 
             NOW=$(date +%Y%m%d_%H%M%S)
 
-            # 기존 프로세스 종료
-            PID=$(pgrep -f ztlog-api || true)
-            if [ -n "$PID" ]; then
-              echo "기존 프로세스($PID) 종료 중..."
-              kill -15 $PID 2>/dev/null || true
-              sleep 5
-              kill -9 $PID 2>/dev/null || true
-            fi
+            # 기존 프로세스 종료 (다중 PID 대응)
+            pkill -15 -f ztlog-api 2>/dev/null || true
+            sleep 5
+            pkill -9 -f ztlog-api 2>/dev/null || true
 
             # 로그 디렉토리 생성
-            mkdir -p /home/ec2-user/apps/api/log
+            # mkdir -p /home/ec2-user/apps/api/log
 
             # 새 프로세스 실행
-            nohup java -Xmx256M -Xms256M \
+              nohup java -Xmx256M -Xms256M \
               -Dspring.profiles.active=$ENV \
               -Dserver.port=$API_PORT \
               -jar /home/ec2-user/apps/api/ztlog-api-0.0.1-SNAPSHOT.jar \
