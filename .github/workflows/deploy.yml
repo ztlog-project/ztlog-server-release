@@ -2,7 +2,7 @@ name: ZTLog Deploy to EC2
 
 on:
   push:
-    branches: [ "main" ] # main 브랜치에 push하면 배포 시작
+    branches: [ "dev", "main" ] # main 브랜치에 push하면 배포 시작
 
 jobs:
   build-and-push:
@@ -63,7 +63,7 @@ jobs:
           script: |
             # API 서버 실행 (8088)
             docker stop ztlog-api || true && docker rm ztlog-api || true
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-api
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-api
             docker run -d --name ztlog-api 
               -p 8088:8088 
               -e "SPRING_PROFILES_ACTIVE=${{ env.ENV }}" \
@@ -72,7 +72,7 @@ jobs:
 
             # ADMIN 서버 실행 (8089)
             docker stop ztlog-admin || true && docker rm ztlog-admin || true
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-admin
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-admin
             docker run -d --name ztlog-admin 
               -p 8089:8089
               -e "SPRING_PROFILES_ACTIVE=${{ env.ENV }}" \
