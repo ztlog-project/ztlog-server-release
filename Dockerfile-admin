@@ -1,5 +1,5 @@
 # 1단계: Gradle 빌드 스테이지
-FROM eclipse-temurin:17-jdk-jammy AS builder
+FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
 
@@ -30,11 +30,11 @@ ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # 빌드된 JAR 파일만 복사
-COPY --from=builder /app/ztlog-admin/build/libs/*.jar ztlog-admin.jar
+COPY ztlog-admin/build/libs/*.jar ztlog-admin-0.0.1-SNAPSHOT.jar
 
 # 비root 사용자 생성 및 권한 설정
 RUN useradd -m -u 1000 ztlog && chown -R ztlog:ztlog /app
-USER ztlog
+#USER ztlog
 
 # 포트 노출 (dev: 9080, prd: 8080)
 EXPOSE 8080 9080

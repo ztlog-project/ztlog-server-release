@@ -30,11 +30,11 @@ ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # 빌드된 JAR 파일만 복사
-COPY --from=builder /app/ztlog-api/build/libs/*.jar ztlog-api.jar
+COPY ztlog-api/build/libs/*.jar ztlog-api-0.0.1-SNAPSHOT.jar
 
 # 비root 사용자 생성 및 권한 설정
 RUN useradd -m -u 1000 ztlog && chown -R ztlog:ztlog /app
-USER ztlog
+#USER ztlog
 
 # 포트 노출 (dev: 9088, prd: 8088)
 EXPOSE 8088 9088

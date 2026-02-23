@@ -12,6 +12,7 @@ on:
 env:
   DOCKER_IMAGE_NAME: ztlog-admin
   CONTAINER_NAME: ztlog-admin
+  DOCKER_TAG: latest
 
 jobs:
   build-and-deploy:
@@ -67,7 +68,7 @@ jobs:
           envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN,AWS_ACCESS_KEY,AWS_SECRET_KEY,ENV,SERVER_PORT,DOCKER_IMAGE_NAME,CONTAINER_NAME,DOCKER_TAG
           script: |
             # Docker 로그인
-            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
             # 기존 컨테이너 중지 및 제거
             docker stop ${CONTAINER_NAME}-${ENV} 2>/dev/null || true
@@ -77,20 +78,20 @@ jobs:
             docker pull $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
 
             # 로그 디렉토리 생성
-            mkdir -p /home/ec2-user/apps/admin/logs
+            # mkdir -p /home/ec2-user/apps/admin/logs
 
             # 새 컨테이너 실행
             docker run -d \
               --name ${CONTAINER_NAME}-${ENV} \
-              --restart unless-stopped \
+#              --restart unless-stopped \
               -p ${SERVER_PORT}:${SERVER_PORT} \
               -e SPRING_PROFILES_ACTIVE=${ENV} \
               -e SERVER_PORT=${SERVER_PORT} \
               -e AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
               -e AWS_SECRET_KEY=${AWS_SECRET_KEY} \
-              -e LOG_PATH=/app/log/admin \
+#               -e LOG_PATH=/app/log/admin \
               -e JAVA_OPTS="-Xmx256M -Xms256M -Daws.credentials.access-key=${AWS_ACCESS_KEY} -Daws.credentials.secret-key=${AWS_SECRET_KEY}" \
-              -v /home/ec2-user/apps/admin/log:/app/log \
+#              -v /home/ec2-user/apps/admin/logs:/app/logs \
               $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
 
             # 이전 이미지 정리 (dangling images)
