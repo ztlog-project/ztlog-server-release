@@ -3,6 +3,8 @@ package com.devlog.core.common.utils;
 import com.devlog.core.common.constants.CommonConstants;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.RowBounds;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -29,6 +31,11 @@ public class PageUtils {
 
     public int getEndIdx(int start, int page, Class<?> entityClass) {
         return start + getPageable(page, entityClass).getPageSize();
+    }
+
+    public RowBounds getRowBounds(Integer page) {
+        int offset = (page - 1) * CommonConstants.PAGE_SIZE;
+        return new RowBounds(offset, CommonConstants.PAGE_SIZE);
     }
 
     private String getPrimaryKeyName(Class<?> entityClass) {

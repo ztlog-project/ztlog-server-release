@@ -4,8 +4,10 @@ import com.devlog.admin.dto.content.request.ContentReqDto;
 import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
+import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.SearchType;
+import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
@@ -18,6 +20,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +45,7 @@ public class ContentService {
     // mapper
     private final ContentStatisticsMapper contentStatisticsMapper;
     private final TokenUtils tokenUtils;
+    private final PageUtils pageUtils;
 
     /**
      * 컨텐츠 리스트 조회하기
@@ -49,7 +54,10 @@ public class ContentService {
      * @return 컨텐츠 리스트
      */
     public ContentListResDto getContentList(Integer page) {
-        List<ContentResDto> contentList = contentStatisticsMapper.selectContentList();
+        RowBounds rowBounds = pageUtils.getRowBounds(page);
+        List<ContentResDto> contentList = contentStatisticsMapper.selectContentList(rowBounds);
+
+
         return ContentListResDto.of(contentList, page);
     }
 
@@ -140,7 +148,8 @@ public class ContentService {
      * @return 검색한 키워드 관련 리스트 반환
      */
     public ContentListResDto searchContentList(SearchType type, String param, Integer page) {
-        List<ContentResDto> list =  contentStatisticsMapper.selectSearchContentList(type, param);
+        RowBounds rowBounds = pageUtils.getRowBounds(page);
+        List<ContentResDto> list =  contentStatisticsMapper.selectSearchContentList(type, param, rowBounds);
         return ContentListResDto.of(list, page);
     }
 }

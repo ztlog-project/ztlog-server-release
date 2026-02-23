@@ -6,7 +6,6 @@ import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.dto.tag.response.TagResDto;
 import com.devlog.admin.mapper.tag.TagMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataConflictException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.tag.Tag;
@@ -38,6 +37,7 @@ public class TagService {
      * @return 태그 리스트
      */
     public TagListResDto getTagList(Integer page) {
+
         List<TagCountResDto> tagList = tagStatisticMapper.selectTagList();
         return TagListResDto.of(tagList, page);
     }
