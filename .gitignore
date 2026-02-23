@@ -40,3 +40,6 @@ out/
 ### CLAUDE ###
 .claude
 CLAUDE.md
+
+### LOG ###
+logs/
