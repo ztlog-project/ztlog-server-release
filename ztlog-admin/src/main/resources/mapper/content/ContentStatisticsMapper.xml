@@ -39,6 +39,10 @@
         order by cm.CTNT_NO desc, tm.TAG_NO;
     </select>
 
+    <select id="selectSearchContentList" resultMap="ContentListMap">
+
+    </select>
+
     <resultMap id="ContentListMap" type="ContentResDto">
         <result column="CTNT_NO" property="ctntNo"/>
         <result column="CTNT_TITLE" property="title"/>

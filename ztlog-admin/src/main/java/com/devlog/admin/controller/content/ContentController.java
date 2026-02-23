@@ -6,6 +6,7 @@ import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.admin.service.content.ContentService;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
+import com.devlog.core.common.enumulation.SearchType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -113,6 +114,21 @@ public class ContentController {
     public ResponseEntity<Response<String>> deleteContentDetail(@PathVariable Long ctntNo) {
         contentService.deleteContentDetail(ctntNo);
         return Response.success(ResponseCode.OK_SUCCESS);
+    }
+
+    @Operation(summary = "컨텐츠 검색", description = "컨텐츠 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러가 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+    })
+    @GetMapping("/contents/search")
+    public ResponseEntity<Response<ContentListResDto>> searchContentList(
+            @RequestParam(value = "type") SearchType type,
+            @RequestParam(value = "param") String param,
+            @RequestParam(value = "page", defaultValue = "1") Integer page
+    ) {
+        return Response.success(ResponseCode.OK_SUCCESS, contentService.searchContentList(type, param, page));
     }
 
 }

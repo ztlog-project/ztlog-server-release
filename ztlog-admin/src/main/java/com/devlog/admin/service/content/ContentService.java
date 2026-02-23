@@ -5,6 +5,7 @@ import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.enumulation.SearchType;
 import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
@@ -33,7 +34,7 @@ public class ContentService {
     private final EntityManager entityManager;
     // repository
     private final ContentRepository contentRepository;
-//    private final ContentDtlRepository contentDtlRepository;
+    //    private final ContentDtlRepository contentDtlRepository;
     private final ContentTagRepository contentTagRepository;
     private final TagRepository tagRepository;
 
@@ -130,4 +131,16 @@ public class ContentService {
         entityManager.refresh(content);
     }
 
+    /**
+     * 컨텐츠 검색하기
+     *
+     * @param type  검색 옵션
+     * @param param 검색 키워드
+     * @param page  페이지 번호 (기본값 = 1)
+     * @return 검색한 키워드 관련 리스트 반환
+     */
+    public ContentListResDto searchContentList(SearchType type, String param, Integer page) {
+        List<ContentResDto> list =  contentStatisticsMapper.selectSearchContentList(type, param);
+        return ContentListResDto.of(list, page);
+    }
 }

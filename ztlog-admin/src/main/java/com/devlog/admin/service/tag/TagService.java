@@ -32,9 +32,6 @@ public class TagService {
     // mapper
     private final TagMapper tagStatisticMapper;
 
-    // utils
-    private final PageUtils pageUtils;
-
     /**
      * 태그 목록 조회
      *
