@@ -11,6 +11,6 @@
         FROM tags_mst ti
                  LEFT JOIN contents_tags ct ON ti.TAG_NO = ct.TAG_NO
         GROUP BY ti.TAG_NO, ti.TAG_NAME
-        ORDER BY ti.TAG_NO
+        ORDER BY ti.TAG_NO DESC
     </select>
 </mapper>

@@ -6,6 +6,7 @@ import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.dto.tag.response.TagResDto;
 import com.devlog.admin.mapper.tag.TagMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataConflictException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.tag.Tag;
@@ -13,6 +14,7 @@ import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class TagService {
 
     // mapper
     private final TagMapper tagStatisticMapper;
+    private final PageUtils pageUtils;
 
     /**
      * 태그 목록 조회
@@ -37,8 +40,8 @@ public class TagService {
      * @return 태그 리스트
      */
     public TagListResDto getTagList(Integer page) {
-
-        List<TagCountResDto> tagList = tagStatisticMapper.selectTagList();
+        RowBounds rowBounds = pageUtils.getRowBounds(page);
+        List<TagCountResDto> tagList = tagStatisticMapper.selectTagList(rowBounds);
         return TagListResDto.of(tagList, page);
     }
 
