@@ -83,15 +83,12 @@ jobs:
             # 새 컨테이너 실행
             docker run -d \
               --name ${CONTAINER_NAME}-${ENV} \
-#              --restart unless-stopped \
               -p ${SERVER_PORT}:${SERVER_PORT} \
               -e SPRING_PROFILES_ACTIVE=${ENV} \
               -e SERVER_PORT=${SERVER_PORT} \
               -e AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
               -e AWS_SECRET_KEY=${AWS_SECRET_KEY} \
-#               -e LOG_PATH=/app/log/admin \
               -e JAVA_OPTS="-Xmx256M -Xms256M -Daws.credentials.access-key=${AWS_ACCESS_KEY} -Daws.credentials.secret-key=${AWS_SECRET_KEY}" \
-#              -v /home/ec2-user/apps/admin/logs:/app/logs \
               $DOCKERHUB_USERNAME/$DOCKER_IMAGE_NAME:$DOCKER_TAG
 
             # 이전 이미지 정리 (dangling images)
