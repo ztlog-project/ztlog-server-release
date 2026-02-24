@@ -7,9 +7,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-security"
 
-    // [MyBatis]
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-
     // [OpenAPI / Swagger]
     // 버전을 2.8.4에서 2.3.0으로 낮추거나, locator의 버전을 제거합니다.
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'

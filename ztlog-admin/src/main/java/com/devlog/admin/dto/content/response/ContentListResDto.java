@@ -41,6 +41,7 @@ public class ContentListResDto {
         int totalCount = list.size();
         int totalPages = (int) Math.ceil((double) totalCount / CommonConstants.PAGE_LIST_SIZE);
 
+
         return ContentListResDto.builder()
                 .count(CommonConstants.PAGE_LIST_SIZE)
                 .totalCount(totalCount)
