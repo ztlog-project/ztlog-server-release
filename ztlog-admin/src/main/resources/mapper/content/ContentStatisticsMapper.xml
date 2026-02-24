@@ -16,7 +16,7 @@
                  left join contents_tags ct on cm.CTNT_NO = ct.CTNT_NO
                  left join tags_mst tm on ct.TAG_NO = tm.TAG_NO
         where 1=1
-        order by cm.CTNT_NO desc, tm.TAG_NO;
+        order by cm.CTNT_NO desc, tm.TAG_NO
     </select>
 
     <select id="selectContent" resultMap="ContentMap">
@@ -36,11 +36,43 @@
                  left join contents_tags ct on cm.CTNT_NO = ct.CTNT_NO
                  left join tags_mst tm on ct.TAG_NO = tm.TAG_NO
         where cm.CTNT_NO = #{ctntNp}
-        order by cm.CTNT_NO desc, tm.TAG_NO;
+        order by cm.CTNT_NO desc, tm.TAG_NO
     </select>
 
     <select id="selectSearchContentList" resultMap="ContentListMap">
-
+        select
+            cm.CTNT_NO,
+            cm.CTNT_TITLE,
+            cm.CTNT_SUBTITLE,
+            cm.INP_USER,
+            cm.DELETED_YN,
+            tm.TAG_NO,
+            tm.TAG_NAME,
+            cm.INP_DTTM,
+            cm.UPD_DTTM
+        from contents_mst cm
+                 <if test="type.name() == 'CONTENT' or type.name() == 'TITLE_CONTENT'">
+                     inner join contents_dtl cd on cm.CTNT_NO = cd.CTNT_NO
+                 </if>
+                 left join contents_tags ct on cm.CTNT_NO = ct.CTNT_NO
+                 left join tags_mst tm on ct.TAG_NO = tm.TAG_NO
+        where 1=1
+        <choose>
+            <when test="type.name() == 'TITLE'">
+                and cm.CTNT_TITLE like concat('%', #{param}, '%')
+            </when>
+            <when test="type.name() == 'CONTENT'">
+                and cd.CTNT_BODY like concat('%', #{param}, '%')
+            </when>
+            <when test="type.name() == 'TITLE_CONTENT'">
+                and (cm.CTNT_TITLE like concat('%', #{param}, '%')
+                    or cd.CTNT_BODY like concat('%', #{param}, '%'))
+            </when>
+            <when test="type.name() == 'TAG'">
+                and tm.TAG_NAME like concat('%', #{param}, '%')
+            </when>
+        </choose>
+        order by cm.CTNT_NO desc, tm.TAG_NO
     </select>
 
     <resultMap id="ContentListMap" type="ContentResDto">
