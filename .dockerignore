@@ -12,6 +12,8 @@
 
 # Build
 **/build/
+!ztlog-admin/build/libs/
+!ztlog-api/build/libs/
 **/target/
 **/bin/
 **/.gradle/
