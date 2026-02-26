@@ -45,6 +45,8 @@ CLAUDE.md
 .env
 .env.local
 .env.*.local
+.env.dev
+.env.prd
 *.pem
 *.key
 secrets/
