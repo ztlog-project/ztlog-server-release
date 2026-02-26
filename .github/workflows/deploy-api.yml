@@ -7,6 +7,7 @@ on:
       - 'ztlog-api/**'
       - 'ztlog-core/**'
       - 'Dockerfile-api'
+      - 'docker-compose.yml'
       - '.github/workflows/deploy-api.yml'
 
 jobs:

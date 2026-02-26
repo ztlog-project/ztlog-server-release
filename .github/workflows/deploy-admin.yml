@@ -7,6 +7,7 @@ on:
       - 'ztlog-admin/**'
       - 'ztlog-core/**'
       - 'Dockerfile-admin'
+      - 'docker-compose.yml'
       - '.github/workflows/deploy-admin.yml'
 
 jobs:
