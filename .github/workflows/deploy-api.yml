@@ -55,33 +55,32 @@ jobs:
           envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,SPRING_ENV,API_PORT
           script: |
             set -e
-
-            if [ ! -d ".git" ]; then
-              mkdir -p /home/ec2-user/apps/${{ github.event.repository.name }}
-              cd ${{ github.event.repository.name }}
             
-              git clone https://github.com/${{ github.repository }}.git
+            # 1. 프로젝트 폴더가 없으면 생성하고 이동 후 클론
+            if [ ! -d "/home/ec2-user/apps/${{ github.event.repository.name }}" ]; then
+              mkdir -p "/home/ec2-user/apps/${{ github.event.repository.name }}"
+              cd "/home/ec2-user/apps/${{ github.event.repository.name }}"
+              git clone "https://github.com{{ github.repository }}.git" .
             else
+              # 폴더가 있으면 이동해서 pull
+              cd "/home/ec2-user/apps/${{ github.event.repository.name }}"
               git pull origin ${{ github.ref_name }}
             fi
-
-            mkdir -p logs/api
-
-            if [ "$SPRING_ENV" = "prd" ]; then
-              DB_NAME="ztlog_prd"
-            else
-              DB_NAME="ztlog_dev"
-            fi
-
+            
+            # 2. 로그 폴더 분리 생성 (소스 폴더 외부 절대 경로)
+            mkdir -p "/home/ec2-user/logs/api"
+            
+            # 3. .env 파일 절대 경로에 직접 작성 (변수 사용 안 함)
             {
-              echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}"
-              echo "ENV=${SPRING_ENV}"
-              echo "API_PORT=${API_PORT}"
-              echo "DB_NAME=${DB_NAME}"
-              echo "AWS_ACCESS_KEY=${AWS_ACCESS_KEY}"
-              echo "AWS_SECRET_KEY=${AWS_SECRET_KEY}"
-            } > .env
-
-            docker-compose pull ztlog-api
-            docker-compose up -d ztlog-api
+              echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
+              echo "ENV=${{ github.ref_name == 'main' && 'prd' || 'dev' }}"
+              echo "API_PORT=${{ github.ref_name == 'main' && '8088' || '9088' }}"
+              echo "DB_NAME=${{ github.ref_name == 'main' && 'ztlog_prd' || 'ztlog_dev' }}"
+              echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}"
+              echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}"
+            } > "/home/ec2-user/apps/${{ github.event.repository.name }}/.env"
+            
+            # 4. 배포 실행 (절대 경로 파일 지정 및 강제 재시작)
+            docker-compose -f "/home/ec2-user/apps/${{ github.event.repository.name }}/docker-compose.yml" pull ztlog-api
+            docker-compose -f "/home/ec2-user/apps/${{ github.event.repository.name }}/docker-compose.yml" up -d --force-recreate ztlog-api
             docker image prune -f
