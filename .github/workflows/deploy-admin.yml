@@ -58,6 +58,7 @@ jobs:
             set -e
             
             # 1. 프로젝트 폴더가 없으면 생성하고 이동 후 클론
+            echo ">>> [LOG] STEP 1: Repository Update"
             if [ ! -d "/home/ec2-user/apps/${{ github.event.repository.name }}" ]; then
               mkdir -p "/home/ec2-user/apps/${{ github.event.repository.name }}"
               cd "/home/ec2-user/apps/${{ github.event.repository.name }}"
@@ -72,6 +73,7 @@ jobs:
             mkdir -p "/home/ec2-user/logs/admin"
             
             # 3. .env 파일 절대 경로에 직접 작성 (변수 사용 안 함)
+            echo ">>> [LOG] STEP 3: Write .env"
             {
               echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
               echo "ENV=${{ github.ref_name == 'main' && 'prd' || 'dev' }}"
@@ -81,12 +83,21 @@ jobs:
               echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}"
               echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}"
             } > "/home/ec2-user/apps/${{ github.event.repository.name }}/.env"
-            
+            echo ">>> [CHECK] .env PORT check:"
+            grep -E "PORT|ENV" "/home/ec2-user/apps/${{ github.event.repository.name }}/.env"
+
             # 4. 기존 컨테이너 중지 및 제거 (충돌 방지)
-            docker stop ztlog-api || true
-            docker rm -f ztlog-api || true
+            echo ">>> [LOG] STEP 4: Remove Existing Containers"
+            docker stop ztlog-admin || true
+            docker rm -f ztlog-admin || true
 
             # 5. 배포 실행 (절대 경로 파일 지정 및 강제 재시작)
+            echo ">>> [LOG] STEP 5: Docker-compose Pull & Up"
             docker-compose -f "/home/ec2-user/apps/${{ github.event.repository.name }}/docker-compose.yml" pull ztlog-admin
-            docker-compose -f "/home/ec2-user/apps/${{ github.event.repository.name }}/docker-compose.yml" up -d --force-recreate ztlog-admin
+            docker-compose -f "/home/ec2-user/apps/${{ github.event.repository.name }}/docker-compose.yml" up -d --no-deps --force-recreate ztlog-admin
+
+            # [LOG 추가] 실시간 구동 상태 및 에러 확인
+            echo ">>> [FINAL] Application Logs (First 50 lines):"
+            docker logs ztlog-admin || echo "No logs found."
+
             docker image prune -f
