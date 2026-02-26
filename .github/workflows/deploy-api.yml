@@ -59,7 +59,7 @@ jobs:
 
             # Git pull 시도 (폴더가 비어있으면 clone)
             if [ ! -d ".git" ]; then
-              git clone https://github.com{{ github.repository }}.git .
+              git clone https://github.com/${{ github.repository }}.git
             else
               git pull origin ${{ github.ref_name }}
             fi
