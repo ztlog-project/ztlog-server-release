@@ -43,30 +43,37 @@ jobs:
       - name: EC2 SSH Deployment
         uses: appleboy/ssh-action@master
         env:
-          # All variables resolved here at the workflow level.
-          # The SSH script uses only $VAR_NAME — no template syntax inside the script.
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          ENV: ${{ github.ref_name == 'main' && 'prd' || 'dev' }}
+          SPRING_ENV: ${{ github.ref_name == 'main' && 'prd' || 'dev' }}
           ADM_PORT: ${{ github.ref_name == 'main' && '8089' || '9089' }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,ENV,ADM_PORT
+          envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,SPRING_ENV,ADM_PORT
           script: |
-            echo "Deploying Admin to $ENV environment (ADM: $ADM_PORT)"
+            cd /home/ec2-user/app
+            git pull
 
-            docker stop ztlog-admin || true && docker rm ztlog-admin || true
-            docker pull $DOCKERHUB_USERNAME/ztlog-admin
-            docker run -d --name ztlog-admin \
-              -p $ADM_PORT:$ADM_PORT \
-              -e "SPRING_PROFILES_ACTIVE=$ENV" \
-              -e "SERVER_PORT=$ADM_PORT" \
-              -e "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" \
-              -e "AWS_SECRET_KEY=$AWS_SECRET_KEY" \
-              -e "JAVA_OPTS=-Xmx256M -Xms256M" \
-              $DOCKERHUB_USERNAME/ztlog-admin
+            mkdir -p logs/admin logs/api
 
+            if [ "$SPRING_ENV" = "prd" ]; then
+              DB_NAME="ztlog_prd"
+            else
+              DB_NAME="ztlog_dev"
+            fi
+
+            cat > .env << EOF
+            DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME
+            ENV=$SPRING_ENV
+            ADM_PORT=$ADM_PORT
+            DB_NAME=$DB_NAME
+            AWS_ACCESS_KEY=$AWS_ACCESS_KEY
+            AWS_SECRET_KEY=$AWS_SECRET_KEY
+            EOF
+
+            docker compose pull ztlog-admin
+            docker compose up -d ztlog-admin
             docker image prune -f

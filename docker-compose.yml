@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: ztlog-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: Cy07351258!
       MYSQL_DATABASE: ${DB_NAME}
       TZ: Asia/Seoul
     ports:
@@ -17,9 +17,7 @@ services:
       retries: 5
 
   ztlog-admin:
-    build:
-      context: .
-      dockerfile: Dockerfile-admin
+    image: ${DOCKERHUB_USERNAME}/ztlog-admin
     container_name: ztlog-admin
     depends_on:
       mysql:
@@ -30,8 +28,6 @@ services:
       SPRING_PROFILES_ACTIVE: ${ENV}
       SERVER_PORT: ${ADM_PORT}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME}?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
       JAVA_OPTS: -Xmx256M -Xms256M
@@ -49,9 +45,7 @@ services:
         tag: "{{.Name}}"
 
   ztlog-api:
-    build:
-      context: .
-      dockerfile: Dockerfile-api
+    image: ${DOCKERHUB_USERNAME}/ztlog-api
     container_name: ztlog-api
     depends_on:
       mysql:
@@ -62,8 +56,6 @@ services:
       SPRING_PROFILES_ACTIVE: ${ENV}
       SERVER_PORT: ${API_PORT}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME}?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
       JAVA_OPTS: -Xmx256M -Xms256M
