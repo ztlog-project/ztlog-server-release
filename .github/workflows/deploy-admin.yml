@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,SPRING_ENV,ADM_PORT
           script: |
-            cd /home/ec2-user/app
+            cd /home/ec2-user/apps
             git pull
 
             mkdir -p logs/admin logs/api
