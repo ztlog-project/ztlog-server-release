@@ -54,10 +54,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,SPRING_ENV,API_PORT
           script: |
+            set -e
             cd /home/ec2-user/apps
             git pull
 
-            mkdir -p logs/admin logs/api
+            mkdir -p logs/api
 
             if [ "$SPRING_ENV" = "prd" ]; then
               DB_NAME="ztlog_prd"
@@ -74,6 +75,6 @@ jobs:
               echo "AWS_SECRET_KEY=${AWS_SECRET_KEY}"
             } > .env
 
-            docker compose pull ztlog-api
-            docker compose up -d ztlog-api
+            docker-compose pull ztlog-api
+            docker-compose up -d ztlog-api
             docker image prune -f
