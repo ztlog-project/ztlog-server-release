@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devlog.admin.mapper.content.ContentStatisticsMapper">
+
+    <select id="selectCountContentList" resultType="integer">
+        select
+            count(cm.CTNT_NO)
+        from contents_mst cm
+        where 1=1
+    </select>
     <select id="selectContentList" resultMap="ContentListMap">
         select
             cm.CTNT_NO,
@@ -37,6 +44,33 @@
                  left join tags_mst tm on ct.TAG_NO = tm.TAG_NO
         where cm.CTNT_NO = #{ctntNp}
         order by cm.CTNT_NO desc, tm.TAG_NO
+    </select>
+
+    <select id="selectCountSearchContentList" resultType="integer">
+        select
+            count(DISTINCT cm.CTNT_NO)
+        from contents_mst cm
+        <if test="type.name() == 'CONTENT' or type.name() == 'TITLE_CONTENT'">
+            inner join contents_dtl cd on cm.CTNT_NO = cd.CTNT_NO
+        </if>
+        left join contents_tags ct on cm.CTNT_NO = ct.CTNT_NO
+        left join tags_mst tm on ct.TAG_NO = tm.TAG_NO
+        where 1=1
+        <choose>
+            <when test="type.name() == 'TITLE'">
+                and cm.CTNT_TITLE like concat('%', #{param}, '%')
+            </when>
+            <when test="type.name() == 'CONTENT'">
+                and cd.CTNT_BODY like concat('%', #{param}, '%')
+            </when>
+            <when test="type.name() == 'TITLE_CONTENT'">
+                and (cm.CTNT_TITLE like concat('%', #{param}, '%')
+                or cd.CTNT_BODY like concat('%', #{param}, '%'))
+            </when>
+            <when test="type.name() == 'TAG'">
+                and tm.TAG_NAME like concat('%', #{param}, '%')
+            </when>
+        </choose>
     </select>
 
     <select id="selectSearchContentList" resultMap="ContentListMap">

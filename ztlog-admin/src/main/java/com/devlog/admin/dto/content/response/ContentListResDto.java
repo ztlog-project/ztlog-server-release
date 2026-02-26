@@ -37,11 +37,8 @@ public class ContentListResDto {
     @Schema(description = "게시물 목록")
     private List<ContentResDto> list;
 
-    public static ContentListResDto of(List<ContentResDto> list, int currentPage) {
-        int totalCount = list.size();
+    public static ContentListResDto of(List<ContentResDto> list, int currentPage, Integer totalCount) {
         int totalPages = (int) Math.ceil((double) totalCount / CommonConstants.PAGE_LIST_SIZE);
-
-
         return ContentListResDto.builder()
                 .count(CommonConstants.PAGE_LIST_SIZE)
                 .totalCount(totalCount)

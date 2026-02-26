@@ -4,7 +4,6 @@ import com.devlog.admin.dto.content.request.ContentReqDto;
 import com.devlog.admin.mapper.content.ContentStatisticsMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
-import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.SearchType;
 import com.devlog.core.common.utils.PageUtils;
@@ -21,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,10 +53,9 @@ public class ContentService {
      */
     public ContentListResDto getContentList(Integer page) {
         RowBounds rowBounds = pageUtils.getRowBounds(page);
+        Integer totalCount = contentStatisticsMapper.selectCountContentList();
         List<ContentResDto> contentList = contentStatisticsMapper.selectContentList(rowBounds);
-
-
-        return ContentListResDto.of(contentList, page);
+        return ContentListResDto.of(contentList, page, totalCount);
     }
 
     /**
@@ -149,7 +146,8 @@ public class ContentService {
      */
     public ContentListResDto searchContentList(SearchType type, String param, Integer page) {
         RowBounds rowBounds = pageUtils.getRowBounds(page);
-        List<ContentResDto> list =  contentStatisticsMapper.selectSearchContentList(type, param, rowBounds);
-        return ContentListResDto.of(list, page);
+        Integer totalCount = contentStatisticsMapper.selectCountSearchContentList(type, param);
+        List<ContentResDto> list = contentStatisticsMapper.selectSearchContentList(type, param, rowBounds);
+        return ContentListResDto.of(list, page, totalCount);
     }
 }

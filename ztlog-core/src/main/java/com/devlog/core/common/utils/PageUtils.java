@@ -33,8 +33,8 @@ public class PageUtils {
     }
 
     public RowBounds getRowBounds(Integer page) {
-        int offset = (page - 1) * CommonConstants.PAGE_SIZE;
-        return new RowBounds(offset, CommonConstants.PAGE_SIZE);
+        int offset = (page - 1) * CommonConstants.PAGE_LIST_SIZE;
+        return new RowBounds(offset, CommonConstants.PAGE_LIST_SIZE);
     }
 
     private String getPrimaryKeyName(Class<?> entityClass) {
