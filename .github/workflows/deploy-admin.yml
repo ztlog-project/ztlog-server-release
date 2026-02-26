@@ -55,10 +55,12 @@ jobs:
           envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,SPRING_ENV,ADM_PORT
           script: |
             set -e
-            cd /home/ec2-user/apps/${{ github.event.repository.name }}
 
             # Git pull 시도 (폴더가 비어있으면 clone)
             if [ ! -d ".git" ]; then
+              mkdir -p /home/ec2-user/apps/${{ github.event.repository.name }}
+              cd ${{ github.event.repository.name }}
+              
               git clone https://github.com/${{ github.repository }}.git
             else
               git pull origin ${{ github.ref_name }}
