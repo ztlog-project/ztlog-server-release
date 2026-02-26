@@ -1,69 +1,18 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: ztlog-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: Cy07351258!
-      MYSQL_DATABASE: ${DB_NAME}
-      TZ: Asia/Seoul
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   ztlog-admin:
     image: ${DOCKERHUB_USERNAME}/ztlog-admin
     container_name: ztlog-admin
-    depends_on:
-      mysql:
-        condition: service_healthy
     ports:
       - "${ADM_PORT}:${ADM_PORT}"
     environment:
       SPRING_PROFILES_ACTIVE: ${ENV}
       SERVER_PORT: ${ADM_PORT}
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME}?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
       JAVA_OPTS: -Xmx256M -Xms256M
-      # Logback reads LOG_PATH to decide where to write rolling log files.
       LOG_PATH: /app/logs
     volumes:
-      # Host: ./logs/admin/  ←→  Container: /app/logs/
-      # Logback produces: admin.log, admin_YYYY-MM-DD_N.log, admin_error_YYYY-MM-DD_N.log
       - ./logs/admin:/app/logs
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"  # 50 MB per file
-        max-file: "5"    # keep 5 rotated files → 250 MB cap for docker logs
-        tag: "{{.Name}}"
-
-  ztlog-api:
-    image: ${DOCKERHUB_USERNAME}/ztlog-api
-    container_name: ztlog-api
-    depends_on:
-      mysql:
-        condition: service_healthy
-    ports:
-      - "${API_PORT}:${API_PORT}"
-    environment:
-      SPRING_PROFILES_ACTIVE: ${ENV}
-      SERVER_PORT: ${API_PORT}
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME}?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
-      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
-      JAVA_OPTS: -Xmx256M -Xms256M
-      LOG_PATH: /app/logs
-    volumes:
-      # Host: ./logs/api/   ←→  Container: /app/logs/
-      # Logback produces: api.log, api_YYYY-MM-DD_N.log, api_error_YYYY-MM-DD_N.log
-      - ./logs/api:/app/logs
     logging:
       driver: "json-file"
       options:
@@ -71,5 +20,23 @@ services:
         max-file: "5"
         tag: "{{.Name}}"
 
-volumes:
-  mysql-data:
+  ztlog-api:
+    image: ${DOCKERHUB_USERNAME}/ztlog-api
+    container_name: ztlog-api
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${ENV}
+      SERVER_PORT: ${API_PORT}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
+      JAVA_OPTS: -Xmx256M -Xms256M
+      LOG_PATH: /app/logs
+    volumes:
+      - ./logs/api:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        tag: "{{.Name}}"
