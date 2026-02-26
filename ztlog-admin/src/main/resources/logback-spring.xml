@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 로그 파일 저장 경로 -->
-    <property name="LOG_PATH" value="${LOG_PATH:-./logs/admin}"/>
+    <property name="LOG_PATH" value="${LOG_PATH:-./logs/}"/>
     <property name="LOG_FILE_NAME" value="admin"/>
 
     <!-- 콘솔 출력 -->
