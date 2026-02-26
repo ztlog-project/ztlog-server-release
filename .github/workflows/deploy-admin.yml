@@ -55,10 +55,16 @@ jobs:
           envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,SPRING_ENV,ADM_PORT
           script: |
             set -e
-            cd /home/ec2-user/apps
-            git pull
+            cd /home/ec2-user/apps/${{ github.event.repository.name }}
 
-            mkdir -p logs/admin logs/api
+            # Git pull 시도 (폴더가 비어있으면 clone)
+            if [ ! -d ".git" ]; then
+              git clone https://github.com{{ github.repository }}.git .
+            else
+              git pull origin ${{ github.ref_name }}
+            fi
+
+            mkdir -p logs/admin 
 
             if [ "$SPRING_ENV" = "prd" ]; then
               DB_NAME="ztlog_prd"
