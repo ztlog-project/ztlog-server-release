@@ -65,14 +65,14 @@ jobs:
               DB_NAME="ztlog_dev"
             fi
 
-            cat > .env << EOF
-            DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME
-            ENV=$SPRING_ENV
-            ADM_PORT=$ADM_PORT
-            DB_NAME=$DB_NAME
-            AWS_ACCESS_KEY=$AWS_ACCESS_KEY
-            AWS_SECRET_KEY=$AWS_SECRET_KEY
-            EOF
+            {
+              echo "DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME}"
+              echo "ENV=${SPRING_ENV}"
+              echo "ADM_PORT=${ADM_PORT}"
+              echo "DB_NAME=${DB_NAME}"
+              echo "AWS_ACCESS_KEY=${AWS_ACCESS_KEY}"
+              echo "AWS_SECRET_KEY=${AWS_SECRET_KEY}"
+            } > .env
 
             docker compose pull ztlog-admin
             docker compose up -d ztlog-admin
