@@ -83,8 +83,8 @@ jobs:
             } > "/home/ec2-user/apps/${{ github.event.repository.name }}/.env"
             
             # 4. 기존 컨테이너 중지 및 제거 (충돌 방지)
-            docker-compose stop ztlog-api || true
-            docker-compose rm -f ztlog-api || true
+            docker stop ztlog-api || true
+            docker rm -f ztlog-api || true
 
             # 5. 배포 실행 (절대 경로 파일 지정 및 강제 재시작)
             docker-compose -f "/home/ec2-user/apps/${{ github.event.repository.name }}/docker-compose.yml" pull ztlog-api
