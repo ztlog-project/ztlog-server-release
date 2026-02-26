@@ -42,26 +42,23 @@ jobs:
       - name: EC2 SSH Deployment
         uses: appleboy/ssh-action@master
         env:
+          # All variables resolved here at the workflow level.
+          # The SSH script uses only $VAR_NAME — no template syntax inside the script.
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          ENV: ${{ github.ref_name == 'main' && 'prd' || 'dev' }}
+          ADM_PORT: ${{ github.ref_name == 'main' && '8089' || '9089' }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GITHUB_REF,AWS_ACCESS_KEY,AWS_SECRET_KEY
+          envs: DOCKERHUB_USERNAME,AWS_ACCESS_KEY,AWS_SECRET_KEY,ENV,ADM_PORT
           script: |
-            if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
-              ENV="prd"
-              ADM_PORT=8089
-            else
-              ENV="dev"
-              ADM_PORT=9089
-            fi
-
             echo "Deploying Admin to $ENV environment (ADM: $ADM_PORT)"
 
             docker stop ztlog-admin || true && docker rm ztlog-admin || true
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-admin
+            docker pull $DOCKERHUB_USERNAME/ztlog-admin
             docker run -d --name ztlog-admin \
               -p $ADM_PORT:$ADM_PORT \
               -e "SPRING_PROFILES_ACTIVE=$ENV" \
@@ -69,6 +66,6 @@ jobs:
               -e "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" \
               -e "AWS_SECRET_KEY=$AWS_SECRET_KEY" \
               -e "JAVA_OPTS=-Xmx256M -Xms256M" \
-              ${{ secrets.DOCKERHUB_USERNAME }}/ztlog-admin
+              $DOCKERHUB_USERNAME/ztlog-admin
 
             docker image prune -f

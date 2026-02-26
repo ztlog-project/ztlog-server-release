@@ -35,6 +35,18 @@ services:
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
       JAVA_OPTS: -Xmx256M -Xms256M
+      # Logback reads LOG_PATH to decide where to write rolling log files.
+      LOG_PATH: /app/logs
+    volumes:
+      # Host: ./logs/admin/  ←→  Container: /app/logs/
+      # Logback produces: admin.log, admin_YYYY-MM-DD_N.log, admin_error_YYYY-MM-DD_N.log
+      - ./logs/admin:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"  # 50 MB per file
+        max-file: "5"    # keep 5 rotated files → 250 MB cap for docker logs
+        tag: "{{.Name}}"
 
   ztlog-api:
     build:
@@ -55,6 +67,17 @@ services:
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
       JAVA_OPTS: -Xmx256M -Xms256M
+      LOG_PATH: /app/logs
+    volumes:
+      # Host: ./logs/api/   ←→  Container: /app/logs/
+      # Logback produces: api.log, api_YYYY-MM-DD_N.log, api_error_YYYY-MM-DD_N.log
+      - ./logs/api:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        tag: "{{.Name}}"
 
 volumes:
   mysql-data:

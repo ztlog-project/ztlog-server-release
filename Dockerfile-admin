@@ -1,10 +1,39 @@
-FROM eclipse-temurin:17-jdk-jammy
-LABEL authors="zoetrope56"
+# ================================================================
+#  Stage 1 — Builder  (JDK for Gradle compilation)
+# ================================================================
+FROM eclipse-temurin:17-jdk-jammy AS builder
+WORKDIR /workspace
 
-# 빌드된 실행 가능한 JAR 복사
-COPY ztlog-admin/build/libs/*.jar ztlog-admin-0.0.1-SNAPSHOT.jar
+# 1. Gradle wrapper
+COPY gradlew .
+COPY gradle/ gradle/
+RUN chmod +x gradlew
+
+# 2. Build scripts for every module (settings resolution needs them all)
+COPY build.gradle settings.gradle ./
+COPY ztlog-core/build.gradle  ztlog-core/build.gradle
+COPY ztlog-api/build.gradle   ztlog-api/build.gradle
+COPY ztlog-admin/build.gradle ztlog-admin/build.gradle
+
+# 3. Warm up dependency cache
+RUN ./gradlew :ztlog-admin:dependencies --no-daemon 2>/dev/null || true
+
+# 4. Source for modules the Admin depends on
+COPY ztlog-core/src  ztlog-core/src
+COPY ztlog-admin/src ztlog-admin/src
+
+# 5. Build
+RUN ./gradlew :ztlog-admin:bootJar -x test --no-daemon
+
+# ================================================================
+#  Stage 2 — Runtime  (slim JRE)
+# ================================================================
+FROM eclipse-temurin:17-jre-jammy
+LABEL maintainer="zoetrope56"
 
 ENV TZ=Asia/Seoul
+WORKDIR /app
 
-# JAVA_OPTS 변수를 중간에 삽입하여 실행하도록 수정
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /ztlog-admin-0.0.1-SNAPSHOT.jar"]
+COPY --from=builder /workspace/ztlog-admin/build/libs/*.jar ztlog-admin-0.0.1-SNAPSHOT.jar
+
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/ztlog-admin-0.0.1-SNAPSHOT.jar"]
