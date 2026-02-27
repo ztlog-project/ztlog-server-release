@@ -13,4 +13,6 @@ public interface ContentRepository extends JpaRepository<Content, Long>, Content
 
     Page<Content> findAllByContentTagsTagsTagNo(Long tagNo, Pageable pageable);
 
+    Page<Content> findAllByCategoryCateNo(Long categoryCateNo, Pageable pageable);
+
 }
