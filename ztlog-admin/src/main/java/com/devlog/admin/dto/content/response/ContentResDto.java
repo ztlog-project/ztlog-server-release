@@ -2,7 +2,7 @@ package com.devlog.admin.dto.content.response;
 
 import com.devlog.admin.dto.tag.request.TagInfoReqDto;
 import com.devlog.core.common.constants.CommonConstants;
-import com.devlog.core.common.enumulation.DELETED_YN;
+import com.devlog.core.common.enumulation.DeletedYN;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -47,7 +47,7 @@ public class ContentResDto {
     private String ext;
 
     @Schema(description = "게시물 삭제 여부")
-    private DELETED_YN deletedYn;
+    private DeletedYN deletedYn;
 
     @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
     private String inpUser;

@@ -50,7 +50,6 @@ public class TagService {
         if (!tagRepository.existsById(Long.valueOf(tagNo))) {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
-
         Page<Content> contentPage = contentRepository.findAllByContentTagsTagsTagNo(Long.valueOf(tagNo), pageUtils.getPageable(page, Content.class));
         return ContentListResDto.of(contentPage);
     }

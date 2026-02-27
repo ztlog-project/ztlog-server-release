@@ -1,7 +1,7 @@
 package com.devlog.core.entity.content;
 
-import com.devlog.core.common.enumulation.DELETED_YN;
 import com.devlog.core.entity.BaseTimeEntity;
+import com.devlog.core.entity.category.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SoftDelete;
@@ -29,6 +29,10 @@ public class Content extends BaseTimeEntity {
 
     @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATE_NO")
+    private Category category;
 
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "CTNT_NO")

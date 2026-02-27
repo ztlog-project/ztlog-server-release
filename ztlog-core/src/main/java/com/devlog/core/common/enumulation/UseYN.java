@@ -1,5 +1,5 @@
 package com.devlog.core.common.enumulation;
 
-public enum DELETED_YN {
+public enum UseYN {
     Y, N
 }
