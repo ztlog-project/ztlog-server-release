@@ -34,14 +34,16 @@ import java.util.List;
 public class ContentService {
 
     private final EntityManager entityManager;
+
     // repository
     private final ContentRepository contentRepository;
-    //    private final ContentDtlRepository contentDtlRepository;
     private final ContentTagRepository contentTagRepository;
     private final TagRepository tagRepository;
 
     // mapper
     private final ContentStatisticsMapper contentStatisticsMapper;
+
+    // utils
     private final TokenUtils tokenUtils;
     private final PageUtils pageUtils;
 

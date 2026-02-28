@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devlog.admin.mapper.category.CategoryMapper">
+
+    <resultMap id="CategoryTreeMap" type="CategoryListResDto">
+        <id property="cateNo" column="CATE_NO"/>
+        <result property="cateNm" column="CATE_NM"/>
+        <result property="cateDepth" column="CATE_DEPTH"/>
+        <result property="dispOrd" column="DISP_ORD"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="inpUser" column="INP_USER"/>
+        <result property="inpDttm" column="INP_DTTM"/>
+        <result property="updDttm" column="UPD_DTTM"/>
+        <!-- 재귀 호출: 동일한 select를 호출하여 하위 카테고리를 children에 담음 -->
+        <collection property="categories"
+                    column="CATE_NO"
+                    javaType="java.util.ArrayList"
+                    ofType="CategoryListResDto"
+                    select="selectCategoryTree"/>
+    </resultMap>
+
+    <!-- 1. 최상위 카테고리 조회 (시작점) -->
+    <select id="selectCategoryList" resultMap="CategoryTreeMap">
+        SELECT
+            cm.CATE_NO,
+            cm.CATE_NM,
+            cm.CATE_DEPTH,
+            cm.DISP_ORD,
+            cm.USE_YN,
+            cm.INP_USER,
+            cm.INP_DTTM,
+            cm.UPD_DTTM
+        FROM cate_mst cm
+        WHERE cm.UPPER_CATE_NO IS NULL
+        ORDER BY cm.DISP_ORD
+    </select>
+
+    <!-- 2. 하위 카테고리 조회 (재귀 실행용) -->
+    <select id="selectCategoryTree" resultMap="CategoryTreeMap">
+        SELECT
+            cm.CATE_NO,
+            cm.CATE_NM,
+            cm.CATE_DEPTH,
+            cm.DISP_ORD,
+            cm.USE_YN,
+            cm.INP_USER,
+            cm.INP_DTTM,
+            cm.UPD_DTTM
+        FROM cate_mst cm
+        WHERE cm.UPPER_CATE_NO = #{cateNo}
+        ORDER BY cm.DISP_ORD
+    </select>
+</mapper>

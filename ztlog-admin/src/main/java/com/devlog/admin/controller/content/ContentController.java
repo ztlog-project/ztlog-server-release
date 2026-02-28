@@ -116,6 +116,14 @@ public class ContentController {
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 
+    /**
+     * 컨텐츠 검색하기
+     *
+     * @param type 검색 옵션(제목, 제목+내용, 내용, 태크)
+     * @param param 검색 키워드
+     * @param page 페이지 번호
+     * @return 검색 결과 리스트
+     */
     @Operation(summary = "컨텐츠 검색", description = "컨텐츠 검색")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ContentListResDto.class))),

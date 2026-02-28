@@ -1,6 +1,6 @@
 package com.devlog.admin.dto.content.request;
 
-import com.devlog.admin.dto.tag.request.TagInsertReqDto;
+import com.devlog.admin.dto.tag.request.TagReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentTag;
@@ -86,7 +86,7 @@ public class ContentReqDto {
         private String inpUser;
 
         @Schema(description = "게시물 태그 목록")
-        List<TagInsertReqDto> tags;
+        List<TagReqDto> tags;
 
         @Schema(description = "게시물 파일 경로")
         private String path;

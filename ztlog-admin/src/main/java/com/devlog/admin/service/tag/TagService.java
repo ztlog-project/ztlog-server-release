@@ -1,6 +1,6 @@
 package com.devlog.admin.service.tag;
 
-import com.devlog.admin.dto.tag.request.TagInsertReqDto;
+import com.devlog.admin.dto.tag.request.TagReqDto;
 import com.devlog.admin.dto.tag.response.TagCountResDto;
 import com.devlog.admin.dto.tag.response.TagListResDto;
 import com.devlog.admin.dto.tag.response.TagResDto;
@@ -62,7 +62,7 @@ public class TagService {
      *
      * @param reqDto 태그 요청 객체
      */
-    public void createTagDetail(TagInsertReqDto reqDto) {
+    public void createTagDetail(TagReqDto reqDto) {
         if (tagRepository.existsByTagName(reqDto.getTagName()))
             throw new DataConflictException(ResponseCode.CONFLICT_DATA_ERROR.getMessage());
         tagRepository.save(Tag.created(reqDto.getTagName()));
@@ -73,7 +73,7 @@ public class TagService {
      *
      * @param reqDto 태그 요청 객체
      */
-    public void updateTagDetail(TagInsertReqDto reqDto) {
+    public void updateTagDetail(TagReqDto reqDto) {
         Tag tag = tagRepository.findById(reqDto.getTagNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         tag.updated(reqDto.getTagName());
