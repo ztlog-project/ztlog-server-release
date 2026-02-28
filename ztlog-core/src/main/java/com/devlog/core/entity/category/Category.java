@@ -46,7 +46,7 @@ public class Category extends BaseTimeEntity {
     @Builder.Default
     private List<Category> categories = new ArrayList<>();
 
-    public static Category created(String cateNm, Integer cateDepth, Integer dispOrd, String inpUser) {
+    public static Category created(String cateNm, Integer cateDepth, Integer dispOrd, String inpUser, Category upperCategory) {
         return Category.builder()
                 .cateNm(cateNm)
                 .cateDepth(cateDepth)
