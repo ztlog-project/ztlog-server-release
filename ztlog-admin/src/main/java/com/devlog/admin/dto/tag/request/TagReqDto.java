@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TagInsertReqDto {
+public class TagReqDto {
 
     @Schema(description = "태그 번호")
     private Long tagNo;

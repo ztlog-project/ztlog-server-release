@@ -2,6 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devlog.admin.mapper.content.ContentStatisticsMapper">
 
+    <resultMap id="ContentListMap" type="ContentResDto">
+        <result column="CTNT_NO" property="ctntNo"/>
+        <result column="CTNT_TITLE" property="title"/>
+        <result column="CTNT_SUBTITLE" property="subTitle"/>
+        <result column="INP_USER" property="inpUser"/>
+        <result column="DELETED_YN" property="deletedYn"/>
+        <result column="INP_DTTM" property="inpDttm"/>
+        <result column="UPD_DTTM" property="updDttm"/>
+
+        <collection property="tags" ofType="TagInfoReqDto">
+            <result column="TAG_NO" property="tagNo" />
+            <result column="TAG_NAME" property="tagName" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="ContentMap" type="ContentResDto">
+        <result column="CTNT_NO" property="ctntNo"/>
+        <result column="CTNT_TITLE" property="title"/>
+        <result column="CTNT_SUBTITLE" property="subTitle"/>
+        <result column="CTNT_BODY" property="body"/>
+        <result column="INP_USER" property="inpUser"/>
+        <result column="DELETED_YN" property="deletedYn"/>
+        <result column="INP_DTTM" property="inpDttm"/>
+        <result column="UPD_DTTM" property="updDttm"/>
+
+        <collection property="tags" ofType="TagInfoReqDto">
+            <result column="TAG_NO" property="tagNo" />
+            <result column="TAG_NAME" property="tagName" />
+        </collection>
+    </resultMap>
+
     <select id="selectCountContentList" resultType="integer">
         select
             count(cm.CTNT_NO)
@@ -109,34 +140,4 @@
         order by cm.CTNT_NO desc, tm.TAG_NO
     </select>
 
-    <resultMap id="ContentListMap" type="ContentResDto">
-        <result column="CTNT_NO" property="ctntNo"/>
-        <result column="CTNT_TITLE" property="title"/>
-        <result column="CTNT_SUBTITLE" property="subTitle"/>
-        <result column="INP_USER" property="inpUser"/>
-        <result column="DELETED_YN" property="deletedYn"/>
-        <result column="INP_DTTM" property="inpDttm"/>
-        <result column="UPD_DTTM" property="updDttm"/>
-
-        <collection property="tags" ofType="TagInfoReqDto">
-            <result column="TAG_NO" property="tagNo" />
-            <result column="TAG_NAME" property="tagName" />
-        </collection>
-    </resultMap>
-
-    <resultMap id="ContentMap" type="ContentResDto">
-        <result column="CTNT_NO" property="ctntNo"/>
-        <result column="CTNT_TITLE" property="title"/>
-        <result column="CTNT_SUBTITLE" property="subTitle"/>
-        <result column="CTNT_BODY" property="body"/>
-        <result column="INP_USER" property="inpUser"/>
-        <result column="DELETED_YN" property="deletedYn"/>
-        <result column="INP_DTTM" property="inpDttm"/>
-        <result column="UPD_DTTM" property="updDttm"/>
-
-        <collection property="tags" ofType="TagInfoReqDto">
-            <result column="TAG_NO" property="tagNo" />
-            <result column="TAG_NAME" property="tagName" />
-        </collection>
-    </resultMap>
 </mapper>
