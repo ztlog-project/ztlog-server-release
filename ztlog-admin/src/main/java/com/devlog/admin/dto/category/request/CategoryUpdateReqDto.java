@@ -1,7 +1,5 @@
 package com.devlog.admin.dto.category.request;
 
-import com.devlog.admin.dto.category.response.CategoryListResDto;
-import com.devlog.core.common.enumulation.UseYN;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -12,7 +10,8 @@ import java.util.List;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class CategoryReqDto {
+public class CategoryUpdateReqDto {
+
     @Schema(description = "카테고리 번호")
     private Long cateNo;
 
@@ -22,13 +21,16 @@ public class CategoryReqDto {
     @Schema(description = "계층 깊이")
     private Integer cateDepth;
 
+    @Schema(description = "상위 카테고리 번호")
+    private Long upperCateNo;
+
     @Schema(description = "노출 순서")
     private Integer dispOrd;
 
     @Schema(description = "사용 여부")
-    private UseYN useYn;
+    private String useYn;
 
     @Schema(description = "하위 카테고리 리스트")
-    private List<CategoryListResDto> categories = new ArrayList<>();
+    private List<CategoryUpdateReqDto> categories = new ArrayList<>();
 
 }

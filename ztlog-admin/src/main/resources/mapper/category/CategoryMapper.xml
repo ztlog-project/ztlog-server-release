@@ -8,6 +8,7 @@
         <result property="cateDepth" column="CATE_DEPTH"/>
         <result property="dispOrd" column="DISP_ORD"/>
         <result property="useYn" column="USE_YN"/>
+        <result property="contentCount" column="contentCount"
         <result property="inpUser" column="INP_USER"/>
         <result property="inpDttm" column="INP_DTTM"/>
         <result property="updDttm" column="UPD_DTTM"/>
@@ -29,7 +30,8 @@
             cm.USE_YN,
             cm.INP_USER,
             cm.INP_DTTM,
-            cm.UPD_DTTM
+            cm.UPD_DTTM,
+            (SELECT COUNT(*) FROM contents_mst ct WHERE ct.CATE_NO = cm.CATE_NO) AS contentCount
         FROM cate_mst cm
         WHERE cm.UPPER_CATE_NO IS NULL
         ORDER BY cm.DISP_ORD
@@ -45,7 +47,8 @@
             cm.USE_YN,
             cm.INP_USER,
             cm.INP_DTTM,
-            cm.UPD_DTTM
+            cm.UPD_DTTM,
+            (SELECT COUNT(*) FROM contents_mst ct WHERE ct.CATE_NO = cm.CATE_NO) AS contentCount
         FROM cate_mst cm
         WHERE cm.UPPER_CATE_NO = #{cateNo}
         ORDER BY cm.DISP_ORD

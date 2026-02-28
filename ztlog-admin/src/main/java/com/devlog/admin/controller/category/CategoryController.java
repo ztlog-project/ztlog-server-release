@@ -1,6 +1,7 @@
 package com.devlog.admin.controller.category;
 
-import com.devlog.admin.dto.category.request.CategoryReqDto;
+import com.devlog.admin.dto.category.request.CategorySaveReqDto;
+import com.devlog.admin.dto.category.request.CategoryUpdateReqDto;
 import com.devlog.admin.dto.category.response.CategoryListResDto;
 import com.devlog.admin.service.category.CategoryService;
 import com.devlog.core.common.dto.Response;
@@ -56,7 +57,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping("/categories")
-    public ResponseEntity<Response<String>> createCategoryDetail(HttpServletRequest request, @RequestBody CategoryReqDto reqDto) {
+    public ResponseEntity<Response<String>> createCategoryDetail(HttpServletRequest request, @RequestBody CategorySaveReqDto reqDto) {
         categoryService.createCategoryDetail(request, reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }
@@ -75,7 +76,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PutMapping("/categories")
-    public ResponseEntity<Response<String>> updateCategoryDetail(HttpServletRequest request, @RequestBody CategoryReqDto reqDto) {
+    public ResponseEntity<Response<String>> updateCategoryDetail(HttpServletRequest request, @RequestBody CategoryUpdateReqDto reqDto) {
         categoryService.updateCategoryDetail(request, reqDto);
         return Response.success(ResponseCode.CREATED_SUCCESS);
     }

@@ -3,8 +3,10 @@ package com.devlog.api.service.category;
 import com.devlog.api.service.category.dto.CategoryResDto;
 import com.devlog.api.service.content.dto.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
+import com.devlog.core.common.enumulation.UseYN;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
+import com.devlog.core.entity.category.Category;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.repository.category.CategoryRepository;
 import com.devlog.core.repository.content.ContentRepository;
@@ -32,9 +34,7 @@ public class CategoryService {
      * @return 카테고리 리스트
      */
     public List<CategoryResDto> getCategoryList() {
-        return categoryRepository.findAll().stream()
-                .map(CategoryResDto::of)
-                .toList();
+        return categoryRepository.findAllByUseYnIs(UseYN.Y).stream().map(CategoryResDto::of).toList();
     }
 
     /**
