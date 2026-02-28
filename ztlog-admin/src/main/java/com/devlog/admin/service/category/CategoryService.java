@@ -43,15 +43,19 @@ public class CategoryService {
     }
 
     public void createCategoryDetail(HttpServletRequest request, CategoryReqDto reqDto) {
+        // TODO : 상위, 하위 카테고리 설정 로직 추가할 것
+
         Category category = Category.created(
                 reqDto.getCateNm(),
                 reqDto.getCateDepth(),
                 reqDto.getDispOrd(),
-                tokenUtils.getUserIdFromHeader(request));
+                tokenUtils.getUserIdFromHeader(request), null);
         categoryRepository.save(category);
     }
 
     public void updateCategoryDetail(HttpServletRequest request, CategoryReqDto reqDto) {
+        // TODO : 상위, 하위 카테고리 설정 및 UseYN 변경 로직 추가할 것
+
         Category category = categoryRepository.findById(reqDto.getCateNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
 
