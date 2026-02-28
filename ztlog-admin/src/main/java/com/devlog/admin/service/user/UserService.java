@@ -78,6 +78,8 @@ public class UserService {
             throw new DataConflictException(ResponseCode.CONFLICT_USER_ERROR.getMessage());
         }
 
+        // TODO : 최상위 어드민 권한 허용 로직 추가
+
         // 비밀번호 암호화 및 사용자 생성
         String encodedPassword = passwordEncoder.encode(reqDto.getPassword());
         User user = User.created(reqDto.getUserId(), reqDto.getUsername(), encodedPassword, UserRole.ADMIN.value());

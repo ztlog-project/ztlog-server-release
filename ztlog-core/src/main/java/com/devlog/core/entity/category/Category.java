@@ -57,11 +57,23 @@ public class Category extends BaseTimeEntity {
                 .build();
     }
 
-    public void updated(String cateNm, Integer cateDepth, Integer dispOrd, String inpUser) {
+    public void updated(String cateNm, Integer cateDepth, Integer dispOrd, UseYN useYn, String inpUser, Category upperCategory) {
         this.cateNm = cateNm;
         this.cateDepth = cateDepth;
         this.dispOrd = dispOrd;
+        this.useYn = useYn;
         this.inpUser = inpUser;
+        this.upperCategory = upperCategory;
+
+        // 하위 카테고리들의 Depth도 자동으로 업데이트 (계층 구조 유지)
+        if (this.categories != null && !this.categories.isEmpty()) {
+            this.categories.forEach(child -> child.updateDepthRecursive(this.cateDepth + 1));
+        }
     }
 
+    // 하위 계층의 Depth를 재귀적으로 변경하는 내부 메서드
+    private void updateDepthRecursive(Integer newDepth) {
+        this.cateDepth = newDepth;
+        this.categories.forEach(child -> child.updateDepthRecursive(newDepth + 1));
+    }
 }
