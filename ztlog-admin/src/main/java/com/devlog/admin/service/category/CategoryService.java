@@ -3,6 +3,7 @@ package com.devlog.admin.service.category;
 import com.devlog.admin.dto.category.request.CategorySaveReqDto;
 import com.devlog.admin.dto.category.request.CategoryUpdateReqDto;
 import com.devlog.admin.dto.category.response.CategoryListResDto;
+import com.devlog.admin.dto.category.response.CategoryResDto;
 import com.devlog.admin.mapper.category.CategoryMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UseYN;
@@ -40,10 +41,32 @@ public class CategoryService {
     private final TokenUtils tokenUtils;
     private final PageUtils pageUtils;
 
+    /**
+     * 카테고리 목록 조회하기
+     *
+     * @return 컨텐츠 리스트 반환
+     */
     public List<CategoryListResDto> getCategoryList() {
         return categoryMapper.selectCategoryList();
     }
 
+    /**
+     * 카테고리 상세 조회
+     *
+     * @param cateNo 카테고리 번호
+     * @return 카테고리 상세 정보
+     */
+    public CategoryResDto getCategoryDetail(Long cateNo) {
+        return categoryMapper.selectCategory(cateNo)
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+    }
+
+    /**
+     * 카테고리 등록하기
+     *
+     * @param request HTTP 요청 객체
+     * @param reqDto  카테고리 정보 객체
+     */
     public void createCategoryDetail(HttpServletRequest request, CategorySaveReqDto reqDto) {
         // 상위 카테고리 조회
         Category upperCategory = null;
@@ -61,6 +84,12 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
+    /**
+     * 카테고리 수정하기
+     *
+     * @param request HTTP 요청 객체
+     * @param reqDto  카테고리 정보 객체
+     */
     public void updateCategoryDetail(HttpServletRequest request, CategoryUpdateReqDto reqDto) {
         // TODO : 상위, 하위 카테고리 설정 및 UseYN 변경 로직 추가할 것
 
@@ -94,12 +123,13 @@ public class CategoryService {
         // categoryRepository.save(category);
     }
 
-    public void deleteCategoryDetail(Long cateNo) {
-        var category = categoryRepository.findById(cateNo)
-                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
-        categoryRepository.delete(category);
-    }
 
+    /**
+     * 하위 카테고리 수정하기
+     *
+     * @param childDto 하위 카테고리 요청 객체
+     * @param parent  상위 카테고리 엔티티
+     */
     private void updateOrCreateChild(CategoryUpdateReqDto childDto, Category parent) {
         if (childDto.getCateNo() != null) {
             // 기존 자식 수정
@@ -128,5 +158,16 @@ public class CategoryService {
                     parent);
             categoryRepository.save(newChild);
         }
+    }
+
+    /**
+     * 카테고리 삭제하기
+     *
+     * @param cateNo 카테고리 번호
+     */
+    public void deleteCategoryDetail(Long cateNo) {
+        var category = categoryRepository.findById(cateNo)
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
+        categoryRepository.delete(category);
     }
 }
