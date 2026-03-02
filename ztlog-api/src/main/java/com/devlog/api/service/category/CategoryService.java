@@ -6,7 +6,6 @@ import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UseYN;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
-import com.devlog.core.entity.category.Category;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.repository.category.CategoryRepository;
 import com.devlog.core.repository.content.ContentRepository;

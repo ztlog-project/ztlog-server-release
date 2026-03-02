@@ -2,7 +2,6 @@ package com.devlog.admin.dto.category.response;
 
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.UseYN;
-import com.devlog.core.entity.category.Category;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -10,7 +9,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @ToString

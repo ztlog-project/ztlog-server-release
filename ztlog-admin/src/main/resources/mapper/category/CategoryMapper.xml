@@ -8,7 +8,7 @@
         <result property="cateDepth" column="CATE_DEPTH"/>
         <result property="dispOrd" column="DISP_ORD"/>
         <result property="useYn" column="USE_YN"/>
-        <result property="contentCount" column="contentCount"
+        <result property="contentCount" column="contentCount"/>
         <result property="inpUser" column="INP_USER"/>
         <result property="inpDttm" column="INP_DTTM"/>
         <result property="updDttm" column="UPD_DTTM"/>
