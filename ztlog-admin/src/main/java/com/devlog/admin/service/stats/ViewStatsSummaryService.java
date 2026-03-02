@@ -21,6 +21,7 @@ public class ViewStatsSummaryService {
 
     private final DateUtils dateUtils;
 
+    // @Scheduled(cron = "0 0 2 * * *")
     public void saveDailyViewStatsSummary(LocalDateTime dateTime) {
 
 //        LocalDateTime dateTime = DateUtils.todayLocalDateTime();
