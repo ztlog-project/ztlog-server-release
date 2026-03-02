@@ -1,6 +1,6 @@
-package com.devlog.admin.dto.main.response;
+package com.devlog.admin.dto.stats.response;
 
-import com.devlog.admin.dto.main.request.MainStatisticsDto;
+import com.devlog.admin.dto.stats.request.MainStatisticsDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
