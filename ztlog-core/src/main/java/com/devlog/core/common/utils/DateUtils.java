@@ -1,14 +1,15 @@
 package com.devlog.core.common.utils;
 
 import com.devlog.core.common.constants.CommonConstants;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+@Component
 @NoArgsConstructor
 public class DateUtils {
 

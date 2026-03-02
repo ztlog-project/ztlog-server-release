@@ -1,4 +1,4 @@
-package com.devlog.admin.dto.main.request;
+package com.devlog.admin.dto.stats.request;
 
 import lombok.Getter;
 import lombok.Setter;
