@@ -53,4 +53,10 @@
         WHERE cm.UPPER_CATE_NO = #{cateNo}
         ORDER BY cm.DISP_ORD
     </select>
+
+    <select id="selectCategory" resultType="CategoryResDto">
+        SELECT cm.*
+        FROM cate_mst cm
+        WHERE cm.CATE_NO = #{cateNo}
+    </select>
 </mapper>

@@ -1,8 +1,7 @@
 package com.devlog.admin.service.content;
 
 import com.devlog.admin.dto.content.request.ContentReqDto;
-import com.devlog.admin.dto.tag.request.TagReqDto;
-import com.devlog.admin.mapper.content.ContentStatisticsMapper;
+import com.devlog.admin.mapper.content.ContentMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
@@ -48,7 +47,7 @@ public class ContentService {
     private final TagRepository tagRepository;
 
     // mapper
-    private final ContentStatisticsMapper contentStatisticsMapper;
+    private final ContentMapper contentStatisticsMapper;
 
     // utils
     private final TokenUtils tokenUtils;

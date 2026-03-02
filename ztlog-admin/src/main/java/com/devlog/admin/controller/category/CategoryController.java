@@ -3,6 +3,7 @@ package com.devlog.admin.controller.category;
 import com.devlog.admin.dto.category.request.CategorySaveReqDto;
 import com.devlog.admin.dto.category.request.CategoryUpdateReqDto;
 import com.devlog.admin.dto.category.response.CategoryListResDto;
+import com.devlog.admin.dto.category.response.CategoryResDto;
 import com.devlog.admin.service.category.CategoryService;
 import com.devlog.core.common.dto.Response;
 import com.devlog.core.common.enumulation.ResponseCode;
@@ -41,6 +42,23 @@ public class CategoryController {
     @GetMapping("/categories")
     public ResponseEntity<Response<List<CategoryListResDto>>> getCategoryList() {
         return Response.success(ResponseCode.OK_SUCCESS, categoryService.getCategoryList());
+    }
+
+    /**
+     * 카테고리 상세 조회
+     *
+     * @param cateNo 카테고리 번호
+     * @return 카테고리 상세 정보
+     */
+    @Operation(summary = "카테고리 상세 조회", description = "카테고리 상세 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+    })
+    @GetMapping("/categories/{cateNo}")
+    public ResponseEntity<Response<CategoryResDto>> getCategoryDetail(@PathVariable Long cateNo) {
+        return Response.success(ResponseCode.OK_SUCCESS, categoryService.getCategoryDetail(cateNo));
     }
 
     /**
