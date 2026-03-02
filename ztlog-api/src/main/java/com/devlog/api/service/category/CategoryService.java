@@ -6,6 +6,7 @@ import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UseYN;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
+import com.devlog.core.entity.category.Category;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.repository.category.CategoryRepository;
 import com.devlog.core.repository.content.ContentRepository;
@@ -14,8 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,7 +37,12 @@ public class CategoryService {
      * @return 카테고리 리스트
      */
     public List<CategoryResDto> getCategoryList() {
-        return categoryRepository.findAllByUseYnIs(UseYN.Y).stream().map(CategoryResDto::of).toList();
+        List<Category> list = categoryRepository.findAllByUseYnIs(UseYN.Y);
+        // 필터 - 리스트 최상위만 루트로 잡음, 재귀 호출해서 하위 depth를 채움
+        return list.stream()
+                .filter(category -> ObjectUtils.isEmpty(category.getUpperCategory()))
+                .map(CategoryResDto::of)
+                .collect(Collectors.toList());
     }
 
     /**
