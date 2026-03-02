@@ -34,9 +34,8 @@ public class TagService {
      * @return 태그 리스트
      */
     public List<TagResDto> getTagList() {
-        return tagRepository.findAll().stream()
-                .map(TagResDto::of)
-                .collect(Collectors.toList());
+        List<Tag> list = tagRepository.findAll().stream().sorted((tag1, tag2) -> tag2.getContentTags().size() - tag1.getContentTags().size()).toList();
+        return list.stream().map(TagResDto::of).collect(Collectors.toList());
     }
 
     /**
@@ -50,7 +49,6 @@ public class TagService {
         if (!tagRepository.existsById(Long.valueOf(tagNo))) {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
-
         Page<Content> contentPage = contentRepository.findAllByContentTagsTagsTagNo(Long.valueOf(tagNo), pageUtils.getPageable(page, Content.class));
         return ContentListResDto.of(contentPage);
     }

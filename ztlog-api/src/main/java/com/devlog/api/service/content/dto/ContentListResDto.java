@@ -1,5 +1,6 @@
 package com.devlog.api.service.content.dto;
 
+import com.devlog.api.service.category.dto.CategoryInfoDto;
 import com.devlog.api.service.tag.dto.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.entity.content.Content;
@@ -80,6 +81,9 @@ public class ContentListResDto {
         @Size(max = CommonConstants.SUBTITLE_SIZE, message = "content title length is too long!!")
         private String subTitle;
 
+        @Schema(description = "게시물 카테고리")
+        private CategoryInfoDto category;
+
         @Schema(description = "게시물 태그 목록")
         private List<TagInfoDto> tags;
 
@@ -95,6 +99,7 @@ public class ContentListResDto {
                     .ctntNo(content.getCtntNo())
                     .title(content.getCtntTitle())
                     .subTitle(content.getCtntSubTitle())
+                    .category(CategoryInfoDto.of(content.getCategory()))
                     .tags(TagInfoDto.toTagResDtoList(content.getContentTags()))
                     .inpUser(content.getInpUser())
                     .inpDttm(content.getInpDttm())

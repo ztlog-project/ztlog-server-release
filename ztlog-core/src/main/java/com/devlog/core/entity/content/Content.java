@@ -1,7 +1,7 @@
 package com.devlog.core.entity.content;
 
-import com.devlog.core.common.enumulation.DELETED_YN;
 import com.devlog.core.entity.BaseTimeEntity;
+import com.devlog.core.entity.category.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SoftDelete;
@@ -30,6 +30,10 @@ public class Content extends BaseTimeEntity {
     @Column(name = "CTNT_SUBTITLE", nullable = false)
     private String ctntSubTitle;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATE_NO")
+    private Category category;
+
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "CTNT_NO")
     private ContentDetail contentDetail;
@@ -41,19 +45,24 @@ public class Content extends BaseTimeEntity {
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
-    public static Content created(String title, String subTitle, String body, String userId) {
+    public static Content created(String title, String subTitle, String body, Category category, String userId) {
         Content content = Content.builder()
                 .ctntTitle(title)
                 .ctntSubTitle(subTitle)
+                .category(category)
                 .inpUser(userId)
                 .build();
         content.contentDetail = ContentDetail.created(title, body, userId, content);
         return content;
     }
 
-    public void updated(String title, String subtitle) {
+    public void updated(String title, String subtitle, Category category, String inpUser) {
         this.ctntTitle = title;
         this.ctntSubTitle = subtitle;
+        this.inpUser = inpUser;
+        if (!Objects.isNull(category)) {
+            this.category = category;
+        }
     }
 
 }

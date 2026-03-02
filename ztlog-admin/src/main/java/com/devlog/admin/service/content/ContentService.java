@@ -1,7 +1,7 @@
 package com.devlog.admin.service.content;
 
 import com.devlog.admin.dto.content.request.ContentReqDto;
-import com.devlog.admin.mapper.content.ContentStatisticsMapper;
+import com.devlog.admin.mapper.content.ContentMapper;
 import com.devlog.admin.dto.content.response.ContentResDto;
 import com.devlog.admin.dto.content.response.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
@@ -9,9 +9,11 @@ import com.devlog.core.common.enumulation.SearchType;
 import com.devlog.core.common.utils.PageUtils;
 import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
+import com.devlog.core.entity.category.Category;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentTag;
 import com.devlog.core.entity.tag.Tag;
+import com.devlog.core.repository.category.CategoryRepository;
 import com.devlog.core.repository.content.ContentRepository;
 import com.devlog.core.repository.content.ContentTagRepository;
 import com.devlog.core.repository.tag.TagRepository;
@@ -25,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -34,14 +39,17 @@ import java.util.List;
 public class ContentService {
 
     private final EntityManager entityManager;
+
     // repository
     private final ContentRepository contentRepository;
-    //    private final ContentDtlRepository contentDtlRepository;
+    private final CategoryRepository categoryRepository;
     private final ContentTagRepository contentTagRepository;
     private final TagRepository tagRepository;
 
     // mapper
-    private final ContentStatisticsMapper contentStatisticsMapper;
+    private final ContentMapper contentStatisticsMapper;
+
+    // utils
     private final TokenUtils tokenUtils;
     private final PageUtils pageUtils;
 
@@ -76,21 +84,20 @@ public class ContentService {
      * @param reqDto  컨텐츠 요청 객체
      */
     public void createContentDetail(HttpServletRequest request, ContentReqDto.ContentReqInfoDto reqDto) {
-        Content content = Content.created(
-                reqDto.getTitle(),
-                reqDto.getSubTitle(),
-                reqDto.getBody(),
-                tokenUtils.getUserIdFromHeader(request));
-        contentRepository.save(content);
+        // 카테고리 조회
+        Category category = categoryRepository.findById(reqDto.getCateNo())
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+        // 컨텐츠 생성
+        Content content = Content.created(reqDto.getTitle(), reqDto.getSubTitle(), reqDto.getBody(), category, tokenUtils.getUserIdFromHeader(request));
 
-        // Create and save tags after content has ID
+        // 컨텐츠 태그 no로 조회, 없을 경우 새로 생성
         List<ContentTag> contentTags = new ArrayList<>();
         reqDto.getTags().forEach(tagReqDto -> {
-            final var tag = tagRepository.findById(tagReqDto.getTagNo())
-                    .orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
+            final var tag = tagRepository.findById(tagReqDto.getTagNo()).orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
             contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
         });
         contentTagRepository.saveAll(contentTags);
+        contentRepository.save(content);
     }
 
     /**
@@ -100,23 +107,46 @@ public class ContentService {
      * @param reqDto  컨텐츠 요청 객체
      */
     public void updateContentDetail(HttpServletRequest request, ContentReqDto.ContentReqInfoDto reqDto) {
+        // 컨텐츠 null check
         Content content = contentRepository.findById(reqDto.getCtntNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
 
-        // 컨텐츠 수정
-        content.updated(reqDto.getTitle(), reqDto.getSubTitle());
-        content.getContentDetail().updated(reqDto.getTitle(), reqDto.getBody(), content);
+        // 카테고리 번호가 바뀐 경우에만 조회해서 엔티티에 넘김 (아니면 null -> updated 메소드에서 수정)
+        Category category = null;
+        if (!reqDto.getCtntNo().equals(content.getCtntNo())) {
+            category = categoryRepository.findById(reqDto.getCateNo())
+                    .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+        }
 
-        // 기존 태그 삭제 후 새 태그 등록
-        contentTagRepository.deleteAll(content.getContentTags());
+        // 기존 태그 리스트 Map으로 변환
+        Map<Long, ContentTag> exTagMap = content.getContentTags().stream()
+                .collect(Collectors.toMap(tag -> tag.getTags().getTagNo(), tag -> tag));
 
-        List<ContentTag> contentTags = new ArrayList<>();
+        // 새 태그 리스트 변경사항 체크
+        List<ContentTag> newTagsList = new ArrayList<>();
         reqDto.getTags().forEach(tagReqDto -> {
-            Tag tag = tagRepository.findById(tagReqDto.getTagNo())
-                    .orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
-            contentTags.add(ContentTag.created(tag, tagReqDto.getSort(), content));
+            ContentTag existing = exTagMap.remove(tagReqDto.getTagNo());
+            if (!Objects.isNull(existing)) {
+                // 이미 존재하는 태그는 유지 -> 정렬 순서만 업데이트
+                existing.updated(existing.getTags(), tagReqDto.getSort());
+                newTagsList.add(existing);
+            } else {
+                // 기존에 없을 경우 -> 새로 생성
+                Tag tag = tagRepository.findById(tagReqDto.getTagNo()).orElseGet(() -> tagRepository.save(Tag.created(tagReqDto.getTagName())));
+                newTagsList.add(ContentTag.created(tag, tagReqDto.getSort(), content));
+            }
         });
-        contentTagRepository.saveAll(contentTags);
+
+        // exTagMap 남은 객체들은 요청에 포함되지 않은 것이므로 삭제
+        if (!exTagMap.isEmpty()) {
+            contentTagRepository.deleteAllInBatch(exTagMap.values());
+        }
+
+        // 컨텐츠 수정 - 새로 추가되거나 수정된 리스트 반영
+        content.updated(reqDto.getTitle(), reqDto.getSubTitle(), category, tokenUtils.getUserIdFromHeader(request));
+        content.getContentDetail().updated(reqDto.getTitle(), reqDto.getBody(), content, tokenUtils.getUserIdFromHeader(request));
+        contentTagRepository.saveAll(newTagsList);
+
     }
 
     /**

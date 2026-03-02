@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mapper
-public interface ContentStatisticsMapper {
+public interface ContentMapper {
     Integer selectCountContentList();
 
     List<ContentResDto> selectContentList(RowBounds rowBounds);
