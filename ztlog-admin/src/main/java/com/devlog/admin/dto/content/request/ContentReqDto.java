@@ -34,6 +34,9 @@ public class ContentReqDto {
     @Size(max = CommonConstants.SUBTITLE_SIZE, message = "content sub-title length is too long!!")
     private String subTitle;
 
+    @Schema(description = "카테고리 번호")
+    private Long cateNo;
+
     @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
     private String inpUser;
 
@@ -81,6 +84,9 @@ public class ContentReqDto {
 
         @Schema(description = "게시물 내용")
         private String body;
+
+        @Schema(description = "카테고리 번호")
+        private Long cateNo;
 
         @Schema(description = "게시물 생성자", defaultValue = CommonConstants.ADMIN_NAME)
         private String inpUser;

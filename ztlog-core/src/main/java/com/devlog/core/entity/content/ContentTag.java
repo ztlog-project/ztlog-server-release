@@ -33,4 +33,9 @@ public class ContentTag {
                 .contents(content)
                 .build();
     }
+
+    public void updated(Tag tag, int sort) {
+        this.tags = tag;
+        this.sort = sort;
+    }
 }

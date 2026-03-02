@@ -39,19 +39,20 @@ public class ContentDetail {
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
-    public static ContentDetail created(String title, String body, String user, Content content) {
+    public static ContentDetail created(String title, String body, String inpUser, Content content) {
         return ContentDetail.builder()
                 .ctntTitle(title)
                 .ctntBody(body)
-                .inpUser(user)
+                .inpUser(inpUser)
                 .content(content)
                 .build();
     }
 
-    public void updated(String title, String body, Content content) {
+    public void updated(String title, String body, Content content, String inpUser) {
         this.ctntTitle = title;
         this.ctntBody = body;
         this.content = content;
+        this.inpUser = inpUser;
     }
 
 }

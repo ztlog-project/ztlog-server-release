@@ -45,19 +45,24 @@ public class Content extends BaseTimeEntity {
     @Column(name = "INP_USER", nullable = false)
     private String inpUser;
 
-    public static Content created(String title, String subTitle, String body, String userId) {
+    public static Content created(String title, String subTitle, String body, Category category, String userId) {
         Content content = Content.builder()
                 .ctntTitle(title)
                 .ctntSubTitle(subTitle)
+                .category(category)
                 .inpUser(userId)
                 .build();
         content.contentDetail = ContentDetail.created(title, body, userId, content);
         return content;
     }
 
-    public void updated(String title, String subtitle) {
+    public void updated(String title, String subtitle, Category category, String inpUser) {
         this.ctntTitle = title;
         this.ctntSubTitle = subtitle;
+        this.inpUser = inpUser;
+        if (!Objects.isNull(category)) {
+            this.category = category;
+        }
     }
 
 }
