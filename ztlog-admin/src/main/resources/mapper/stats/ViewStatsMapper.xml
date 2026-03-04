@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devlog.admin.mapper.stats.ViewStatsMapper">
+
+    <!-- 1. 특정 날짜의 view_log 에서 컨텐츠별 조회수 합산 조회 -->
+    <select id="selectDailyViewCounts" resultType="Map">
+        SELECT
+            CTNT_NO  AS ctntNo,
+            SUM(VIEW_CNT) AS viewCnt
+        FROM view_log
+        WHERE VIEW_DT = #{targetDate}
+        GROUP BY CTNT_NO
+    </select>
+
+    <!-- 2. 일별 조회수 통계 upsert (view_stats_daily) -->
+    <insert id="upsertDailyViewStats">
+        INSERT INTO view_stats_daily (STAT_DT, CTNT_NO, VIEW_CNT)
+        VALUES (#{targetDate}, #{ctntNo}, #{viewCnt})
+        ON DUPLICATE KEY UPDATE
+            VIEW_CNT = VALUES(VIEW_CNT),
+            UPD_DTTM = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 3. 누적 조회수 합산 upsert (content_stats) -->
+    <insert id="updateCumulativeViewStats">
+        INSERT INTO content_stats (CTNT_NO, VIEW_CNT)
+        VALUES (#{ctntNo}, #{viewCnt})
+        ON DUPLICATE KEY UPDATE
+            VIEW_CNT = VIEW_CNT + VALUES(VIEW_CNT),
+            UPD_DTTM = CURRENT_TIMESTAMP
+    </insert>
+
+</mapper>

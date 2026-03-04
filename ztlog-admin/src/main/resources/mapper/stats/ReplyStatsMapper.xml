@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devlog.admin.mapper.stats.ReplyStatsMapper">
+
+    <!-- 댓글수 강제 동기화 upsert (content_stats) — @Param 없음으로 param1/param2 사용 -->
+    <insert id="upsertReplyCount">
+        INSERT INTO content_stats (CTNT_NO, REPLY_CNT)
+        VALUES (#{param1}, #{param2})
+        ON DUPLICATE KEY UPDATE
+            REPLY_CNT = VALUES(REPLY_CNT),
+            UPD_DTTM  = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 댓글수 UPDATE (존재하는 row만 갱신) -->
+    <update id="updateReplyCount">
+        UPDATE content_stats
+        SET
+            REPLY_CNT = #{replyCnt},
+            UPD_DTTM  = CURRENT_TIMESTAMP
+        WHERE CTNT_NO = #{ctntNo}
+    </update>
+
+    <!-- 단건 업데이트 예시 -->
+    <update id="updateCommentCount">
+        UPDATE posts
+        SET comment_count = #{commentCount},
+            updated_at = NOW()
+        WHERE post_id = #{postId}
+    </update>
+
+    <!-- (권장) 다건 처리 시: 하나씩 호출하는 것보다 루프를 돌리는 방식 -->
+    <update id="updateCommentCountsBatch">
+        <foreach collection="list" item="node" separator=";">
+            UPDATE posts
+            SET comment_count = #{node.comments.totalCount}
+            WHERE post_id = CAST(REGEXP_REPLACE(#{node.title}, '[^0-9]', '') AS UNSIGNED)
+        </foreach>
+    </update>
+</mapper>
