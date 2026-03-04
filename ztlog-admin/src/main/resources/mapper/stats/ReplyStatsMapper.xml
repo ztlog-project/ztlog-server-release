@@ -20,4 +20,20 @@
         WHERE CTNT_NO = #{ctntNo}
     </update>
 
+    <!-- 단건 업데이트 예시 -->
+    <update id="updateCommentCount">
+        UPDATE posts
+        SET comment_count = #{commentCount},
+            updated_at = NOW()
+        WHERE post_id = #{postId}
+    </update>
+
+    <!-- (권장) 다건 처리 시: 하나씩 호출하는 것보다 루프를 돌리는 방식 -->
+    <update id="updateCommentCountsBatch">
+        <foreach collection="list" item="node" separator=";">
+            UPDATE posts
+            SET comment_count = #{node.comments.totalCount}
+            WHERE post_id = CAST(REGEXP_REPLACE(#{node.title}, '[^0-9]', '') AS UNSIGNED)
+        </foreach>
+    </update>
 </mapper>
