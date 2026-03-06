@@ -9,14 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -47,59 +47,47 @@ public class ReplyStatsSummaryService {
     }
 
     // @Scheduled(cron = "0 0 2 * * *")
-    @Transactional
     public void syncAllComments() {
         log.info(">>> Giscus 댓글 동기화 배치 시작");
+        List<GiscusResponse.Node> nodes = fetchGiscusNodes();
 
+        // 1. 스트림 안에서 변환과 필터링을 한꺼번에 처리 (가장 권장되는 방식)
+        List<ReplyStatsResDto> updateList = nodes.stream()
+                .map(this::mapToReplyStatsDto)
+                .flatMap(Optional::stream) // ID 추출 성공한 것만 통과
+                .toList();
 
-        String query = String.format("{ \"query\": \"query { repository(owner: \\\"%s\\\", name: \\\"%s\\\") { discussions(first: 100) { nodes { title comments { totalCount } } } } }\" }", userName, commentRepo);
+        // 2. DB 업데이트
+        updateList.forEach(dto -> replyStatsMapper.upsertReplyCount(dto.getCtntNo(), dto.getReplyCnt()));
 
-        webClient.post()
+        log.info(">>> 총 {}건 동기화 완료", updateList.size());
+    }
+
+    // [중요] 누락되었던 데이터 호출 메서드
+    private List<GiscusResponse.Node> fetchGiscusNodes() {
+        String query = String.format("{ \"query\": \"query { repository(owner: \\\"%s\\\", name: \\\"%s\\\") { discussions(first: 100) { nodes { title comments { totalCount } } } } }\" }",
+                userName, commentRepo);
+
+        return webClient.post()
                 .uri(githubUrl)
                 .header(HttpHeaders.AUTHORIZATION, "bearer " + githubToken)
                 .bodyValue(query)
                 .retrieve()
                 .bodyToMono(GiscusResponse.class)
                 .blockOptional()
-                .map(res -> res.getData().getRepository().getDiscussions().getNodes())
-                .ifPresent(nodes -> nodes.forEach(node -> {
-                    Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(node.getTitle());
-                    if (matcher.find()) {
-                        Long ctntNo = Long.parseLong(matcher.group(1));
-                        int replyCnt = node.getComments().getTotalCount();
+                .map(GiscusResponse::getNodes) // DTO에 작성하신 getNodes() 호출
+                .orElse(Collections.emptyList());
+    }
 
-                        // 존재하면 UPDATE, 없으면 INSERT (한 번의 DB 호출)
-                        replyStatsMapper.upsertReplyCount(ctntNo, replyCnt);
-                        ReplyStatsResDto dto = ReplyStatsResDto.of(ctntNo, replyCnt);
-                        log.info("response :: ctntNo: {} - coutn: {}", dto.getCtntNo(), dto.getReplyCnt());
-                    }
-                }));
-
-
-
-//        GiscusResponse response = webClient.post()
-//                .uri(githubUrl)
-//                .header(HttpHeaders.AUTHORIZATION, "bearer " + githubToken)
-//                .bodyValue(query)
-//                .retrieve()
-//                .bodyToMono(GiscusResponse.class)
-//                .block();
-//        if (response == null || response.getData() == null) return;
-//
-//        response.getData().getRepository().getDiscussions().getNodes().stream()
-//                .map(node -> new Object[]{CommonConstants.POST_ID_PATTERN.matcher(node.getTitle()), node.getComments().getTotalCount()})
-//                .filter(arr -> ((Matcher) arr[0]).find())
-//                .forEach(arr -> {
-//                    Long ctntNo = Long.parseLong(((Matcher) arr[0]).group(1));
-//                    int replyCnt = (int) arr[1];
-//                    // 단일 upsert 쿼리로 호출 (기존 exist 확인 절차 삭제)
-//                    replyStatsMapper.upsertReplyCount(ctntNo, replyCnt);
-//
-//                    ReplyStatsResDto dto = ReplyStatsResDto.of(ctntNo, replyCnt);
-//
-//                    log.info("response : {}", dto.toString());
-//                });
-
-        log.info(">>> 동기화 완료");
+    private Optional<ReplyStatsResDto> mapToReplyStatsDto(GiscusResponse.Node node) {
+        // 추출 로직은 서비스 내부 private 메서드로 관리
+        Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(node.getTitle());
+        if (matcher.find()) {
+            return Optional.of(ReplyStatsResDto.of(
+                    Long.parseLong(matcher.group(1)),
+                    node.getComments().getTotalCount()
+            ));
+        }
+        return Optional.empty();
     }
 }

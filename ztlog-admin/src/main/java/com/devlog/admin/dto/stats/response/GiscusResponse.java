@@ -1,43 +1,45 @@
 package com.devlog.admin.dto.stats.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class GiscusResponse {
-    private Data data;
+    private GiscusData data;
 
-    @Getter
-    @Setter
-    public static class Data {
+    public List<Node> getNodes() {
+        if (data != null && data.repository != null && data.repository.discussions != null) {
+            return data.repository.discussions.nodes;
+        }
+        return Collections.emptyList();
+    }
+
+    @Data
+    public static class GiscusData {
         private Repository repository;
     }
 
-    @Getter
-    @Setter
+    @Data
     public static class Repository {
         private Discussions discussions;
     }
 
-    @Getter
-    @Setter
+    @Data
     public static class Discussions {
         private List<Node> nodes;
     }
 
-    @Getter
-    @Setter
+    @Data
     public static class Node {
-        private String title;      // 예: "http://ztlog.io/contents/10"
-        private Comments comments; // 댓글 정보
+        private String title;
+        private Comments comments;
     }
 
-    @Getter
-    @Setter
+    @Data
     public static class Comments {
-        private int totalCount;    // 실제 저장할 댓글 수
+        private int totalCount;
     }
+
 }
