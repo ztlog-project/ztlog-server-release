@@ -58,3 +58,6 @@ log/
 
 ### Docker ###
 docker-compose.override.yml
+
+### Google Cloud Key ###
+ztlog-admin/src/main/resources/google-search-console-key.json
