@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-public class GiscusResponseDto {
+public class GiscusResDto {
     private GiscusData data;
 
     public List<Node> getNodes() {

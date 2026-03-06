@@ -1,7 +1,7 @@
 package com.devlog.admin.service.stats;
 
-import com.devlog.admin.dto.stats.response.GiscusResponseDto;
-import com.devlog.admin.dto.stats.response.ReplyStatsResDto;
+import com.devlog.admin.dto.stats.response.GiscusResDto;
+import com.devlog.admin.dto.stats.response.CommentStatsResDto;
 import com.devlog.admin.mapper.stats.ReplyStatsMapper;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.utils.DateUtils;
@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ReplyStatsSummaryService {
+public class CommentStatsService {
 
     private final WebClient webClient; // Bean 등록 권장
     private final ReplyStatsMapper replyStatsMapper;
@@ -49,10 +49,10 @@ public class ReplyStatsSummaryService {
     // @Scheduled(cron = "0 0 2 * * *")
     public void syncAllComments() {
         log.info(">>> Giscus 댓글 동기화 배치 시작");
-        List<GiscusResponseDto.Node> nodes = fetchGiscusNodes();
+        List<GiscusResDto.Node> nodes = fetchGiscusNodes();
 
         // 1. 스트림 안에서 변환과 필터링을 한꺼번에 처리 (가장 권장되는 방식)
-        List<ReplyStatsResDto> updateList = nodes.stream()
+        List<CommentStatsResDto> updateList = nodes.stream()
                 .map(this::mapToReplyStatsDto)
                 .flatMap(Optional::stream) // ID 추출 성공한 것만 통과
                 .toList();
@@ -64,7 +64,7 @@ public class ReplyStatsSummaryService {
     }
 
     // [중요] 누락되었던 데이터 호출 메서드
-    private List<GiscusResponseDto.Node> fetchGiscusNodes() {
+    private List<GiscusResDto.Node> fetchGiscusNodes() {
         String query = String.format("{ \"query\": \"query { repository(owner: \\\"%s\\\", name: \\\"%s\\\") { discussions(first: 100) { nodes { title comments { totalCount } } } } }\" }",
                 userName, commentRepo);
 
@@ -73,21 +73,25 @@ public class ReplyStatsSummaryService {
                 .header(HttpHeaders.AUTHORIZATION, "bearer " + githubToken)
                 .bodyValue(query)
                 .retrieve()
-                .bodyToMono(GiscusResponseDto.class)
+                .bodyToMono(GiscusResDto.class)
                 .blockOptional()
-                .map(GiscusResponseDto::getNodes) // DTO에 작성하신 getNodes() 호출
+                .map(GiscusResDto::getNodes) // DTO에 작성하신 getNodes() 호출
                 .orElse(Collections.emptyList());
     }
 
-    private Optional<ReplyStatsResDto> mapToReplyStatsDto(GiscusResponseDto.Node node) {
+    private Optional<CommentStatsResDto> mapToReplyStatsDto(GiscusResDto.Node node) {
         // 추출 로직은 서비스 내부 private 메서드로 관리
         Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(node.getTitle());
         if (matcher.find()) {
-            return Optional.of(ReplyStatsResDto.of(
+            return Optional.of(CommentStatsResDto.of(
                     Long.parseLong(matcher.group(1)),
                     node.getComments().getTotalCount()
             ));
         }
         return Optional.empty();
+    }
+
+    public CommentStatsResDto getRealTimeCommentStats(Long ctntNo) {
+        return null;
     }
 }

@@ -1,6 +1,6 @@
 package com.devlog.admin.mapper.stats;
 
-import com.devlog.admin.dto.stats.response.GiscusResponseDto;
+import com.devlog.admin.dto.stats.response.GiscusResDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,5 +15,5 @@ public interface ReplyStatsMapper {
 
     void updateReplyCount(Long ctntNo, int replyCnt);
 
-    void updateCommentCountsBatch(@Param("list") List<GiscusResponseDto.Node> nodes);  // (선택) 성능을 위한 벌크 업데이트
+    void updateCommentCountsBatch(@Param("list") List<GiscusResDto.Node> nodes);  // (선택) 성능을 위한 벌크 업데이트
 }
