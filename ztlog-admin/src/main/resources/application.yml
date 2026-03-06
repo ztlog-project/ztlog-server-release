@@ -30,6 +30,15 @@ jwt:
   access-token-expire-time: 600000
   refresh-token-expire-time: 15552000000
 
+github:
+  url: https://api.github.com/graphql
+  token: ${GITHUB_TOKEN}
+  user:
+    name: zoetrope56
+    comment-repo: devlog-comments
+#    name: ztlog-project
+#    comment-repo: ztlog-comment
+
 # AWS S3 설정
 aws:
   credentials:

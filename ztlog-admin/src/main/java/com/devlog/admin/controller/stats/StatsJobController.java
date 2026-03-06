@@ -3,6 +3,7 @@ package com.devlog.admin.controller.stats;
 import com.devlog.admin.service.stats.ReplyStatsSummaryService;
 import com.devlog.admin.service.stats.ViewStatsSummaryService;
 import com.devlog.core.common.constants.CommonConstants;
+import com.devlog.core.common.dto.Response;
 import com.devlog.core.common.enumulation.ResponseCode;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,9 +36,9 @@ public class StatsJobController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    public ResponseEntity<String> processDailyViewStats(@RequestParam @DateTimeFormat(pattern = CommonConstants.DEFAULT_DATE_FORMAT) LocalDateTime date) {
+    public ResponseEntity<Response<String>> processDailyViewStats(@RequestParam @DateTimeFormat(pattern = CommonConstants.DEFAULT_DATE_FORMAT) LocalDateTime date) {
         viewStatsSummaryService.saveDailyViewStatsSummary(date);
-        return ResponseEntity.ok(date + " - 조회수 집계 처리가 완료되었습니다.");
+        return Response.success(ResponseCode.OK_SUCCESS, date + " - 조회수 집계 처리가 완료되었습니다.");
     }
 
     @PostMapping("/stats/reply")
@@ -46,8 +47,21 @@ public class StatsJobController {
             @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
-    public ResponseEntity<String> processReplyStatsSync(@RequestParam Long ctntNo, @RequestParam Integer replyCnt) {
+    public ResponseEntity<Response<String>> processReplyStatsSync(@RequestParam Long ctntNo, @RequestParam Integer replyCnt) {
         replyStatsSummaryService.saveReplyStatsSummaryByContent(ctntNo, replyCnt);
-        return ResponseEntity.ok("CTNT_NO : " + ctntNo + " - 댓글 수 동기화 처리가 완료되었습니다.");
+        return Response.success(ResponseCode.OK_SUCCESS, "CTNT_NO : " + ctntNo + " - 댓글 수 동기화 처리가 완료되었습니다.");
     }
+
+
+    @PostMapping("/stats/reply")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ResponseCode.class))),
+            @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
+    })
+    public ResponseEntity<Response<String>> processReplyStatsSync() {
+        replyStatsSummaryService.syncAllComments();
+        return Response.success(ResponseCode.OK_SUCCESS, " 모든 댓글 수 동기화 처리가 완료되었습니다.");
+    }
+
 }
