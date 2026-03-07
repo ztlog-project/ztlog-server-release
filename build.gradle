@@ -64,10 +64,18 @@ project(':ztlog-api') {
 }
 
 project(':ztlog-admin') {
-    bootJar { enabled = true } // 실행 모듈은 활성화
+    bootJar { enabled = true }
     jar { enabled = false }
     dependencies {
         implementation(project(':ztlog-core'))
+
+        // [최종 해결책] 특정 리비전을 명시하지 않고 저장소에서 찾을 수 있는 최신본을 가져오게 합니다.
+        implementation 'com.google.apis:google-api-services-searchconsole:v1-rev+'
+
+        // 구글 API 통신을 위한 필수 공통 라이브러리
+        implementation 'com.google.api-client:google-api-client:2.2.0'
+        implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
+        implementation 'com.google.http-client:google-http-client-gson:1.43.3'
     }
 }
 

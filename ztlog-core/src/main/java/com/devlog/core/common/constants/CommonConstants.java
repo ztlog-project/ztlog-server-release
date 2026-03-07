@@ -1,6 +1,7 @@
 package com.devlog.core.common.constants;
 
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class CommonConstants {
 
@@ -30,5 +31,8 @@ public class CommonConstants {
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DEFAULT_DATE_MILLISECONDS_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+    // 정규식 패턴 미리 컴파일 (성능 최적화)
+    public static final Pattern POST_ID_PATTERN = Pattern.compile("/contents/(\\d+)");
 
 }

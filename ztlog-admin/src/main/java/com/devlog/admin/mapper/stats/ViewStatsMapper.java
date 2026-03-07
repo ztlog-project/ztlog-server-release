@@ -1,5 +1,7 @@
 package com.devlog.admin.mapper.stats;
 
+import com.devlog.admin.dto.stats.response.DailyStatsDto;
+import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,16 +12,11 @@ import java.util.Map;
 @Mapper
 public interface ViewStatsMapper {
 
-    // 1. 전날 로그 집계
-    List<Map<String, Object>> selectDailyViewCounts(@Param("targetDate") LocalDate targetDate);
+//    List<Map<String, Object>> selectDailyViewCounts(@Param("date") LocalDate date);
 
-    // 2. 일별 통계 반영 (ON DUPLICATE KEY UPDATE)
-    void upsertDailyViewStats(@Param("targetDate") LocalDate targetDate, @Param("ctntNo") Long ctntNo, @Param("viewCnt") int viewCnt);
+    void upsertDailyViewStats(DailyStatsDto dailyStatsDto);
 
-    // 3. 누적 조회수 합산
-    void updateCumulativeViewStats(@Param("ctntNo") Long ctntNo, @Param("viewCnt") int viewCnt);
+    void updateCumulativeViewStats(@Param("ctntNo") Long ctntNo, @Param("viewCnt") long viewCnt);
 
-
-
-
+    void insertViewRawLogs(@Param("list") List<ViewRawDataReqDto> list);
 }

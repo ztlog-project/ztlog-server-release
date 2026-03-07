@@ -1,7 +1,7 @@
 package com.devlog.admin.controller.stats;
 
-import com.devlog.admin.service.stats.MainDashBoardService;
-import com.devlog.admin.dto.stats.response.MainDashBoardResDto;
+import com.devlog.admin.service.stats.MainStatsService;
+import com.devlog.admin.dto.stats.response.MainStsatsResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class MainDashBoardController {
 
-    private final MainDashBoardService mainDashBoardService;
+    private final MainStatsService mainStatsService;
 
     /**
      * 메인화면(대쉬보드) 조회
@@ -36,8 +36,8 @@ public class MainDashBoardController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @GetMapping("/main")
-    public ResponseEntity<Response<MainDashBoardResDto>> getMainStatisticsInfo() {
-        return Response.success(ResponseCode.OK_SUCCESS, mainDashBoardService.getMainStatisticsInfo());
+    public ResponseEntity<Response<MainStsatsResDto>> getMainStatisticsInfo() {
+        return Response.success(ResponseCode.OK_SUCCESS, mainStatsService.getMainStatisticsInfo());
     }
 
 }

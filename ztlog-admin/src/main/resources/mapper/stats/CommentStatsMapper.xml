@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devlog.admin.mapper.stats.CommentStatsMapper">
+
+    <select id="existCommentStats" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM contents_cmmt_stats WHERE CTNT_NO = #{ctntNo})
+    </select>
+
+    <!-- 댓글수 upsert (contents_cmmt_stats) -->
+    <insert id="upsertCommentCount">
+        INSERT INTO contents_cmmt_stats (CTNT_NO, CMMT_CNT, INP_DTTM, UPD_DTTM)
+        VALUES (#{ctntNo}, #{commentCnt}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+            CMMT_CNT = VALUES(CMMT_CNT),
+            UPD_DTTM = NOW()
+    </insert>
+
+    <!-- 댓글수 UPDATE -->
+    <update id="updateCommentCount">
+        UPDATE contents_cmmt_stats
+        SET CMMT_CNT = #{commentCnt},
+            UPD_DTTM = NOW()
+        WHERE CTNT_NO = #{ctntNo}
+    </update>
+
+</mapper>
