@@ -1,34 +1,19 @@
 package com.devlog.admin.service.stats;
 
 import com.devlog.admin.component.GoogleSearchConsole;
-import com.devlog.admin.dto.stats.request.DailyStatsReqDto;
+import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
 import com.devlog.admin.dto.stats.request.ViewStatsReqDto;
 import com.devlog.admin.dto.stats.response.DailyStatsDto;
 import com.devlog.admin.mapper.stats.ViewStatsMapper;
 import com.devlog.core.common.utils.DateUtils;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.searchconsole.v1.SearchConsole;
-import com.google.api.services.searchconsole.v1.SearchConsoleScopes;
-import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryRequest;
-import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryResponse;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
+import com.devlog.core.entity.content.Content;
+import com.devlog.core.repository.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,33 +22,47 @@ import java.util.Optional;
 public class ViewStatsService {
 
     private final ViewStatsMapper viewStatsMapper;
+    private final ContentRepository contentRepository;
     private final GoogleSearchConsole googleSearchConsole;
-    private final DateUtils dateUtils;
 
     /**
-     * 1. 일별 통계 내역 기록 (조회수, 댓글수 증가량 get 후 save)
+     * 1. 일별 통계 내역 기록 (구글 서치콘솔 조회수 get 후 save)
      */
-    // @Scheduled(cron = "0 0 2 * * *")
-    public void collectDailyGrowthStats(DailyStatsReqDto reqDto) {
-        // [GET] 구글 서치콘솔에서 데이터 가져오기
-        List<DailyStatsDto> googleData = googleSearchConsole.fetchGoogleSearchConsoleData(reqDto.getStartDate(), reqDto.getEndDate());
+    @Transactional
+    public void collectDailyGrowthStats() {
+        String today = DateUtils.todayLocalDateToString();
 
-        // [SAVE] DB에 저장 (MyBatis Upsert)
-        for (DailyStatsDto dto : googleData) {
-            viewStatsMapper.upsertDailyViewStats(dto);
-        }
+        googleSearchConsole.fetchAllPageViews(today, today)
+                .stream()
+                .filter(dto -> dto.getCtntNo() != null)
+                .forEach(viewStatsMapper::upsertDailyViewStats);
     }
 
     /**
-     * 3. 누적 조회수 통계 업데이트 (1시간 주기 합산 get 후 save)
+     * 3. 게시물 누적 조회수 업데이트 (작성일~오늘 전체 클릭수 SET)
      */
-    // @Scheduled(cron = "0 0 2 * * *")
     @Transactional
     public void syncTotalViews(ViewStatsReqDto reqDto) {
-        // [GET] 로우 데이터에서 총합 계산
-        Long totalCount = viewStatsMapper.getTotalViewCountFromLog(reqDto.getCtntNo());
-        // [SAVE] 누적 테이블 갱신
-        viewStatsMapper.upsertTotalViewStats(reqDto.getCtntNo(), totalCount);
+        Content content = contentRepository.findById(reqDto.getCtntNo())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 컨텐츠입니다."));
+
+        String startDate = DateUtils.dateToString(content.getInpDttm().toLocalDate());
+        String endDate = DateUtils.todayLocalDateToString();
+
+        long totalViewCnt = googleSearchConsole.fetchContentViews(startDate, endDate, reqDto.getCtntNo())
+                .stream()
+                .mapToLong(DailyStatsDto::getViewCnt)
+                .sum();
+
+        viewStatsMapper.updateCumulativeViewStats(reqDto.getCtntNo(), totalViewCnt);
+    }
+
+    @Transactional
+    public void collectViewRawLogs(String startDate, String endDate) {
+        List<ViewRawDataReqDto> rawLogs = googleSearchConsole.fetchRawLogData(startDate, endDate);
+        if (!rawLogs.isEmpty()) {
+            viewStatsMapper.insertViewRawLogs(rawLogs);
+        }
     }
 
 }

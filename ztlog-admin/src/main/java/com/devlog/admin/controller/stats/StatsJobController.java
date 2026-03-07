@@ -3,9 +3,7 @@ package com.devlog.admin.controller.stats;
 import com.devlog.admin.dto.stats.request.CommentStatsReqDto;
 import com.devlog.admin.dto.stats.request.ViewRawLogReqDto;
 import com.devlog.admin.dto.stats.request.ViewStatsReqDto;
-import com.devlog.admin.dto.stats.request.DailyStatsReqDto;
 import com.devlog.admin.service.stats.CommentStatsService;
-import com.devlog.admin.service.stats.ViewLogService;
 import com.devlog.admin.service.stats.ViewStatsService;
 import com.devlog.core.common.dto.Response;
 import com.devlog.core.common.enumulation.ResponseCode;
@@ -15,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +25,6 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class StatsJobController {
 
-    private final ViewLogService viewLogService;
     private final ViewStatsService viewStatsService;
     private final CommentStatsService commentStatsService;
 
@@ -36,7 +32,6 @@ public class StatsJobController {
      * 일별 통계 기록 (조회수, 댓글수 증가량 외부 API 연동 저장)
      * 수동 실행 시 특정 기간의 데이터를 수집하여 DB에 기록
      *
-     * @param reqDto 일별 통계 데이터
      * @return 성공 응답
      */
     @Operation(summary = "일별 통계 기록", description = "일별 통계 기록 (조회수, 댓글수 증가량 외부 API 연동 저장)")
@@ -46,8 +41,8 @@ public class StatsJobController {
             @ApiResponse(responseCode = "500", description = "예상치 못한 서버 에러 발생", content = @Content(schema = @Schema(implementation = ResponseCode.class)))
     })
     @PostMapping("/daily")
-    public ResponseEntity<Response<List<String>>> collectDailyGrowthStats(@RequestBody @Valid DailyStatsReqDto reqDto) {
-        viewStatsService.collectDailyGrowthStats(reqDto);
+    public ResponseEntity<Response<List<String>>> collectDailyGrowthStats() {
+        viewStatsService.collectDailyGrowthStats();
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 
@@ -104,7 +99,7 @@ public class StatsJobController {
     })
     @PostMapping("/views/raw")
     public ResponseEntity<Response<String>> collectViewRawLogs(@RequestBody ViewRawLogReqDto reqDto) {
-        viewLogService.collectViewRawLogs(reqDto);
+        viewStatsService.collectViewRawLogs(reqDto.getStartDate(), reqDto.getEndDate());
         return Response.success(ResponseCode.OK_SUCCESS);
     }
 

@@ -3,6 +3,8 @@ package com.devlog.admin.dto.stats.response;
 import com.google.api.services.searchconsole.v1.model.ApiDataRow;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -10,21 +12,23 @@ import lombok.*;
 @Builder(access = AccessLevel.PRIVATE)
 public class DailyStatsDto {
 
+    private LocalDate statDt;   // 통계 날짜 (STAT_DT)
+    private Long ctntNo;        // 컨텐츠 번호 (CTNT_NO)
     private String pageUrl;     // 페이지 주소 (Dimensions: page)
-    private Long clicks;        // 클릭수
+    private Long viewCnt;       // 조회수 (VIEW_CNT)
     private Long impressions;   // 노출수
     private Double ctr;         // 클릭률 (CTR)
     private Double position;    // 평균 순위
 
-    public static DailyStatsDto of(ApiDataRow row) {
+    public static DailyStatsDto of(ApiDataRow row, LocalDate statDt, String pageUrl, Long ctntNo) {
         return DailyStatsDto.builder()
-                .pageUrl(row.getKeys().isEmpty() ? "unknown" : row.getKeys().get(0))
-                .clicks(row.getClicks().longValue())
+                .statDt(statDt)
+                .ctntNo(ctntNo)
+                .pageUrl(pageUrl)
+                .viewCnt(row.getClicks().longValue())
                 .impressions(row.getImpressions().longValue())
                 .ctr(row.getCtr())
                 .position(row.getPosition())
                 .build();
-
-
     }
 }

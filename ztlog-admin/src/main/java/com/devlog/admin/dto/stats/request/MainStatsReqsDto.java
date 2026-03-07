@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
-public class MainStatisticsDto {
+public class MainStatsReqsDto {
     private long totalPostCount;
     private long totalTagCount;
     private long totalViewCount;

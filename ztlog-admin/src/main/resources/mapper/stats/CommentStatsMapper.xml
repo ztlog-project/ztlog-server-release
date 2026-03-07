@@ -6,31 +6,21 @@
         SELECT EXISTS(SELECT 1 FROM contents_cmmt_stats WHERE CTNT_NO = #{ctntNo})
     </select>
 
-    <!-- 댓글수 강제 동기화 upsert (content_stats) — @Param 없음으로 param1/param2 사용 -->
+    <!-- 댓글수 upsert (contents_cmmt_stats) -->
     <insert id="upsertCommentCount">
-        INSERT INTO contents_cmmt_stats (CTNT_NO, CMMT_CNT, UPD_DTTM)
-        VALUES (#{ctntNo}, #{commentCnt}, NOW()) -- 이 부분에 닫는 괄호 추가
-            ON DUPLICATE KEY
-        UPDATE
-            CMMT_CNT =#{commentCnt}
-        VALUES (Comment_CNT), UPD_DTTM = NOW()
-
+        INSERT INTO contents_cmmt_stats (CTNT_NO, CMMT_CNT, INP_DTTM, UPD_DTTM)
+        VALUES (#{ctntNo}, #{commentCnt}, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+            CMMT_CNT = VALUES(CMMT_CNT),
+            UPD_DTTM = NOW()
     </insert>
 
-    <!-- 댓글수 UPDATE (존재하는 row만 갱신) -->
+    <!-- 댓글수 UPDATE -->
     <update id="updateCommentCount">
         UPDATE contents_cmmt_stats
         SET CMMT_CNT = #{commentCnt},
-            UPD_DTTM  = NOW()
+            UPD_DTTM = NOW()
         WHERE CTNT_NO = #{ctntNo}
     </update>
 
-    <!-- (권장) 다건 처리 시: 하나씩 호출하는 것보다 루프를 돌리는 방식 -->
-    <update id="updateCommentCountsBatch">
-        <foreach collection="list" item="node" separator=";">
-            UPDATE contents_cmmt_stats
-            SET CMMT_CNT = #{node.comments.totalCount}
-            WHERE CTNT_NO = CAST(REGEXP_REPLACE(#{node.title}, '[^0-9]', '') AS UNSIGNED)
-        </foreach>
-    </update>
 </mapper>

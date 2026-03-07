@@ -1,11 +1,15 @@
 package com.devlog.admin.component;
 
 import com.devlog.admin.dto.stats.response.DailyStatsDto;
+import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
+import com.devlog.core.common.constants.CommonConstants;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.searchconsole.v1.SearchConsole;
 import com.google.api.services.searchconsole.v1.SearchConsoleScopes;
+import com.google.api.services.searchconsole.v1.model.ApiDimensionFilter;
+import com.google.api.services.searchconsole.v1.model.ApiDimensionFilterGroup;
 import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryRequest;
 import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryResponse;
 import com.google.auth.http.HttpCredentialsAdapter;
@@ -17,9 +21,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
 @Slf4j
 @Component
@@ -28,53 +34,118 @@ public class GoogleSearchConsole {
     @Value("${google.search-console.site-url}")
     private String siteUrl;
 
-    /**
-     * 구글 서치콘솔 API 연동 로직 (서비스 내부 private 메소드)
-     */
-    public List<DailyStatsDto> fetchGoogleSearchConsoleData(String startDate, String endDate) {
-        try (InputStream keyFile = getClass().getResourceAsStream("/google-search-console-key.json")) {
-            // 1. 키 파일 존재 확인
-            if (keyFile == null) {
-                throw new RuntimeException("구글 서비스 키 파일을 찾을 수 없습니다.");
-            }
-
-            // 2. 인증 및 서비스 빌드
-            GoogleCredentials credentials = GoogleCredentials.fromStream(keyFile)
-                    .createScoped(Collections.singleton(SearchConsoleScopes.WEBMASTERS_READONLY));
-
-            SearchConsole service = new SearchConsole.Builder(
-                    GoogleNetHttpTransport.newTrustedTransport(),
-                    GsonFactory.getDefaultInstance(),
-                    new HttpCredentialsAdapter(credentials))
-                    .setApplicationName("ztlog-admin-app")
-                    .build();
-
-            // 3. 쿼리 요청 설정
+    // 전체 페이지 일별 조회수 조회
+    public List<DailyStatsDto> fetchAllPageViews(String startDate, String endDate) {
+        try {
+            SearchConsole service = buildService();
             SearchAnalyticsQueryRequest request = new SearchAnalyticsQueryRequest()
                     .setStartDate(startDate)
                     .setEndDate(endDate)
                     .setDimensions(List.of("page"))
                     .setRowLimit(100);
 
-            // 4. API 실행 및 결과 반환
+            return executeQuery(service, request, endDate);
+
+        } catch (GoogleJsonResponseException e) {
+            throw new RuntimeException("Google API 응답 실패: " + e.getDetails().getMessage(), e);
+        } catch (IOException | GeneralSecurityException e) {
+            throw new RuntimeException("통계 데이터 수집 중 시스템 오류 발생", e);
+        }
+    }
+
+    // 특정 컨텐츠 누적 조회수 조회
+    public List<DailyStatsDto> fetchContentViews(String startDate, String endDate, Long ctntNo) {
+        try {
+            SearchConsole service = buildService();
+
+            ApiDimensionFilterGroup filterGroup = new ApiDimensionFilterGroup()
+                    .setFilters(Collections.singletonList(new ApiDimensionFilter()
+                            .setDimension("page")
+                            .setOperator("contains")
+                            .setExpression("/contents/" + ctntNo)));
+
+            SearchAnalyticsQueryRequest request = new SearchAnalyticsQueryRequest()
+                    .setStartDate(startDate)
+                    .setEndDate(endDate)
+                    .setDimensions(List.of("page"))
+                    .setDimensionFilterGroups(List.of(filterGroup))
+                    .setRowLimit(10);
+
+            return executeQuery(service, request, endDate);
+
+        } catch (Exception e) {
+            log.error("콘텐츠 {} 데이터 fetch 실패: {}", ctntNo, e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    // 날짜별 페이지 로우 데이터 조회 (배치 적재용)
+    public List<ViewRawDataReqDto> fetchRawLogData(String startDate, String endDate) {
+        try {
+            SearchConsole service = buildService();
+            SearchAnalyticsQueryRequest request = new SearchAnalyticsQueryRequest()
+                    .setStartDate(startDate)
+                    .setEndDate(endDate)
+                    .setDimensions(List.of("date", "page"))
+                    .setRowLimit(25000);
+
             SearchAnalyticsQueryResponse response = service.searchanalytics()
                     .query(siteUrl, request)
                     .execute();
 
-            // Optional로 null 처리와 변환을 한 번에!
             return Optional.ofNullable(response.getRows())
                     .orElse(Collections.emptyList())
                     .stream()
-                    .map(DailyStatsDto::of)
+                    .map(row -> {
+                        LocalDate viewDt = LocalDate.parse(row.getKeys().get(0));
+                        String pageUrl = row.getKeys().get(1);
+                        Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(pageUrl);
+                        Long ctntNo = matcher.find() ? Long.parseLong(matcher.group(1)) : null;
+                        return ViewRawDataReqDto.of(row, viewDt, pageUrl, ctntNo);
+                    })
+                    .filter(dto -> dto.getCtntNo() != null)
                     .toList();
 
         } catch (GoogleJsonResponseException e) {
-            // 구글 API 응답 에러 (권한 부족, 할당량 초과 등)
             throw new RuntimeException("Google API 응답 실패: " + e.getDetails().getMessage(), e);
         } catch (IOException | GeneralSecurityException e) {
-            // 네트워크 연결 및 인증서 관련 시스템 에러
             throw new RuntimeException("통계 데이터 수집 중 시스템 오류 발생", e);
         }
+    }
+
+    private SearchConsole buildService() throws IOException, GeneralSecurityException {
+        try (InputStream keyFile = getClass().getResourceAsStream("/google-search-console-key.json")) {
+            if (keyFile == null) throw new RuntimeException("구글 서비스 키 파일을 찾을 수 없습니다.");
+
+            GoogleCredentials credentials = GoogleCredentials.fromStream(keyFile)
+                    .createScoped(Collections.singleton(SearchConsoleScopes.WEBMASTERS_READONLY));
+
+            return new SearchConsole.Builder(
+                    GoogleNetHttpTransport.newTrustedTransport(),
+                    GsonFactory.getDefaultInstance(),
+                    new HttpCredentialsAdapter(credentials))
+                    .setApplicationName("ztlog.io")
+                    .build();
+        }
+    }
+
+    private List<DailyStatsDto> executeQuery(SearchConsole service, SearchAnalyticsQueryRequest request, String endDate)
+            throws IOException {
+        SearchAnalyticsQueryResponse response = service.searchanalytics()
+                .query(siteUrl, request)
+                .execute();
+
+        LocalDate statDt = LocalDate.parse(endDate);
+        return Optional.ofNullable(response.getRows())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(row -> {
+                    String pageUrl = row.getKeys().isEmpty() ? "" : row.getKeys().get(0);
+                    Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(pageUrl);
+                    Long ctntNo = matcher.find() ? Long.parseLong(matcher.group(1)) : null;
+                    return DailyStatsDto.of(row, statDt, pageUrl, ctntNo);
+                })
+                .toList();
     }
 
 }
