@@ -8,17 +8,29 @@
             CTNT_NO  AS ctntNo,
             SUM(VIEW_CNT) AS viewCnt
         FROM view_log
-        WHERE VIEW_DT = #{targetDate}
+        WHERE VIEW_DT = #{date}
         GROUP BY CTNT_NO
+    </select>
+
+    <select id="getTotalViewCountFromLog" resultType="java.lang.Long">
+        SELECT * FROM view_log
     </select>
 
     <!-- 2. 일별 조회수 통계 upsert (view_stats_daily) -->
     <insert id="upsertDailyViewStats">
         INSERT INTO view_stats_daily (STAT_DT, CTNT_NO, VIEW_CNT)
-        VALUES (#{targetDate}, #{ctntNo}, #{viewCnt})
+        VALUES (#{date}, #{ctntNo}, #{viewCnt})
         ON DUPLICATE KEY UPDATE
             VIEW_CNT = VALUES(VIEW_CNT),
             UPD_DTTM = CURRENT_TIMESTAMP
+    </insert>
+
+    <insert id="upsertTotalViewStats">
+        INSERT INTO view_stats_daily (STAT_DT, CTNT_NO, VIEW_CNT)
+        VALUES (#{date}, #{ctntNo}, #{viewCnt})
+            ON DUPLICATE KEY UPDATE
+                                 VIEW_CNT = VALUES(VIEW_CNT),
+                                 UPD_DTTM = CURRENT_TIMESTAMP
     </insert>
 
     <!-- 3. 누적 조회수 합산 upsert (content_stats) -->

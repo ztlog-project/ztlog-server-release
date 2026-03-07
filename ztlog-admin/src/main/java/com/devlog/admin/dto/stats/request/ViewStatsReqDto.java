@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ViewStatsReqDto {
-
+    private Long ctntNo;
     private String startDate;
     private String endDate;
 
