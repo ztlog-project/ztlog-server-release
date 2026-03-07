@@ -3,8 +3,10 @@
 <mapper namespace="com.devlog.admin.mapper.stats.MainStatsMapper">
     <select id="selectMainStatistics" resultType="MainStatsReqsDto">
         SELECT
-            (SELECT COUNT(*) FROM contents_mst cm) AS totalPostCount,
-            (SELECT COUNT(*) FROM tags_mst tm)     AS totalTagCount
+            (SELECT COUNT(*) FROM contents_mst WHERE DELETED_YN = 'N' OR DELETED_YN IS NULL) AS totalPostCount,
+            (SELECT COUNT(*) FROM tags_mst)                                                    AS totalTagCount,
+            (SELECT COALESCE(SUM(VIEW_CNT), 0) FROM contents_view_stats)                      AS totalViewCount,
+            (SELECT COALESCE(SUM(CMMT_CNT), 0) FROM contents_cmmt_stats)                      AS totalCommentCount
     </select>
 
 </mapper>
