@@ -1,7 +1,9 @@
 package com.devlog.admin.service.stats;
 
+import com.devlog.admin.dto.stats.request.DailyStatsReqDto;
+import com.devlog.admin.dto.stats.request.ViewStatsReqDto;
 import com.devlog.admin.dto.stats.response.DailyStatsDto;
-import com.devlog.admin.dto.stats.response.TotalViewStatsResDto;
+import com.devlog.admin.dto.stats.response.TotalViewStatsDto;
 import com.devlog.admin.mapper.stats.ViewStatsMapper;
 import com.devlog.core.common.utils.DateUtils;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -13,6 +15,7 @@ import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryReques
 import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryResponse;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,27 +45,16 @@ public class ViewStatsService {
     @Value("${google.search-console.site-url}")
     private String siteUrl;
 
-    // @Scheduled(cron = "0 0 2 * * *")
-    public void saveDailyViewStatsSummary(LocalDateTime dateTime) {
-
-        // 로그에서 컨텐츠별 조회수 집계 데이터 가져오기
-        List<Map<String, Object>> counts = viewStatsMapper.selectDailyViewCounts(dateTime.toLocalDate());
-
-        for (Map<String, Object> row : counts) {
-            Long ctntNo = Long.valueOf(row.get("ctntNo").toString());
-            int viewCnt = Integer.parseInt(row.get("viewCnt").toString());
-
-            // 일별 통계 반영 (Upsert)
-            viewStatsMapper.upsertDailyViewStats(dateTime.toLocalDate(), ctntNo, viewCnt);
-
-            // 누적 통계 합산 반영 (Upsert)
-            viewStatsMapper.updateCumulativeViewStats(ctntNo, viewCnt);
-        }
+    public void syncTotalViews(ViewStatsReqDto reqDto) {
 
     }
 
-    public List<DailyStatsDto> getDailyGrowthStats(String startDate, String endDate) {
+    public void collectDailyGrowthStats(DailyStatsReqDto reqDto) {
         try (InputStream keyFile = getClass().getResourceAsStream("/google-search-console-key.json")) {
+            String startDate = reqDto.getStartDate();
+            String endDate = reqDto.getEndDate();
+
+
             // 1. 키 파일 존재 확인
             if (keyFile == null) {
                 throw new RuntimeException("구글 서비스 키 파일을 찾을 수 없습니다.");
@@ -92,11 +84,13 @@ public class ViewStatsService {
                     .execute();
 
             // Optional로 null 처리와 변환을 한 번에!
-            return Optional.ofNullable(response.getRows())
+            List<DailyStatsDto> list =  Optional.ofNullable(response.getRows())
                     .orElse(Collections.emptyList())
                     .stream()
                     .map(DailyStatsDto::of)
-                    .collect(Collectors.toList());
+                    .toList();
+
+            saveDailyViewStatsSummary(DateUtils.toLocalDateTime(endDate));
 
         } catch (GoogleJsonResponseException e) {
             // 구글 API 응답 에러 (권한 부족, 할당량 초과 등)
@@ -107,7 +101,22 @@ public class ViewStatsService {
         }
     }
 
-    public TotalViewStatsResDto getBatchCumulativeViews(Long ctntNo) {
-        return null;
+    // @Scheduled(cron = "0 0 2 * * *")
+    public void saveDailyViewStatsSummary(LocalDateTime dateTime) {
+
+        // 로그에서 컨텐츠별 조회수 집계 데이터 가져오기
+        List<Map<String, Object>> counts = viewStatsMapper.selectDailyViewCounts(dateTime.toLocalDate());
+
+        for (Map<String, Object> row : counts) {
+            Long ctntNo = Long.valueOf(row.get("ctntNo").toString());
+            int viewCnt = Integer.parseInt(row.get("viewCnt").toString());
+
+            // 일별 통계 반영 (Upsert)
+            viewStatsMapper.upsertDailyViewStats(dateTime.toLocalDate(), ctntNo, viewCnt);
+
+            // 누적 통계 합산 반영 (Upsert)
+            viewStatsMapper.updateCumulativeViewStats(ctntNo, viewCnt);
+        }
+
     }
 }

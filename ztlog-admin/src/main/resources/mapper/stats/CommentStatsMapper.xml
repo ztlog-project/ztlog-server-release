@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.devlog.admin.mapper.stats.ReplyStatsMapper">
+<mapper namespace="com.devlog.admin.mapper.stats.CommentStatsMapper">
 
-    <select id="existReplyStats" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM contents_reply_stats WHERE CTNT_NO = #{ctntNo})
+    <select id="existCommentStats" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM contents_cmmt_stats WHERE CTNT_NO = #{ctntNo})
     </select>
 
     <!-- 댓글수 강제 동기화 upsert (content_stats) — @Param 없음으로 param1/param2 사용 -->
-    <insert id="upsertReplyCount">
-        INSERT INTO contents_reply_stats (CTNT_NO, REPLY_CNT, UPD_DTTM)
-        VALUES (#{ctntNo}, #{replyCnt}, NOW()) -- 이 부분에 닫는 괄호 추가
+    <insert id="upsertCommentCount">
+        INSERT INTO contents_cmmt_stats (CTNT_NO, CMMT_CNT, UPD_DTTM)
+        VALUES (#{ctntNo}, #{commentCnt}, NOW()) -- 이 부분에 닫는 괄호 추가
             ON DUPLICATE KEY
         UPDATE
-            REPLY_CNT =#{replyCnt}
-        VALUES (REPLY_CNT), UPD_DTTM = NOW()
+            CMMT_CNT =#{commentCnt}
+        VALUES (Comment_CNT), UPD_DTTM = NOW()
 
     </insert>
 
     <!-- 댓글수 UPDATE (존재하는 row만 갱신) -->
-    <update id="updateReplyCount">
-        UPDATE contents_reply_stats
-        SET REPLY_CNT = #{replyCnt},
+    <update id="updateCommentCount">
+        UPDATE contents_cmmt_stats
+        SET CMMT_CNT = #{commentCnt},
             UPD_DTTM  = NOW()
         WHERE CTNT_NO = #{ctntNo}
     </update>
@@ -28,8 +28,8 @@
     <!-- (권장) 다건 처리 시: 하나씩 호출하는 것보다 루프를 돌리는 방식 -->
     <update id="updateCommentCountsBatch">
         <foreach collection="list" item="node" separator=";">
-            UPDATE contents_reply_stats
-            SET REPLY_CNT = #{node.comments.totalCount}
+            UPDATE contents_cmmt_stats
+            SET CMMT_CNT = #{node.comments.totalCount}
             WHERE CTNT_NO = CAST(REGEXP_REPLACE(#{node.title}, '[^0-9]', '') AS UNSIGNED)
         </foreach>
     </update>

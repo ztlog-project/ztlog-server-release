@@ -1,8 +1,8 @@
 package com.devlog.admin.service.stats;
 
+import com.devlog.admin.dto.stats.request.CommentStatsReqDto;
 import com.devlog.admin.dto.stats.response.GiscusResDto;
-import com.devlog.admin.dto.stats.response.CommentStatsResDto;
-import com.devlog.admin.mapper.stats.ReplyStatsMapper;
+import com.devlog.admin.mapper.stats.CommentStatsMapper;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 public class CommentStatsService {
 
     private final WebClient webClient; // Bean 등록 권장
-    private final ReplyStatsMapper replyStatsMapper;
+    private final CommentStatsMapper replyStatsMapper;
     private final DateUtils dateUtils;
 
     @Value("${github.url}")
@@ -41,8 +41,8 @@ public class CommentStatsService {
     private String commentRepo;
 
 
-    public void saveReplyStatsSummaryByContent(Long ctntNo, int replyCnt) {
-        replyStatsMapper.updateReplyCount(ctntNo, replyCnt);
+    public void syncCommentStats(CommentStatsReqDto reqDto) {
+        replyStatsMapper.updateCommentCount(reqDto.getCtntNo(), reqDto.getCommentCnt());
 
     }
 
@@ -52,7 +52,7 @@ public class CommentStatsService {
         List<GiscusResDto.Node> nodes = fetchGiscusNodes();
 
         // 1. 스트림 안에서 변환과 필터링을 한꺼번에 처리 (가장 권장되는 방식)
-        List<CommentStatsResDto> updateList = nodes.stream()
+        List<CommentStatsReqDto> updateList = nodes.stream()
                 .map(this::mapToReplyStatsDto)
                 .flatMap(Optional::stream) // ID 추출 성공한 것만 통과
                 .toList();
@@ -79,11 +79,11 @@ public class CommentStatsService {
                 .orElse(Collections.emptyList());
     }
 
-    private Optional<CommentStatsResDto> mapToReplyStatsDto(GiscusResDto.Node node) {
+    private Optional<CommentStatsReqDto> mapToReplyStatsDto(GiscusResDto.Node node) {
         // 추출 로직은 서비스 내부 private 메서드로 관리
         Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(node.getTitle());
         if (matcher.find()) {
-            return Optional.of(CommentStatsResDto.of(
+            return Optional.of(CommentStatsReqDto.of(
                     Long.parseLong(matcher.group(1)),
                     node.getComments().getTotalCount()
             ));
@@ -91,7 +91,7 @@ public class CommentStatsService {
         return Optional.empty();
     }
 
-    public CommentStatsResDto getRealTimeCommentStats(Long ctntNo) {
+    public CommentStatsReqDto getRealTimeCommentStats(Long ctntNo) {
         return null;
     }
 }

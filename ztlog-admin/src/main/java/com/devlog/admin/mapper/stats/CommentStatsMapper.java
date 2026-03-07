@@ -7,13 +7,13 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-public interface ReplyStatsMapper {
+public interface CommentStatsMapper {
 
-    boolean existReplyStats(Long ctntNo);
+    boolean existCommentStats(Long ctntNo);
 
-    Integer upsertReplyCount(@Param("ctntNo") Long ctntNo, @Param("replyCnt") int replyCnt);
+    Integer upsertCommentCount(@Param("ctntNo") Long ctntNo, @Param("CommentCnt") int commentCnt);
 
-    void updateReplyCount(Long ctntNo, int replyCnt);
+    void updateCommentCount(Long ctntNo, int commentCnt);
 
     void updateCommentCountsBatch(@Param("list") List<GiscusResDto.Node> nodes);  // (선택) 성능을 위한 벌크 업데이트
 }
