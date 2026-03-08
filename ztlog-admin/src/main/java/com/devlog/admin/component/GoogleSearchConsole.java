@@ -1,6 +1,6 @@
 package com.devlog.admin.component;
 
-import com.devlog.admin.dto.stats.response.DailyStatsDto;
+import com.devlog.admin.dto.stats.response.DailyStatsResDto;
 import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -35,7 +35,7 @@ public class GoogleSearchConsole {
     private String siteUrl;
 
     // 전체 페이지 일별 조회수 조회
-    public List<DailyStatsDto> fetchAllPageViews(String startDate, String endDate) {
+    public List<DailyStatsResDto> fetchAllPageViews(String startDate, String endDate) {
         try {
             SearchConsole service = buildService();
             SearchAnalyticsQueryRequest request = new SearchAnalyticsQueryRequest()
@@ -54,7 +54,7 @@ public class GoogleSearchConsole {
     }
 
     // 특정 컨텐츠 누적 조회수 조회
-    public List<DailyStatsDto> fetchContentViews(String startDate, String endDate, Long ctntNo) {
+    public List<DailyStatsResDto> fetchContentViews(String startDate, String endDate, Long ctntNo) {
         try {
             SearchConsole service = buildService();
 
@@ -129,7 +129,7 @@ public class GoogleSearchConsole {
         }
     }
 
-    private List<DailyStatsDto> executeQuery(SearchConsole service, SearchAnalyticsQueryRequest request, String endDate)
+    private List<DailyStatsResDto> executeQuery(SearchConsole service, SearchAnalyticsQueryRequest request, String endDate)
             throws IOException {
         SearchAnalyticsQueryResponse response = service.searchanalytics()
                 .query(siteUrl, request)
@@ -143,7 +143,7 @@ public class GoogleSearchConsole {
                     String pageUrl = row.getKeys().isEmpty() ? "" : row.getKeys().get(0);
                     Matcher matcher = CommonConstants.POST_ID_PATTERN.matcher(pageUrl);
                     Long ctntNo = matcher.find() ? Long.parseLong(matcher.group(1)) : null;
-                    return DailyStatsDto.of(row, statDt, pageUrl, ctntNo);
+                    return DailyStatsResDto.of(row, statDt, pageUrl, ctntNo);
                 })
                 .toList();
     }

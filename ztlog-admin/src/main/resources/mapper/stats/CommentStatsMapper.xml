@@ -6,8 +6,16 @@
         SELECT EXISTS(SELECT 1 FROM contents_cmmt_stats WHERE CTNT_NO = #{ctntNo})
     </select>
 
+    <select id="selectCommentStatsSummary" resultType="CommentStatsResDto">
+        SELECT
+            COALESCE(SUM(CMMT_CNT), 0) AS totalCommentCnt,
+            COALESCE(MAX(CMMT_CNT), 0) AS maxCommentCnt,
+            COUNT(CASE WHEN CMMT_CNT > 0 THEN 1 END) AS contentCount
+        FROM contents_cmmt_stats
+    </select>
+
     <!-- 댓글수 upsert (contents_cmmt_stats) -->
-    <insert id="upsertCommentCount">
+    <insert id="upsertCommentCount">ㄱㅣㅅ
         INSERT INTO contents_cmmt_stats (CTNT_NO, CMMT_CNT, INP_DTTM, UPD_DTTM)
         VALUES (#{ctntNo}, #{commentCnt}, NOW(), NOW())
         ON DUPLICATE KEY UPDATE
