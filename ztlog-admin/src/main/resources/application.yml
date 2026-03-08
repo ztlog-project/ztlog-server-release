@@ -31,12 +31,12 @@ jwt:
   refresh-token-expire-time: 15552000000
 
 google:
-  search-console:
+  search-console:∂
     site-url: https://ztlog.io
 
 github:
   url: https://api.github.com/graphql
-  token: ${GITHUB_TOKEN}
+  token: ${GITHUB_TOKEN:}
   user:
     name: ztlog-project
     comment-repo: ztlog-comment
@@ -44,8 +44,8 @@ github:
 # AWS S3 설정
 aws:
   credentials:
-    access-key: ${AWS_ACCESS_KEY}
-    secret-key: ${AWS_SECRET_KEY}
+    access-key: ${AWS_ACCESS_KEY:}
+    secret-key: ${AWS_SECRET_KEY:}
   s3:
     bucket: ztlog-s3-bucket
   region:
