@@ -26,5 +26,32 @@
             (#{item.viewDt}, #{item.ctntNo}, #{item.viewCnt})
         </foreach>
     </insert>
+    <select id="selectDailyGrowthStats" resultType="DailyGrowthResDto">
+        SELECT
+            statDate,
+            totalViewCnt,
+            totalViewCnt - LAG(totalViewCnt) OVER (ORDER BY statDate) AS dailyGrowth
+        FROM (
+            SELECT
+                STAT_DATE AS statDate,
+                SUM(VIEW_CNT) AS totalViewCnt
+            FROM contents_daily_stats
+            WHERE STAT_DATE BETWEEN #{startDate} AND #{endDate}
+            GROUP BY STAT_DATE
+        ) daily
+        ORDER BY statDate
+    </select>
+
+    <select id="selectViewRankingStats" resultType="ViewRankingResDto">
+        SELECT
+            RANK() OVER (ORDER BY cvs.VIEW_CNT DESC) AS rankNo,
+            cvs.CTNT_NO AS ctntNo,
+            cm.CTNT_TITLE AS ctntTitle,
+            cvs.VIEW_CNT AS viewCnt
+        FROM contents_view_stats cvs
+        JOIN contents_mst cm ON cvs.CTNT_NO = cm.CTNT_NO
+        ORDER BY cvs.VIEW_CNT DESC
+        LIMIT 10
+    </select>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.devlog.admin.service.stats;
 
 import com.devlog.admin.component.GiscusComponent;
 import com.devlog.admin.dto.stats.request.CommentStatsReqDto;
+import com.devlog.admin.dto.stats.response.CommentStatsResDto;
 import com.devlog.admin.dto.stats.response.GiscusDataResDto;
 import com.devlog.admin.mapper.stats.CommentStatsMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
@@ -31,7 +32,7 @@ public class CommentStatsService {
             throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
         }
         // 통계 테이블 업데이트 (Upsert)
-        commentStatsMapper.updateCommentCount(reqDto.getCtntNo(), node.getComments().getTotalCount());
+        commentStatsMapper.upsertCommentCount(reqDto.getCtntNo(), node.getComments().getTotalCount());
 
     }
 
@@ -44,5 +45,14 @@ public class CommentStatsService {
                 .toList();
         // 통계 테이블 업데이트 (Upsert)
         nodeList.forEach(dto -> commentStatsMapper.upsertCommentCount(dto.getCtntNo(), dto.getCommentCnt()));
+    }
+
+    /**
+     * 현재 댓글 통계 요약 조회
+     */
+    @Transactional(readOnly = true)
+    public CommentStatsResDto getCommentStatsSummary() {
+        return commentStatsMapper.selectCommentStatsSummary()
+                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
     }
 }

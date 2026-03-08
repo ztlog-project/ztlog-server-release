@@ -1,15 +1,19 @@
 package com.devlog.admin.mapper.stats;
 
+import com.devlog.admin.dto.stats.response.CommentStatsResDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Optional;
 
 @Mapper
 public interface CommentStatsMapper {
 
     boolean existCommentStats(Long ctntNo);
 
-    void upsertCommentCount(@Param("ctntNo") Long ctntNo, @Param("CommentCnt") int commentCnt);
+    void upsertCommentCount(@Param("ctntNo") Long ctntNo, @Param("commentCnt") int commentCnt);
 
-    void updateCommentCount(Long ctntNo, int commentCnt);
+    void updateCommentCount(@Param("ctntNo") Long ctntNo, @Param("commentCnt") int commentCnt);
 
+    Optional<CommentStatsResDto> selectCommentStatsSummary();
 }

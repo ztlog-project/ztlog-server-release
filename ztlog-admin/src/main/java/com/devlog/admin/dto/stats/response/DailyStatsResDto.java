@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-public class DailyStatsDto {
+public class DailyStatsResDto {
 
     private LocalDate statDt;   // 통계 날짜 (STAT_DT)
     private Long ctntNo;        // 컨텐츠 번호 (CTNT_NO)
@@ -20,8 +20,8 @@ public class DailyStatsDto {
     private Double ctr;         // 클릭률 (CTR)
     private Double position;    // 평균 순위
 
-    public static DailyStatsDto of(ApiDataRow row, LocalDate statDt, String pageUrl, Long ctntNo) {
-        return DailyStatsDto.builder()
+    public static DailyStatsResDto of(ApiDataRow row, LocalDate statDt, String pageUrl, Long ctntNo) {
+        return DailyStatsResDto.builder()
                 .statDt(statDt)
                 .ctntNo(ctntNo)
                 .pageUrl(pageUrl)

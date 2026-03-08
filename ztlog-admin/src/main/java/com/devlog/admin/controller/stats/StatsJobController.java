@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "통계 집계 실행", description = "통계 집계 수동 실행 및 관리 API")
+@Tag(name = "통계 집계 실행", description = "통계 집계 수동 실행 및 관리 API 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/stats")
 public class StatsJobController {
 
     private final ViewStatsService viewStatsService;

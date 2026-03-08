@@ -3,7 +3,9 @@ package com.devlog.admin.service.stats;
 import com.devlog.admin.component.GoogleSearchConsole;
 import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
 import com.devlog.admin.dto.stats.request.ViewStatsReqDto;
-import com.devlog.admin.dto.stats.response.DailyStatsDto;
+import com.devlog.admin.dto.stats.response.DailyGrowthResDto;
+import com.devlog.admin.dto.stats.response.DailyStatsResDto;
+import com.devlog.admin.dto.stats.response.ViewRankingResDto;
 import com.devlog.admin.mapper.stats.ViewStatsMapper;
 import com.devlog.core.common.utils.DateUtils;
 import com.devlog.core.entity.content.Content;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -51,7 +54,7 @@ public class ViewStatsService {
 
         long totalViewCnt = googleSearchConsole.fetchContentViews(startDate, endDate, reqDto.getCtntNo())
                 .stream()
-                .mapToLong(DailyStatsDto::getViewCnt)
+                .mapToLong(DailyStatsResDto::getViewCnt)
                 .sum();
 
         viewStatsMapper.updateCumulativeViewStats(reqDto.getCtntNo(), totalViewCnt);
@@ -65,4 +68,17 @@ public class ViewStatsService {
         }
     }
 
+    /**
+     * 일별 조회수 증가량 추이 조회
+     */
+    public List<DailyGrowthResDto> getDailyGrowthStats(LocalDate startDate, LocalDate endDate) {
+        return viewStatsMapper.selectDailyGrowthStats(startDate, endDate);
+    }
+
+    /**
+     * 일별 조회수 증가량 추이 조회
+     */
+    public List<ViewRankingResDto> getViewRankingStats() {
+        return viewStatsMapper.selectViewRankingStats();
+    }
 }
