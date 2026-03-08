@@ -31,7 +31,7 @@ jwt:
   refresh-token-expire-time: 15552000000
 
 google:
-  search-console:∂
+  search-console:
     site-url: https://ztlog.io
 
 github:
