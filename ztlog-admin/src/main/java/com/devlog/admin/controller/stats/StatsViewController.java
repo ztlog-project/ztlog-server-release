@@ -5,6 +5,7 @@ import com.devlog.admin.dto.stats.response.DailyGrowthResDto;
 import com.devlog.admin.dto.stats.response.ViewRankingResDto;
 import com.devlog.admin.service.stats.CommentStatsService;
 import com.devlog.admin.service.stats.ViewStatsService;
+import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.dto.Response;
 import com.devlog.core.common.enumulation.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,8 +46,8 @@ public class StatsViewController {
     })
     @GetMapping("/daily-growth")
     public ResponseEntity<Response<List<DailyGrowthResDto>>> getDailyGrowthStats(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = CommonConstants.DEFAULT_DATE_FORMAT) LocalDate startDate,
+            @RequestParam @DateTimeFormat(pattern = CommonConstants.DEFAULT_DATE_FORMAT) LocalDate endDate) {
         // service에서 해당 기간의 통계 데이터를 조회하는 로직 호출
         return Response.success(ResponseCode.OK_SUCCESS, viewStatsService.getDailyGrowthStats(startDate, endDate));
     }
