@@ -38,8 +38,8 @@ public class CategoryResDto {
     @Schema(description = "생성자")
     private String inpUser;
 
-    @Schema(description = "생성일시")
-    private String inpDttm;
+    @Schema(description = "수정일시")
+    private String updDttm;
 
     private List<CategoryResDto> categories;
 
@@ -52,7 +52,7 @@ public class CategoryResDto {
                 .ctntCount(countProvider.apply(category.getCateNo()))
                 .useYn(category.getUseYn())
                 .inpUser(category.getInpUser())
-                .inpDttm(DateUtils.datetomeToString(category.getInpDttm()))
+                .updDttm(DateUtils.datetomeToString(category.getUpdDttm()))
                 .categories(category.getCategories().stream()
                         .map(child -> of(child, countProvider))
                         .collect(Collectors.toList()))
