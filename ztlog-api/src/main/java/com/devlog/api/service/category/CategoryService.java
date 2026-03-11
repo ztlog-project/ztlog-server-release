@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,9 +39,8 @@ public class CategoryService {
     public List<CategoryResDto> getCategoryList() {
         List<Category> list = categoryRepository.findAllByUseYnIs(UseYN.Y);
         // 필터 - 리스트 최상위만 루트로 잡음, 재귀 호출해서 하위 depth를 채움
-        return list.stream()
-                .filter(category -> ObjectUtils.isEmpty(category.getUpperCategory()))
-                .map(CategoryResDto::of)
+        return list.stream().filter(category -> ObjectUtils.isEmpty(category.getUpperCategory()))
+                .map(category -> CategoryResDto.of(category, contentRepository::countByCategoryCateNo))
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +48,7 @@ public class CategoryService {
      * 카테고리 게시물 목록 조회하기
      *
      * @param cateNo 카테고리 번호
-     * @param page  페이지 번호 (기본값 = 1)
+     * @param page   페이지 번호 (기본값 = 1)
      * @return 카테고리 게시물 리스트
      */
     public ContentListResDto getCategoryContentList(Integer cateNo, Integer page) {
