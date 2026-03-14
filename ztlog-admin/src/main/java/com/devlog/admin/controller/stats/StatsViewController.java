@@ -1,8 +1,8 @@
 package com.devlog.admin.controller.stats;
 
-import com.devlog.admin.dto.stats.response.CommentStatsResDto;
-import com.devlog.admin.dto.stats.response.DailyGrowthResDto;
-import com.devlog.admin.dto.stats.response.ViewRankingResDto;
+import com.devlog.admin.service.stats.dto.response.CommentStatsResDto;
+import com.devlog.admin.service.stats.dto.response.DailyGrowthResDto;
+import com.devlog.admin.service.stats.dto.response.ViewRankingResDto;
 import com.devlog.admin.service.stats.CommentStatsService;
 import com.devlog.admin.service.stats.ViewStatsService;
 import com.devlog.core.common.constants.CommonConstants;

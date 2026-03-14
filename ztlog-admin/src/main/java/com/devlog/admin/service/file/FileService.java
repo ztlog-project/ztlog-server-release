@@ -1,6 +1,6 @@
 package com.devlog.admin.service.file;
 
-import com.devlog.admin.dto.file.response.FileUploadResDto;
+import com.devlog.admin.service.file.dto.response.FileUploadResDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.ValidationException;

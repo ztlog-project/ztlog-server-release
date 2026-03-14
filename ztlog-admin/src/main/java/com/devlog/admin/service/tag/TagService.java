@@ -1,9 +1,9 @@
 package com.devlog.admin.service.tag;
 
-import com.devlog.admin.dto.tag.request.TagReqDto;
-import com.devlog.admin.dto.tag.response.TagCountResDto;
-import com.devlog.admin.dto.tag.response.TagListResDto;
-import com.devlog.admin.dto.tag.response.TagResDto;
+import com.devlog.admin.service.tag.dto.request.TagReqDto;
+import com.devlog.admin.service.tag.dto.response.TagCountResDto;
+import com.devlog.admin.service.tag.dto.response.TagListResDto;
+import com.devlog.admin.service.tag.dto.response.TagResDto;
 import com.devlog.admin.mapper.tag.TagMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.utils.PageUtils;

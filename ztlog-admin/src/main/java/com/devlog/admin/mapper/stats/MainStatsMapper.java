@@ -1,6 +1,6 @@
 package com.devlog.admin.mapper.stats;
 
-import com.devlog.admin.dto.stats.request.MainStatsReqsDto;
+import com.devlog.admin.service.stats.dto.request.MainStatsReqsDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;

@@ -1,11 +1,11 @@
 package com.devlog.admin.service.stats;
 
 import com.devlog.admin.component.GoogleSearchConsole;
-import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
-import com.devlog.admin.dto.stats.request.ViewStatsReqDto;
-import com.devlog.admin.dto.stats.response.DailyGrowthResDto;
-import com.devlog.admin.dto.stats.response.DailyStatsResDto;
-import com.devlog.admin.dto.stats.response.ViewRankingResDto;
+import com.devlog.admin.service.stats.dto.request.ViewRawDataReqDto;
+import com.devlog.admin.service.stats.dto.request.ViewStatsReqDto;
+import com.devlog.admin.service.stats.dto.response.DailyGrowthResDto;
+import com.devlog.admin.service.stats.dto.response.DailyStatsResDto;
+import com.devlog.admin.service.stats.dto.response.ViewRankingResDto;
 import com.devlog.admin.mapper.stats.ViewStatsMapper;
 import com.devlog.core.common.utils.DateUtils;
 import com.devlog.core.entity.content.Content;

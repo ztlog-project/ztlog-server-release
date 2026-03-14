@@ -1,7 +1,7 @@
 package com.devlog.admin.mapper.category;
 
-import com.devlog.admin.dto.category.response.CategoryListResDto;
-import com.devlog.admin.dto.category.response.CategoryResDto;
+import com.devlog.admin.service.category.dto.response.CategoryListResDto;
+import com.devlog.admin.service.category.dto.response.CategoryResDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

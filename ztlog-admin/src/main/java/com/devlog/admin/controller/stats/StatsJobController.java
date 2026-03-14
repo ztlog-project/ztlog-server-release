@@ -1,8 +1,8 @@
 package com.devlog.admin.controller.stats;
 
-import com.devlog.admin.dto.stats.request.CommentStatsReqDto;
-import com.devlog.admin.dto.stats.request.ViewRawLogReqDto;
-import com.devlog.admin.dto.stats.request.ViewStatsReqDto;
+import com.devlog.admin.service.stats.dto.request.CommentStatsReqDto;
+import com.devlog.admin.service.stats.dto.request.ViewRawLogReqDto;
+import com.devlog.admin.service.stats.dto.request.ViewStatsReqDto;
 import com.devlog.admin.service.stats.CommentStatsService;
 import com.devlog.admin.service.stats.ViewStatsService;
 import com.devlog.core.common.dto.Response;

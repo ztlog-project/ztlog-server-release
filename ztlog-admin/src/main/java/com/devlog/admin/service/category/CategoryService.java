@@ -1,9 +1,9 @@
 package com.devlog.admin.service.category;
 
-import com.devlog.admin.dto.category.request.CategorySaveReqDto;
-import com.devlog.admin.dto.category.request.CategoryUpdateReqDto;
-import com.devlog.admin.dto.category.response.CategoryListResDto;
-import com.devlog.admin.dto.category.response.CategoryResDto;
+import com.devlog.admin.service.category.dto.request.CategorySaveReqDto;
+import com.devlog.admin.service.category.dto.request.CategoryUpdateReqDto;
+import com.devlog.admin.service.category.dto.response.CategoryListResDto;
+import com.devlog.admin.service.category.dto.response.CategoryResDto;
 import com.devlog.admin.mapper.category.CategoryMapper;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UseYN;
@@ -12,7 +12,6 @@ import com.devlog.core.common.utils.TokenUtils;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.category.Category;
 import com.devlog.core.repository.category.CategoryRepository;
-import com.devlog.core.repository.content.ContentRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j

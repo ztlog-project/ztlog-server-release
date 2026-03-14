@@ -1,7 +1,7 @@
 package com.devlog.admin.controller.stats;
 
 import com.devlog.admin.service.stats.MainStatsService;
-import com.devlog.admin.dto.stats.response.MainStsatsResDto;
+import com.devlog.admin.service.stats.dto.response.MainStsatsResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,9 +1,9 @@
 package com.devlog.admin.controller.category;
 
-import com.devlog.admin.dto.category.request.CategorySaveReqDto;
-import com.devlog.admin.dto.category.request.CategoryUpdateReqDto;
-import com.devlog.admin.dto.category.response.CategoryListResDto;
-import com.devlog.admin.dto.category.response.CategoryResDto;
+import com.devlog.admin.service.category.dto.request.CategorySaveReqDto;
+import com.devlog.admin.service.category.dto.request.CategoryUpdateReqDto;
+import com.devlog.admin.service.category.dto.response.CategoryListResDto;
+import com.devlog.admin.service.category.dto.response.CategoryResDto;
 import com.devlog.admin.service.category.CategoryService;
 import com.devlog.core.common.dto.Response;
 import com.devlog.core.common.enumulation.ResponseCode;
