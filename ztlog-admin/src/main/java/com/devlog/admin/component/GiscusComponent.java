@@ -1,6 +1,6 @@
 package com.devlog.admin.component;
 
-import com.devlog.admin.dto.stats.response.GiscusDataResDto;
+import com.devlog.admin.service.stats.dto.response.GiscusDataResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

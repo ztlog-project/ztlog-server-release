@@ -1,6 +1,6 @@
 package com.devlog.admin.mapper.tag;
 
-import com.devlog.admin.dto.tag.response.TagCountResDto;
+import com.devlog.admin.service.tag.dto.response.TagCountResDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 

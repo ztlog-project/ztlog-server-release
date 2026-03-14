@@ -1,6 +1,6 @@
 package com.devlog.admin.mapper.stats;
 
-import com.devlog.admin.dto.stats.response.CommentStatsResDto;
+import com.devlog.admin.service.stats.dto.response.CommentStatsResDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

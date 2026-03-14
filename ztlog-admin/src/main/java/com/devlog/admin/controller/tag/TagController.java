@@ -1,9 +1,9 @@
 package com.devlog.admin.controller.tag;
 
-import com.devlog.admin.dto.tag.request.TagReqDto;
-import com.devlog.admin.dto.tag.response.TagListResDto;
+import com.devlog.admin.service.tag.dto.request.TagReqDto;
+import com.devlog.admin.service.tag.dto.response.TagListResDto;
 import com.devlog.admin.service.tag.TagService;
-import com.devlog.admin.dto.tag.response.TagResDto;
+import com.devlog.admin.service.tag.dto.response.TagResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;

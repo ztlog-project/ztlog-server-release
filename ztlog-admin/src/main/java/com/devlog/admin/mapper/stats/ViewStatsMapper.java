@@ -1,9 +1,9 @@
 package com.devlog.admin.mapper.stats;
 
-import com.devlog.admin.dto.stats.response.DailyGrowthResDto;
-import com.devlog.admin.dto.stats.response.DailyStatsResDto;
-import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
-import com.devlog.admin.dto.stats.response.ViewRankingResDto;
+import com.devlog.admin.service.stats.dto.response.DailyGrowthResDto;
+import com.devlog.admin.service.stats.dto.response.DailyStatsResDto;
+import com.devlog.admin.service.stats.dto.request.ViewRawDataReqDto;
+import com.devlog.admin.service.stats.dto.response.ViewRankingResDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,7 +1,7 @@
 package com.devlog.admin.component;
 
-import com.devlog.admin.dto.stats.response.DailyStatsResDto;
-import com.devlog.admin.dto.stats.request.ViewRawDataReqDto;
+import com.devlog.admin.service.stats.dto.response.DailyStatsResDto;
+import com.devlog.admin.service.stats.dto.request.ViewRawDataReqDto;
 import com.devlog.core.common.constants.CommonConstants;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;

@@ -1,9 +1,9 @@
 package com.devlog.admin.service.content;
 
-import com.devlog.admin.dto.content.request.ContentReqDto;
+import com.devlog.admin.service.content.dto.request.ContentReqDto;
 import com.devlog.admin.mapper.content.ContentMapper;
-import com.devlog.admin.dto.content.response.ContentResDto;
-import com.devlog.admin.dto.content.response.ContentListResDto;
+import com.devlog.admin.service.content.dto.response.ContentResDto;
+import com.devlog.admin.service.content.dto.response.ContentListResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.SearchType;
 import com.devlog.core.common.utils.PageUtils;

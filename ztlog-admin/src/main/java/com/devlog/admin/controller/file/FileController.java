@@ -1,7 +1,7 @@
 package com.devlog.admin.controller.file;
 
 
-import com.devlog.admin.dto.file.response.FileUploadResDto;
+import com.devlog.admin.service.file.dto.response.FileUploadResDto;
 import com.devlog.admin.service.file.FileService;
 import com.devlog.core.common.dto.Response;
 import com.devlog.core.common.enumulation.ResponseCode;

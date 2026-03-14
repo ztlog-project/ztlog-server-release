@@ -1,9 +1,9 @@
 package com.devlog.admin.service.user;
 
-import com.devlog.admin.dto.user.request.LoginReqDto;
-import com.devlog.admin.dto.user.request.SignupReqDto;
-import com.devlog.admin.dto.user.response.UserDetailDto;
-import com.devlog.admin.dto.user.response.UserResDto;
+import com.devlog.admin.service.user.dto.request.LoginReqDto;
+import com.devlog.admin.service.user.dto.request.SignupReqDto;
+import com.devlog.admin.service.user.dto.response.UserDetailDto;
+import com.devlog.admin.service.user.dto.response.UserResDto;
 import com.devlog.core.common.dto.TokenInfo;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UserRole;

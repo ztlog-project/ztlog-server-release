@@ -1,8 +1,8 @@
 package com.devlog.admin.service.stats;
 
 import com.devlog.admin.mapper.stats.MainStatsMapper;
-import com.devlog.admin.dto.stats.request.MainStatsReqsDto;
-import com.devlog.admin.dto.stats.response.MainStsatsResDto;
+import com.devlog.admin.service.stats.dto.request.MainStatsReqsDto;
+import com.devlog.admin.service.stats.dto.response.MainStsatsResDto;
 import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
