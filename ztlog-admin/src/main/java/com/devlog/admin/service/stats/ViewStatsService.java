@@ -33,9 +33,9 @@ public class ViewStatsService {
      */
     @Transactional
     public void collectDailyGrowthStats() {
-        String today = DateUtils.todayLocalDateToString();
+        String yesterday = DateUtils.dateToString(DateUtils.yesterdayLocalDate());
 
-        googleSearchConsole.fetchAllPageViews(today, today)
+        googleSearchConsole.fetchAllPageViews(yesterday, yesterday)
                 .stream()
                 .filter(dto -> dto.getCtntNo() != null)
                 .forEach(viewStatsMapper::upsertDailyViewStats);
