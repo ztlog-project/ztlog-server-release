@@ -113,7 +113,7 @@ public class ContentService {
 
         // 카테고리 번호가 바뀐 경우에만 조회해서 엔티티에 넘김 (아니면 null -> updated 메소드에서 수정)
         Category category = null;
-        if (!reqDto.getCtntNo().equals(content.getCtntNo())) {
+        if (!reqDto.getCateNo().equals(content.getCategory().getCateNo())) {
             category = categoryRepository.findById(reqDto.getCateNo())
                     .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         }

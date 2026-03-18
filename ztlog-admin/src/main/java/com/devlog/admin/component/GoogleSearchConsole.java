@@ -14,6 +14,7 @@ import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryReques
 import com.google.api.services.searchconsole.v1.model.SearchAnalyticsQueryResponse;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -34,21 +35,41 @@ public class GoogleSearchConsole {
     @Value("${google.search-console.site-url}")
     private String siteUrl;
 
+    private SearchConsole searchConsole;
+
+    @PostConstruct
+    public void init() {
+        try (InputStream keyFile = getClass().getResourceAsStream("/google-search-console-key.json")) {
+            if (keyFile == null) throw new RuntimeException("구글 서비스 키 파일을 찾을 수 없습니다.");
+
+            GoogleCredentials credentials = GoogleCredentials.fromStream(keyFile)
+                    .createScoped(Collections.singleton(SearchConsoleScopes.WEBMASTERS_READONLY));
+
+            this.searchConsole = new SearchConsole.Builder(
+                    GoogleNetHttpTransport.newTrustedTransport(),
+                    GsonFactory.getDefaultInstance(),
+                    new HttpCredentialsAdapter(credentials))
+                    .setApplicationName("ztlog.io")
+                    .build();
+        } catch (IOException | GeneralSecurityException e) {
+            throw new RuntimeException("Google Search Console 클라이언트 초기화 실패", e);
+        }
+    }
+
     // 전체 페이지 일별 조회수 조회
     public List<DailyStatsResDto> fetchAllPageViews(String startDate, String endDate) {
         try {
-            SearchConsole service = buildService();
             SearchAnalyticsQueryRequest request = new SearchAnalyticsQueryRequest()
                     .setStartDate(startDate)
                     .setEndDate(endDate)
                     .setDimensions(List.of("page"))
                     .setRowLimit(100);
 
-            return executeQuery(service, request, endDate);
+            return executeQuery(searchConsole, request, endDate);
 
         } catch (GoogleJsonResponseException e) {
             throw new RuntimeException("Google API 응답 실패: " + e.getDetails().getMessage(), e);
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
             throw new RuntimeException("통계 데이터 수집 중 시스템 오류 발생", e);
         }
     }
@@ -56,8 +77,6 @@ public class GoogleSearchConsole {
     // 특정 컨텐츠 누적 조회수 조회
     public List<DailyStatsResDto> fetchContentViews(String startDate, String endDate, Long ctntNo) {
         try {
-            SearchConsole service = buildService();
-
             ApiDimensionFilterGroup filterGroup = new ApiDimensionFilterGroup()
                     .setFilters(Collections.singletonList(new ApiDimensionFilter()
                             .setDimension("page")
@@ -71,7 +90,7 @@ public class GoogleSearchConsole {
                     .setDimensionFilterGroups(List.of(filterGroup))
                     .setRowLimit(10);
 
-            return executeQuery(service, request, endDate);
+            return executeQuery(searchConsole, request, endDate);
 
         } catch (Exception e) {
             log.error("콘텐츠 {} 데이터 fetch 실패: {}", ctntNo, e.getMessage());
@@ -82,14 +101,13 @@ public class GoogleSearchConsole {
     // 날짜별 페이지 로우 데이터 조회 (배치 적재용)
     public List<ViewRawDataReqDto> fetchRawLogData(String startDate, String endDate) {
         try {
-            SearchConsole service = buildService();
             SearchAnalyticsQueryRequest request = new SearchAnalyticsQueryRequest()
                     .setStartDate(startDate)
                     .setEndDate(endDate)
                     .setDimensions(List.of("date", "page"))
                     .setRowLimit(25000);
 
-            SearchAnalyticsQueryResponse response = service.searchanalytics()
+            SearchAnalyticsQueryResponse response = searchConsole.searchanalytics()
                     .query(siteUrl, request)
                     .execute();
 
@@ -108,24 +126,8 @@ public class GoogleSearchConsole {
 
         } catch (GoogleJsonResponseException e) {
             throw new RuntimeException("Google API 응답 실패: " + e.getDetails().getMessage(), e);
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
             throw new RuntimeException("통계 데이터 수집 중 시스템 오류 발생", e);
-        }
-    }
-
-    private SearchConsole buildService() throws IOException, GeneralSecurityException {
-        try (InputStream keyFile = getClass().getResourceAsStream("/google-search-console-key.json")) {
-            if (keyFile == null) throw new RuntimeException("구글 서비스 키 파일을 찾을 수 없습니다.");
-
-            GoogleCredentials credentials = GoogleCredentials.fromStream(keyFile)
-                    .createScoped(Collections.singleton(SearchConsoleScopes.WEBMASTERS_READONLY));
-
-            return new SearchConsole.Builder(
-                    GoogleNetHttpTransport.newTrustedTransport(),
-                    GsonFactory.getDefaultInstance(),
-                    new HttpCredentialsAdapter(credentials))
-                    .setApplicationName("ztlog.io")
-                    .build();
         }
     }
 

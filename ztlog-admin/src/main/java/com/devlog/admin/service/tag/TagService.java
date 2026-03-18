@@ -77,7 +77,6 @@ public class TagService {
         Tag tag = tagRepository.findById(reqDto.getTagNo())
                 .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         tag.updated(reqDto.getTagName());
-        tagRepository.save(tag);
     }
 
     /**

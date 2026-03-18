@@ -93,12 +93,13 @@ public class CategoryService {
                 .orElse(null);
 
         // 자식 카테고리 재귀 업데이트 (CollectionUtils나 isEmpty 체크 활용)
+        String currentUser = tokenUtils.getUserIdFromHeader(request);
         if (!reqDto.getCategories().isEmpty()) {
-            reqDto.getCategories().forEach(childDto -> updateOrCreateChild(childDto, category));
+            reqDto.getCategories().forEach(childDto -> updateOrCreateChild(childDto, category, currentUser));
         }
 
         // 4. 정보 갱신
-        category.updated(reqDto.getCateNm(), reqDto.getCateDepth(), reqDto.getDispOrd(), UseYN.valueOf(reqDto.getUseYn()), tokenUtils.getUserIdFromHeader(request), upperCategory);
+        category.updated(reqDto.getCateNm(), reqDto.getCateDepth(), reqDto.getDispOrd(), UseYN.valueOf(reqDto.getUseYn()), currentUser, upperCategory);
     }
 
 
@@ -108,21 +109,21 @@ public class CategoryService {
      * @param childDto 하위 카테고리 요청 객체
      * @param parent   상위 카테고리 엔티티
      */
-    private void updateOrCreateChild(CategoryUpdateReqDto childDto, Category parent) {
+    private void updateOrCreateChild(CategoryUpdateReqDto childDto, Category parent, String currentUser) {
         if (childDto.getCateNo() != null) {
-            // 기존 자식 카테고리수정
+            // 기존 자식 카테고리 수정
             Category child = categoryRepository.findById(childDto.getCateNo())
                     .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DELETE_DATA.getMessage()));
 
-            child.updated(childDto.getCateNm(), childDto.getCateDepth(), childDto.getDispOrd(), UseYN.valueOf(childDto.getUseYn()), parent.getInpUser(), parent);
+            child.updated(childDto.getCateNm(), childDto.getCateDepth(), childDto.getDispOrd(), UseYN.valueOf(childDto.getUseYn()), currentUser, parent);
 
             // 자식의 자식들도 재귀 처리
             if (childDto.getCategories() != null) {
-                childDto.getCategories().forEach(grandChild -> updateOrCreateChild(grandChild, child));
+                childDto.getCategories().forEach(grandChild -> updateOrCreateChild(grandChild, child, currentUser));
             }
         } else {
             // 신규 자식 카테고리 등록
-            Category newChild = Category.created(childDto.getCateNm(), childDto.getCateDepth(), childDto.getDispOrd(), parent.getInpUser(), parent);
+            Category newChild = Category.created(childDto.getCateNm(), childDto.getCateDepth(), childDto.getDispOrd(), currentUser, parent);
             categoryRepository.save(newChild);
         }
     }

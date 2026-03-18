@@ -23,10 +23,10 @@ public class ContentRepositoryImpl implements ContentRepositoryCustom {
 
     @Override
     public Page<Content> findContentsByCondition(SearchType type, String keyword, int page) {
-        List<Content> content = query.selectFrom(QContent.content)
+        List<Content> contentList = query.selectFrom(QContent.content)
                 .where(searchCondition(type, keyword))
                 .fetch();
-        return new PageImpl<>(content, pageUtils.getPageable(page, Content.class), content.size());
+        return new PageImpl<>(contentList, pageUtils.getPageable(page, Content.class), contentList.size());
     }
 
     private BooleanExpression searchCondition(SearchType type, String keyword) {

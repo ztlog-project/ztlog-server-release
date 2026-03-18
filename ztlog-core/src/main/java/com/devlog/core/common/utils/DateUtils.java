@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -42,7 +43,9 @@ public class DateUtils {
     }
 
     public static LocalDateTime convertUtcToKst(LocalDateTime utcDateTime) {
-        return utcDateTime.plusHours(9);
+        return utcDateTime.atZone(ZoneOffset.UTC)
+                .withZoneSameInstant(ZoneId.of("Asia/Seoul"))
+                .toLocalDateTime();
     }
 
     public static LocalDate yesterdayLocalDate() {
