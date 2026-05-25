@@ -30,6 +30,15 @@ jwt:
   access-token-expire-time: 600000
   refresh-token-expire-time: 15552000000
 
+security:
+  password-encoder:
+    secret: "secret"
+
+admin:
+  super-user:
+    id: ${SUPER_USER_ID:yjchoi}
+    password: ${SUPER_USER_PASSWORD:12345678}
+
 google:
   search-console:
     site-url: https://ztlog.io
