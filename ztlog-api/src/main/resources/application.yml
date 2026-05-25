@@ -25,6 +25,10 @@ jwt:
   access-token-expire-time: 600000
   refresh-token-expire-time: 15552000000
 
+security:
+  password-encoder:
+    secret: "secret"
+
 # AWS S3 설정
 aws:
   credentials:
