@@ -27,10 +27,10 @@ public class CommentStatsService {
     public void syncCommentStats(CommentStatsReqDto reqDto) {
         // Giscus(GitHub) API를 통해 실시간 댓글 수 수집 -> ctntNo를 기반으로 매핑된 Discussion 정보 사용
         GiscusDataResDto.Node node = giscusComponent.fetchCommentCount(reqDto.getCtntNo());
+
         // null check
-        if (Optional.ofNullable(node).isEmpty()) {
-            throw new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage());
-        }
+        Optional.ofNullable(node).orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
+
         // 통계 테이블 업데이트 (Upsert)
         commentStatsMapper.upsertCommentCount(reqDto.getCtntNo(), node.getComments().getTotalCount());
 
