@@ -1,11 +1,14 @@
 package com.devlog.api.service.category.dto;
 
+import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.common.enumulation.UseYN;
+import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.category.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -22,6 +25,7 @@ public class CategoryInfoDto {
     private String cateNm;
 
     public static CategoryInfoDto of(Category category) {
+        Optional.ofNullable(category).orElseThrow(()-> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
         return CategoryInfoDto.builder()
                 .cateNo(category.getCateNo())
                 .cateNm(category.getCateNm())

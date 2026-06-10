@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +76,7 @@ public class ContentController {
     @GetMapping("/contents/search")
     public ResponseEntity<Response<ContentListResDto>> searchContentList(
             @RequestParam(value = "type") SearchType type,
-            @RequestParam(value = "param") String param,
+            @RequestParam(value = "param") @NotBlank(message = "검색어를 입력해주세요.") String param,
             @RequestParam(value = "page", defaultValue = "1") Integer page
     ) {
         return Response.success(ResponseCode.OK_SUCCESS, contentService.searchContentList(type, param, page));
