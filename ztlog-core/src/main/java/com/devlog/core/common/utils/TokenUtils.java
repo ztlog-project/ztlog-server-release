@@ -106,8 +106,11 @@ public class TokenUtils {
             throw new JwtException("INVALID_TOKEN");
         }
 
+        log.info("[TokenUtils] Bearer Token : {}", bearerToken);
+
         // Prefix 제거
         String token = bearerToken.substring(CommonConstants.BEARER_PREFIX.length());
+        log.info("[TokenUtils] JWT Token : {}", token);
 
         // 2. JWT 파싱 및 Subject 반환
         try {

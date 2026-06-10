@@ -3,8 +3,6 @@ package com.devlog.api.service.content.dto;
 import com.devlog.api.service.category.dto.CategoryInfoDto;
 import com.devlog.api.service.tag.dto.TagInfoDto;
 import com.devlog.core.common.constants.CommonConstants;
-import com.devlog.core.common.enumulation.ResponseCode;
-import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.entity.content.Content;
 import com.devlog.core.entity.content.ContentDetail;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,7 +12,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -61,9 +58,7 @@ public class ContentResDto {
     private LocalDateTime updDttm;
 
     public static ContentResDto of(Content content) {
-        ContentDetail contentDetail = Optional.ofNullable(content.getContentDetail())
-                .orElseThrow(() -> new DataNotFoundException(ResponseCode.NOT_FOUND_DATA.getMessage()));
-
+        ContentDetail contentDetail = content.getContentDetail();
         return ContentResDto.builder()
                 .ctntNo(content.getCtntNo())
                 .title(content.getCtntTitle())
