@@ -50,7 +50,7 @@ public class GiscusComponent {
                 .bodyToMono(GiscusDataResDto.class)
                 .blockOptional();
 
-        return response.map(giscusResDto -> giscusResDto.getNodes().get(0)).orElse(null);
+        return response.flatMap(giscusResDto -> giscusResDto.getNodes().stream().findFirst()).orElse(null);
     }
 
     public List<GiscusDataResDto.Node> fetchAllCommentCount() {
