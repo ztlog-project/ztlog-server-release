@@ -35,26 +35,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 this.tokenUtils.validateToken(token);
                 String userId = tokenUtils.getUserIdFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
-
-                if (userDetails != null
-                        && userDetails.isEnabled()
-                        && userDetails.isAccountNonLocked()
-                        && userDetails.isCredentialsNonExpired()) {
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+                authenticate(userId, request);
             } catch (JwtException e) {
-                if ("EXPIRED_TOKEN".equals(e.getMessage()) && tokenUtils.reissue(request, response)) {
-                    filterChain.doFilter(request, response);
-                    return;
+                if ("EXPIRED_TOKEN".equals(e.getMessage())) {
+                    String reissuedUserId = tokenUtils.reissue(request, response);
+                    if (reissuedUserId != null) {
+                        // 재발급된 토큰으로 현재 요청도 즉시 인증 처리해 무중단 재발급을 완성한다.
+                        authenticate(reissuedUserId, request);
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
                 }
                 request.setAttribute("exception", e.getMessage());
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void authenticate(String userId, HttpServletRequest request) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+
+        if (userDetails != null
+                && userDetails.isEnabled()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()) {
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
 }

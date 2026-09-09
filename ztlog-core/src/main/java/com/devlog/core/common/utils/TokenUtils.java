@@ -191,12 +191,12 @@ public class TokenUtils {
      *
      * @param request  요청
      * @param response 응답
-     * @return 재발급 성공 여부
+     * @return 재발급 성공 시 새로 발급된 토큰의 userId, 실패 시 null
      */
-    public boolean reissue(HttpServletRequest request, HttpServletResponse response) {
+    public String reissue(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = request.getHeader("Refresh");
         if (!StringUtils.hasText(refreshToken)) {
-            return false;
+            return null;
         }
         try {
             validateToken(refreshToken);
@@ -204,10 +204,10 @@ public class TokenUtils {
             TokenInfo tokenInfo = generateToken(userId);
             accessTokenSetHeader(tokenInfo.getAccessToken(), response);
             refreshTokenSetHeader(tokenInfo.getRefreshToken(), response);
-            return true;
+            return userId;
         } catch (Exception e) {
             log.warn("[TokenUtils] Refresh token reissue failed: {}", e.getMessage());
-            return false;
+            return null;
         }
     }
 
