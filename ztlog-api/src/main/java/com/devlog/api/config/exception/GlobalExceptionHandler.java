@@ -5,6 +5,7 @@ import com.devlog.core.common.enumulation.ResponseCode;
 import com.devlog.core.config.exception.CoreException;
 import com.devlog.core.config.exception.DataNotFoundException;
 import com.devlog.core.config.exception.ValidationException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response<String>> handleBadRequestException(Exception e) {
         log.warn("BadRequestException: {}", e.getMessage());
         return Response.error(ResponseCode.INVALID_DATA_ERROR);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Response<String>> handleConstraintViolationException(ConstraintViolationException e) {
+        log.warn("ConstraintViolationException: {}", e.getMessage());
+        return Response.error(ResponseCode.INVALID_DATA_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

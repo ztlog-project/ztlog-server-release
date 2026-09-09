@@ -15,6 +15,7 @@ public class CommonConstants {
     public static final int TAG_NAME_SIZE = 15;
     public static final int TITLE_SIZE = 100;
     public static final int SUBTITLE_SIZE = 200;
+    public static final int SEARCH_PARAM_MAX_SIZE = 100;
 
     // file upload
     public static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
