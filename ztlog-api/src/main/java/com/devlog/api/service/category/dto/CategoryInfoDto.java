@@ -22,6 +22,9 @@ public class CategoryInfoDto {
     private String cateNm;
 
     public static CategoryInfoDto of(Category category) {
+        if (category == null) {
+            return null;
+        }
         return CategoryInfoDto.builder()
                 .cateNo(category.getCateNo())
                 .cateNm(category.getCateNm())
