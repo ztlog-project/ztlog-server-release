@@ -12,7 +12,7 @@ import static com.devlog.core.entity.content.QContentTag.contentTag;
 import static com.devlog.core.entity.tag.QTag.tag;
 
 @RequiredArgsConstructor
-public class TagRepositoryImpl implements TagRepositoryCustom {
+public class TagRepositoryCustomImpl implements TagRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

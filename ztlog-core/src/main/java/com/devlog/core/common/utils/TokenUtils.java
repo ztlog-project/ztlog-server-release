@@ -234,10 +234,9 @@ public class TokenUtils {
     }
 
     public String maskString(String str) {
-        if (str == null) return null;
-        if (str.length() <= 4) return str; // 4자리 이하인 경우 마스킹 없이 그대로 반환
-
-        return str.substring(0, 4) + "*".repeat(str.length() - 4);
+        if (str == null || str.isBlank()) return "";
+        if (str.length() <= 8) return "***";
+        return str.substring(0, 8) + "***(len=" + str.length() + ")";
     }
 }
 
