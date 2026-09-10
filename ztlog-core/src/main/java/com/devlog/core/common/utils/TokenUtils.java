@@ -108,6 +108,8 @@ public class TokenUtils {
 
         // Prefix 제거
         String token = bearerToken.substring(CommonConstants.BEARER_PREFIX.length());
+        log.info("[TokenUtils] Bearer Token : {}", maskString(bearerToken));
+        log.info("[TokenUtils] JWT Token : {}", maskString(token));
 
         // 2. JWT 파싱 및 Subject 반환
         try {
@@ -191,12 +193,12 @@ public class TokenUtils {
      *
      * @param request  요청
      * @param response 응답
-     * @return 재발급 성공 시 새로 발급된 토큰의 userId, 실패 시 null
+     * @return 재발급 성공 여부
      */
-    public String reissue(HttpServletRequest request, HttpServletResponse response) {
+    public boolean reissue(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = request.getHeader("Refresh");
         if (!StringUtils.hasText(refreshToken)) {
-            return null;
+            return false;
         }
         try {
             validateToken(refreshToken);
@@ -204,10 +206,10 @@ public class TokenUtils {
             TokenInfo tokenInfo = generateToken(userId);
             accessTokenSetHeader(tokenInfo.getAccessToken(), response);
             refreshTokenSetHeader(tokenInfo.getRefreshToken(), response);
-            return userId;
+            return true;
         } catch (Exception e) {
             log.warn("[TokenUtils] Refresh token reissue failed: {}", e.getMessage());
-            return null;
+            return false;
         }
     }
 
@@ -229,6 +231,13 @@ public class TokenUtils {
     private String handleJwtException(String type, String message, Exception e) {
         log.warn("[TokenUtils] {} JWT Token - {}", type, e.getMessage());
         throw new JwtException(message);
+    }
+
+    public String maskString(String str) {
+        if (str == null) return null;
+        if (str.length() <= 4) return str; // 4자리 이하인 경우 마스킹 없이 그대로 반환
+
+        return str.substring(0, 4) + "*".repeat(str.length() - 4);
     }
 }
 

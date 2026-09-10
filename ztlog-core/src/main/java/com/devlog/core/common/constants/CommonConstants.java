@@ -9,6 +9,7 @@ public class CommonConstants {
     public static final String ZTLOG = "ztlog";
     public static final String ADMIN_NAME = "admin";
 
+
     // number
     public static final int PAGE_SIZE = 5;
     public static final int PAGE_LIST_SIZE = 10;
@@ -27,6 +28,8 @@ public class CommonConstants {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String REFRESH_HEADER = "Refresh";
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String EXPIRED = "EXPIRED_TOKEN";
+
 
     // dateformat
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
