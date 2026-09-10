@@ -14,9 +14,12 @@ public class UserResDto {
 
     private String username;
 
+    private String grant;
+
     public static UserResDto of(User user) {
         return UserResDto.builder()
                 .username(user.getUsername())
+                .grant(user.getGrant())
                 .build();
     }
 }
